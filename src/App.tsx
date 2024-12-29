@@ -1,9 +1,11 @@
-import './reset.css';
+import { Route, Routes } from 'react-router-dom';
 
-import { useReducer } from 'react';
+import Home from '@/pages/Home';
 
 export const App = () => {
-  const [count, increment] = useReducer((c: number) => c + 1, 0);
-
-  return <button onClick={increment}>{count}</button>;
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+    </Routes>
+  );
 };
