@@ -1,5 +1,3 @@
-import './reset.css';
-
 import { useReducer } from 'react';
 
 export const App = () => {
