@@ -23,7 +23,6 @@ export const ApiTest = () => {
     };
 
     fetchData().catch((err: unknown) => {
-      // 타입 좁히기
       if (err instanceof Error) {
         console.error(err.message); // 에러 메시지 출력
         setError('데이터를 가져오는데 실패했습니다.'); // 에러 메시지 설정
