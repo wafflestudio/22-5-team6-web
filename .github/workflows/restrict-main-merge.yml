@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Check if PR is from dev branch
         run: |
-          if [[ "${{ github.event.pull_request.head.ref }}" != "dev" ]]; then
+          if [[ "${{ github.event.pull_request.base.ref }}" == "main" && "${{ github.event.pull_request.head.ref }}" != "dev" ]]; then
             echo "❌ Error: Only pull requests from 'dev' branch can be merged into 'main'."
             exit 1
           fi
