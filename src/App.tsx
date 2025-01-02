@@ -1,7 +1,13 @@
-import { useReducer } from 'react';
+import { Route, Routes } from 'react-router-dom';
+
+import { ApiTest } from '@/routes/ApiTest';
+import Home from '@/routes/Home';
 
 export const App = () => {
-  const [count, increment] = useReducer((c: number) => c + 1, 0);
-
-  return <button onClick={increment}>{count}</button>;
+  return (
+    <Routes>
+      <Route path="/" element={<Home />} />
+      <Route path="/test" element={<ApiTest />} />
+    </Routes>
+  );
 };
