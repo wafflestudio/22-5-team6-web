@@ -1,3 +1,5 @@
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import IosShareIcon from '@mui/icons-material/IosShare';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 
@@ -32,9 +34,21 @@ export const Roomdetail = () => {
   }, []); // 빈 배열: 컴포넌트가 마운트될 때 한 번만 실행
 
   return (
-    <div>
+    <div className="flex flex-col justify-start items-center w-dvw">
       <Topbar />
-      <h1>React & Spring 연결 테스트</h1>
+      <div className="flex w-full items-end justify-between">
+        <div className="text-2xl font-bold">{text}</div>
+        <div className="flex space-x-[13px]">
+          <div className="flex items-center space-x-[5px]">
+            <IosShareIcon style={{ width: 15, height: 15 }} />
+            <div className="text-sm">공유하기</div>
+          </div>
+          <div className="flex items-center space-x-[5px]">
+            <FavoriteBorderIcon style={{ width: 15, height: 15 }} />
+            <div className="text-sm">저장</div>
+          </div>
+        </div>
+      </div>
       {isLoading ? (
         <p>서버에서 데이터를 가져오는 중...</p>
       ) : error !== null ? (
