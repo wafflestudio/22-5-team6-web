@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 
 import gallery from '@/components/common/gallery.svg';
 import Topbar from '@/components/home/Topbar';
+import Info from '@/components/roomdetail/Info'
+import Reservation from '@/components/roomdetail/Reservation'
 import { mockRoom } from '@/mock/mockRoom'
 import type { roomType } from '@/types/roomType'
 
@@ -42,23 +44,23 @@ export const Roomdetail = () => {
   
 
   return (
-    <div className="flex flex-col justify-start items-center w-dvw">
+    <div className="flex flex-col justify-start items-center w-full">
       <Topbar/>
       <div className="flex flex-col w-full px-[55px]">
         <div className="flex w-full items-end justify-between py-4">
           <div className="text-2xl font-normal">{data.name}</div>
           <div className="flex space-x-[13px]">
-            <div className="flex items-center space-x-[5px]">
+            <div className="flex items-center space-x-[5px] px-2 py-1 rounded-md hover:bg-[#F7F7F7] cursor-pointer">
               <IosShareIcon style={{ width: 15, height: 15 }} />
               <div className="text-sm underline">공유하기</div>
             </div>
-            <div className="flex items-center space-x-[5px]">
+            <div className="flex items-center space-x-[5px] px-2 py-1 rounded-md hover:bg-[#F7F7F7] cursor-pointer">
               <FavoriteBorderIcon style={{ width: 15, height: 15 }} />
               <div className="text-sm underline">저장</div>
             </div>
           </div>
         </div>
-        <div className="grid grid-cols-4 grid-rows-2 gap-2 w-full h-[400px]">
+        <div className="grid grid-cols-4 grid-rows-2 gap-2 w-full h-[330px]">
           <div className="col-span-2 row-span-2 flex items-center justify-center rounded-l-xl bg-gray-300  hover:bg-gray-400 cursor-pointer">
             <PhotoSizeSelectActualIcon style={{ width: '50%', height: '50%', color: 'white' }} />
           </div>
@@ -79,6 +81,14 @@ export const Roomdetail = () => {
                 사진 모두 보기
               </div>
             </button>
+          </div>
+        </div>
+        <div className="flex items-start w-full h-fit">
+          <div className="flex-1">
+            <Info data={data} />
+          </div>
+          <div className="flex-2">
+            <Reservation />
           </div>
         </div>
       </div>
