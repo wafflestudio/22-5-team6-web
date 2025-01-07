@@ -10,7 +10,7 @@ export const App = () => {
     <SearchProvider>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/test" element={<ApiTest />} />
+        <Route path="/tests" element={<ApiTest />} />
       </Routes>
     </SearchProvider>
   );
