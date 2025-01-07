@@ -9,7 +9,7 @@ const Topbar = () => {
   // const navigate = useNavigate();
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="h-20 px-10">
         <div className="flex items-center justify-between h-full">
           <div className="flex-1">
