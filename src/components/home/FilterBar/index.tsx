@@ -2,7 +2,7 @@ import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useRef } from 'react';
 
 // 필터 아이템 타입 정의
-export interface FilterItem {
+interface FilterItem {
   label: string;
   imageUrl: string;
 }
