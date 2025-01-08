@@ -1,4 +1,5 @@
 import { Menu, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 // import { useNavigate } from 'react-router-dom';
 import LogoIcon from '@/components/common/LogoIcon';
@@ -6,14 +7,21 @@ import LogoText from '@/components/common/LogoText';
 
 import SearchBar from './Search/SearchBar';
 const Topbar = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    void navigate(`/`);
+  };
 
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col w-full">
       <div className="h-20 px-10">
         <div className="flex items-center justify-between h-full">
           <div className="flex-1">
-            <button className="flex items-center gap-1">
+            <button
+              className="flex items-center gap-1"
+              onClick={handleLogoClick}
+            >
               <LogoIcon />
               <div className="hidden md:block">
                 <LogoText />
