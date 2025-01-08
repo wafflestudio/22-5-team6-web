@@ -23,7 +23,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
     };
 
     try {
-      const response = await fetch('/api/auth/signup', {
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -34,7 +34,6 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
       if (!response.ok) {
         throw new Error('Signup failed');
       }
-
       alert('Signup successful!');
     } catch (error: unknown) {
       if (error instanceof Error) {
@@ -66,8 +65,7 @@ const AuthForm: React.FC<AuthFormProps> = ({ mode }) => {
       if (!response.ok) {
         throw new Error('Login failed');
       }
-
-      window.location.href = '/api/auth/login';
+      window.location.href = response.url;
     } catch (error: unknown) {
       if (error instanceof Error) {
         console.error(error.message);
