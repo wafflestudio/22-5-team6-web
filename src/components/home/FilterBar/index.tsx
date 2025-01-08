@@ -2,13 +2,13 @@ import { ChevronLeft, ChevronRight, SlidersHorizontal } from 'lucide-react';
 import { useRef } from 'react';
 
 // 필터 아이템 타입 정의
-interface FilterItem {
+export interface FilterItem {
   label: string;
   imageUrl: string;
 }
 
 // 필터 데이터
-const filterItems: FilterItem[] = [
+export const filterItems: FilterItem[] = [
   {
     label: '한적한 시골',
     imageUrl:
@@ -71,7 +71,7 @@ const filterItems: FilterItem[] = [
   },
 ];
 
-const FilterBar = () => {
+export const FilterBar = () => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const scroll = (direction: 'left' | 'right') => {
@@ -137,5 +137,3 @@ const FilterBar = () => {
     </div>
   );
 };
-
-export default FilterBar;

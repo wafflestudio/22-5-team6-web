@@ -1,4 +1,4 @@
-import FilterBar from '@/components/home/FilterBar';
+import {FilterBar} from '@/components/home/FilterBar';
 import Listings from '@/components/home/Listings';
 import Topbar from '@/components/home/Topbar';
 
