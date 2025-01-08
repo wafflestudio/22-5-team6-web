@@ -9,15 +9,17 @@ const Listings = () => {
   const navigate = useNavigate();
 
   const handleRoomClick = (id: string) => {
-    void navigate(`/${id}`)
-  }
+    void navigate(`/${id}`);
+  };
 
   return (
     <>
       {mockListings.map((listing) => (
         <div
           key={listing.id}
-          onClick={() => { handleRoomClick(listing.id); }}
+          onClick={() => {
+            handleRoomClick(listing.id);
+          }}
           style={{ cursor: 'pointer' }}
         >
           <ListingItem listing={listing} />

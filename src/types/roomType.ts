@@ -84,6 +84,9 @@ export type roomType = {
     total: number;
   }[]; // 수정: price를 배열로 변경
   superhost: boolean;
+  luggage: boolean;
+  tv: boolean;
+  wifi: boolean;
   selfcheckin: boolean;
   info: string;
   maxOccupancy: number;
