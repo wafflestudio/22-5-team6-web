@@ -3,10 +3,10 @@ import { Route, Routes } from 'react-router-dom';
 
 import { SearchProvider } from '@/components/home/context/SearchContext';
 import { ApiTest } from '@/routes/ApiTest';
-import Auth from '@/routes/Auth';
 import Home from '@/routes/Home';
 import Redirect from '@/routes/Redirect';
 
+import { ProfileInfoList } from './routes/Profile';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {
@@ -18,9 +18,8 @@ export const App = () => {
           <Route path="/" element={<Home />} />
           <Route path="/:id" element={<Roomdetail />} />
           <Route path="/tests" element={<ApiTest />} />
-          <Route path="/registerTest" element={<Auth mode="signup" />} />
-          <Route path="/loginTest" element={<Auth mode="login" />} />
           <Route path="/redirect" element={<Redirect />} />
+          <Route path="/profile" element={<ProfileInfoList />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </SearchProvider>
