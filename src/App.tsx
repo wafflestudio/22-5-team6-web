@@ -6,7 +6,6 @@ import { ApiTest } from '@/routes/ApiTest';
 import Home from '@/routes/Home';
 import Redirect from '@/routes/Redirect';
 
-import { ProfileInfoList } from './routes/Profile';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {
@@ -19,7 +18,6 @@ export const App = () => {
           <Route path="/:id" element={<Roomdetail />} />
           <Route path="/tests" element={<ApiTest />} />
           <Route path="/redirect" element={<Redirect />} />
-          <Route path="/profile" element={<ProfileInfoList />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </SearchProvider>
