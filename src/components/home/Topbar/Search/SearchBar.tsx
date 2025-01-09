@@ -35,7 +35,11 @@ const SearchBar = () => {
             >
               <span className="text-sm font-medium">여행지</span>
               <span className="text-sm text-gray-500">
-                {location !== '' ? location : '여행지 검색'}
+                {location.sido !== ''
+                  ? location.sigungu !== undefined
+                    ? `${location.sido} ${location.sigungu}`
+                    : location.sido
+                  : '여행지 검색'}
               </span>
             </button>
 
