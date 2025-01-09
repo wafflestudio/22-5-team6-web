@@ -51,6 +51,7 @@ const Topbar = () => {
   const handleLogout = () => {
     setIsLoggedIn(false);
     setDropdownOpen(false);
+    localStorage.removeItem('token');
     alert('로그아웃 되었습니다.');
   };
 
