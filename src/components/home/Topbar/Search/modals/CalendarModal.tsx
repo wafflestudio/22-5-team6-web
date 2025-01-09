@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 import { useSearch } from '@/components/home/context/SearchContext';
 
-interface CalendarModalProps {
+type CalendarModalProps = {
   onClose: () => void;
-}
+};
 
 const CalendarModal = ({ onClose }: CalendarModalProps) => {
   const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();
@@ -125,7 +125,7 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
             <h3 className="text-center font-medium mb-4">
               {currentMonth.format('YYYY년 M월')}
             </h3>
-            <table className="w-full border-separate border-spacing-0">
+            <table className="w-half border-separate border-spacing-0">
               <thead>
                 <tr>
                   {['일', '월', '화', '수', '목', '금', '토'].map((day) => (

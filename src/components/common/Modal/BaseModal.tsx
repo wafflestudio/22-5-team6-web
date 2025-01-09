@@ -1,12 +1,12 @@
 import { X } from 'lucide-react';
 import React from 'react';
 
-interface BaseModalProps {
+type BaseModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
-}
+};
 
 const BaseModal = ({ isOpen, onClose, title, children }: BaseModalProps) => {
   if (!isOpen) return null;
@@ -20,7 +20,7 @@ const BaseModal = ({ isOpen, onClose, title, children }: BaseModalProps) => {
       />
 
       {/* Modal */}
-      <div className="fixed inset-x-0 top-8 mx-auto max-w-2xl bg-white rounded-xl z-50">
+      <div className="fixed inset-x-0 top-8 mx-auto w-full max-w-4xl bg-white rounded-xl z-50">
         {/* Header */}
         <div className="relative flex items-center justify-center py-4 border-b">
           {/* Close button */}

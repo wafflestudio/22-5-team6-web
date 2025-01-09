@@ -5,6 +5,7 @@ import { SearchProvider } from '@/components/home/context/SearchContext';
 import { ApiTest } from '@/routes/ApiTest';
 import Auth from '@/routes/Auth';
 import Home from '@/routes/Home';
+import Hosting from '@/routes/Hosting';
 import Redirect from '@/routes/Redirect';
 
 import { Roomdetail } from './routes/roomDetail';
@@ -22,7 +23,8 @@ export const App = () => {
           <Route path="/loginTest" element={<Auth mode="login" />} />
           <Route path="/redirect" element={<Redirect />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
-        </Routes>
+          <Route path="/hosting" element={<Hosting />} />
+      </Routes>
       </SearchProvider>
     </StyledEngineProvider>
   );
