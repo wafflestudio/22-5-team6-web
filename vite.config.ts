@@ -13,8 +13,7 @@ const config = defineConfig({
   server: {
     proxy: {
       '/api': {
-        target:
-          'http://ec2-15-165-159-152.ap-northeast-2.compute.amazonaws.com:8080', // 백엔드 서버 주소
+        target: 'https://d2gjarpl85ijp5.cloudfront.net/', // 백엔드 서버 주소
         changeOrigin: true, // Origin 헤더 변경
         //rewrite: (path) => path.replace(/^\/api/, ''), // `/api` 제거
       },
