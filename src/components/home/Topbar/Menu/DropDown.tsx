@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type DropdownProps = {
   isOpen: boolean;
@@ -18,6 +19,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   onLogout,
 }) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -37,20 +39,34 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   if (!isOpen) return null;
 
+  const handleMyPageClick = () => {
+    void (async () => {
+      await navigate('/profile');
+      onClose();
+    })();
+  };
+
   return (
     <div
       ref={dropdownRef}
-      className={`absolute right-0 ${
-        isLoggedIn ? 'mt-32' : 'mt-44'
-      } mr-64 py-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}
+      className={`absolute right-0 mt-44 mr-64 py-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}
     >
       {isLoggedIn ? (
-        <button
-          onClick={onLogout}
-          className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
-        >
-          로그아웃
-        </button>
+        <>
+          <button
+            onClick={handleMyPageClick}
+            className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
+          >
+            마이 페이지
+          </button>
+          <hr className="w-full my-1 border-t border-gray-300" />
+          <button
+            onClick={onLogout}
+            className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
+          >
+            로그아웃
+          </button>
+        </>
       ) : (
         <>
           <button
