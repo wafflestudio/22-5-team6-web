@@ -3,6 +3,7 @@ import IosShareIcon from '@mui/icons-material/IosShare';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 import gallery from '@/components/common/gallery.svg';
 import Topbar from '@/components/home/Topbar';
@@ -15,13 +16,14 @@ export const Roomdetail = () => {
   const [data, setData] = useState<roomType>(mockRoom); // 서버 응답 데이터를 저장
   const [error, setError] = useState<string | null>(null); // 에러 메시지 저장
   const [isLoading, setIsLoading] = useState<boolean>(true); // API 호출 상태 저장
+  const { id } = useParams<{ id?: string }>();
   const token =
-    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmcxIiwiaWF0IjoxNzM2MjEyOTU0LCJleHAiOjE3MzYyOTkzNTR9.hOpTa8Ql-1CkswTnD2VKqrH59NEx-FokTRK3pjcJBNCxZN-FS-q44y97eiOJEXzDjJWgy0Bc3bAFXKzcQCo8iQ';
+    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3MzYzOTcxODgsImV4cCI6MTczNjQ4MzU4OH0.AqocOzrkeh_dEWr3H8fjQTSJZM_q52AHD5FDh-nw7xlTqiDGUldzERT9k_58eudyaANAdB9lfaM_HD4YdAbv6A';
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await axios.get<roomType>(
-          'https://d1m69dle8ss110.cloudfront.net/api/v1/rooms/1',
+          `http://ec2-15-165-159-152.ap-northeast-2.compute.amazonaws.com:8080/api/v1/rooms/${id}`,
           {
             method: 'GET',
             headers: { Authorization: `Bearer ${token}` }, // 헤더에 토큰 추가
@@ -44,7 +46,7 @@ export const Roomdetail = () => {
     };
 
     void fetchData();
-  }, []); // 빈 배열: 컴포넌트가 마운트될 때 한 번만 실행
+  }, [id]); // 빈 배열: 컴포넌트가 마운트될 때 한 번만 실행
 
   return (
     <div className="flex flex-col justify-start items-center w-full">
@@ -101,7 +103,7 @@ export const Roomdetail = () => {
             <Info data={data} />
           </div>
           <div className="flex-2">
-            <Reservation />
+            <Reservation data={data} />
           </div>
         </div>
       </div>
