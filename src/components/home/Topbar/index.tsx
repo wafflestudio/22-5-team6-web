@@ -79,24 +79,27 @@ const Topbar = () => {
             >
               당신의 공간을 에어비앤비하세요
             </button>
-            <button
-              className="flex items-center gap-3 border border-gray-300 rounded-full p-2 hover:shadow-md transition-shadow"
-              onClick={toggleDropdown}
-            >
-              <Menu size={18} />
-              <User size={30} className="text-gray-500" />
-            </button>
 
-            <Dropdown
-              isOpen={isDropdownOpen}
-              isLoggedIn={isLoggedIn}
-              onClose={() => {
-                setDropdownOpen(false);
-              }}
-              onLogin={handleLoginModalOpen}
-              onSignup={handleSignupModalOpen}
-              onLogout={handleLogout}
-            />
+            <div className="flex items-center justify-end space-x-4 relative">
+              <button
+                className="flex items-center gap-3 border border-gray-300 rounded-full p-2 hover:shadow-md transition-shadow"
+                onClick={toggleDropdown}
+              >
+                <Menu size={18} />
+                <User size={30} className="text-gray-500" />
+              </button>
+
+              <Dropdown
+                isOpen={isDropdownOpen}
+                isLoggedIn={isLoggedIn}
+                onClose={() => {
+                  setDropdownOpen(false);
+                }}
+                onLogin={handleLoginModalOpen}
+                onSignup={handleSignupModalOpen}
+                onLogout={handleLogout}
+              />
+            </div>
           </div>
         </div>
       </div>

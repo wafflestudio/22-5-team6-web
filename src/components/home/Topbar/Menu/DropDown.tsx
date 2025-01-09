@@ -42,7 +42,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       ref={dropdownRef}
       className={`absolute right-0 ${
         isLoggedIn ? 'mt-32' : 'mt-44'
-      } py-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}
+      } mr-64 py-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}
     >
       {isLoggedIn ? (
         <button

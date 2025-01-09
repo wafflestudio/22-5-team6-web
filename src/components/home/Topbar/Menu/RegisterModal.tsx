@@ -167,7 +167,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             )}
             <button
               type="submit"
-              className="mt-5 mb-1 px-14 py-2 w-[500px] h-12 text-white rounded-lg transition-all duration-500 bg-gradient-to-tl from-primary-color from-30% via-[#e8214f] to-[#BD1E59] bg-size-200 bg-pos-0 hover:bg-pos-100"
+              className="mt-5 mb-1 px-14 py-2 w-[500px] h-12 text-white rounded-lg transition-all duration-500 bg-gradient-to-tl from-airbnb from-30% via-[#e8214f] to-[#BD1E59] bg-size-200 bg-pos-0 hover:bg-pos-100"
             >
               회원가입
             </button>
@@ -177,7 +177,7 @@ const SignupModal: React.FC<SignupModalProps> = ({
             이미 계정이 있으신가요?{' '}
             <button
               onClick={onSwitchToLogin}
-              className="text-primary-color hover:underline"
+              className="text-airbnb hover:underline"
             >
               로그인
             </button>

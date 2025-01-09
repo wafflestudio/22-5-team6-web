@@ -171,7 +171,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
             )}
             <button
               type="submit"
-              className="mt-5 mb-1 px-14 py-2 w-[500px] h-12 text-white rounded-lg transition-all duration-500 bg-gradient-to-tl from-primary-color from-30% via-[#e8214f] to-[#BD1E59] bg-size-200 bg-pos-0 hover:bg-pos-100"
+              className="mt-5 mb-1 px-14 py-2 w-[500px] h-12 text-white rounded-lg transition-all duration-500 bg-gradient-to-tl from-airbnb from-30% via-[#e8214f] to-[#BD1E59] bg-size-200 bg-pos-0 hover:bg-pos-100"
             >
               로그인
             </button>
@@ -181,7 +181,7 @@ const LoginModal: React.FC<LoginModalProps> = ({
             에어비앤비가 처음이신가요?{' '}
             <button
               onClick={onSwitchToSignup}
-              className="text-primary-color hover:underline"
+              className="text-airbnb hover:underline"
             >
               회원가입
             </button>
