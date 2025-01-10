@@ -9,14 +9,16 @@ interface FilterModalProps {
   onApplyFilter: (priceRange: { min: number; max: number }) => void;
 }
 
+const initialMinPrice = 15000;
+const initialMaxPrice = 310000;
+
 export default function FilterModal({
   isOpen,
   onClose,
   onApplyFilter,
 }: FilterModalProps) {
-  const [minPrice, setMinPrice] = useState<number>(15000);
-  const [maxPrice, setMaxPrice] = useState<number>(310000);
-
+  const [minPrice, setMinPrice] = useState(initialMinPrice);
+  const [maxPrice, setMaxPrice] = useState(initialMaxPrice);
   const handleApply = () => {
     if (minPrice > maxPrice) {
       alert('최소 가격이 최대 가격보다 클 수 없습니다.');
@@ -25,10 +27,9 @@ export default function FilterModal({
     onApplyFilter({ min: minPrice, max: maxPrice });
     onClose();
   };
-
   const handleReset = () => {
-    setMinPrice(15000);
-    setMaxPrice(310000);
+    setMinPrice(initialMinPrice);
+    setMaxPrice(initialMaxPrice);
   };
 
   return (
