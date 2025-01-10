@@ -76,18 +76,17 @@ export type roomType = {
   description: string;
   type1: string; // 추가: 상세 화면의 country 뒤 텍스트
   type2: string; // 추가: 메인 화면 FilterBar 상 목록
-  address: string;
   price: {
     pernight: number;
     cleaningfee: number;
     charge: number;
     total: number;
-  }[]; // 수정: price를 배열로 변경
-  superhost: boolean;
-  luggage: boolean;
-  tv: boolean;
-  wifi: boolean;
-  selfcheckin: boolean;
+  };
+  isSuperhost: boolean;
+  isLuggage: boolean;
+  isTv: boolean;
+  isWifi: boolean;
+  isSelfcheckin: boolean;
   info: string;
   maxOccupancy: number;
   bedroom: number;
@@ -102,5 +101,5 @@ export type roomType = {
     city: string;
     suburb: string;
     town: string;
-  }; // 추가: location을 배열로 정의
+  };
 };
