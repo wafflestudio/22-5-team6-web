@@ -2,7 +2,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Shareheart } from '@/components/roomdetail/shareheart';
+import { Shareheart } from '@/components/roomdetail/Shareheart';
 import PhotoModal from '@/components/roomdetail/PhotoModal';
 import gallery from '@/components/common/gallery.svg';
 import Topbar from '@/components/home/Topbar';
