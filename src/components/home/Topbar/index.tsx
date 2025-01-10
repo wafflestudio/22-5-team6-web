@@ -1,7 +1,6 @@
 import { Menu, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-// import { useNavigate } from 'react-router-dom';
 import LogoIcon from '@/components/common/LogoIcon';
 import LogoText from '@/components/common/LogoText';
 
@@ -30,10 +29,15 @@ const Topbar = () => {
           </div>
 
           <div className="flex-1 flex items-center justify-end gap-4">
-            <button className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm">
+            <button
+              className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm"
+              onClick={() => {
+                void navigate('/hosting');
+              }}
+            >
               당신의 공간을 에어비앤비하세요
             </button>
-            <button className="flex items-center gap-3 border rounded-full p-2 hover:shadow-md">
+            <button className="flex items-center gap-3 border border-gray-300 rounded-full p-2 hover:shadow-md transition-shadow">
               <Menu size={18} />
               <User size={30} className="text-gray-500" />
             </button>

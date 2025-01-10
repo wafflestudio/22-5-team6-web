@@ -1,7 +1,7 @@
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import StarIcon from '@mui/icons-material/Star';
 
-import { filterItems } from '@/components/home/FilterBar/index';
+import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
 import checkin from '@/components/roomdetail/checkin.svg';
 import crownleft from '@/components/roomdetail/crownleft.svg';
 import crownright from '@/components/roomdetail/crownright.svg';
@@ -16,7 +16,9 @@ interface InfoProps {
 }
 
 const Info = ({ data }: InfoProps) => {
-  const matchingItem = filterItems.find((item) => item.label === data.type2);
+  const matchingItem = ACCOMMODATION_TYPES.find(
+    (item) => item.label === data.type2,
+  );
   const issuperhost = data.superhost;
   const isluggage = data.luggage;
   const ischeckin = data.selfcheckin;
