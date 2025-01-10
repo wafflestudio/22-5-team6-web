@@ -22,9 +22,9 @@ export const App = () => {
           <Route path="/registerTest" element={<Auth mode="signup" />} />
           <Route path="/loginTest" element={<Auth mode="login" />} />
           <Route path="/redirect" element={<Redirect />} />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
           <Route path="/hosting" element={<Hosting />} />
-      </Routes>
+          <Route path="*" element={<h1>404 Not Found</h1>} />
+        </Routes>
       </SearchProvider>
     </StyledEngineProvider>
   );

@@ -7,13 +7,10 @@ import LogoText from '@/components/common/LogoText';
 import SearchBar from './Search/SearchBar';
 const Topbar = () => {
   const navigate = useNavigate();
-<<<<<<< HEAD
 
   const handleLogoClick = () => {
     void navigate(`/`);
   };
-=======
->>>>>>> d3fe4e7 (feat: Hosting 페이지 구현 및 메인 페이지 기능 개선)
 
   return (
     <div className="flex flex-col w-full">
@@ -22,13 +19,7 @@ const Topbar = () => {
           <div className="flex-1">
             <button
               className="flex items-center gap-1"
-<<<<<<< HEAD
               onClick={handleLogoClick}
-=======
-              onClick={() => {
-                void navigate('/');
-              }}
->>>>>>> d3fe4e7 (feat: Hosting 페이지 구현 및 메인 페이지 기능 개선)
             >
               <LogoIcon />
               <div className="hidden md:block">
