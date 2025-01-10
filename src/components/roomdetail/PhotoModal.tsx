@@ -1,7 +1,7 @@
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 
-import { Shareheart } from '@/components/roomdetail/shareheart';
+import { Shareheart } from '@/components/roomdetail/Shareheart';
 
 const PhotoModal = ({ onClose }: { onClose: () => void }) => {
   const photos = [
