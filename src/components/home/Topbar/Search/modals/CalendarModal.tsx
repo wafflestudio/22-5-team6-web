@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 import { useSearch } from '@/components/home/context/SearchContext';
 
-interface CalendarModalProps {
+type CalendarModalProps = {
   onClose: () => void;
-}
+};
 
 const CalendarModal = ({ onClose }: CalendarModalProps) => {
   const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();

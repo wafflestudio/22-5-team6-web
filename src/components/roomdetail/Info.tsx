@@ -1,7 +1,7 @@
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import StarIcon from '@mui/icons-material/Star';
 
-import { filterItems } from '@/components/home/FilterBar/index';
+import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
 import checkin from '@/components/roomdetail/checkin.svg';
 import crownleft from '@/components/roomdetail/crownleft.svg';
 import crownright from '@/components/roomdetail/crownright.svg';
@@ -16,7 +16,9 @@ interface InfoProps {
 }
 
 const Info = ({ data }: InfoProps) => {
-  const matchingItem = filterItems.find((item) => item.label === data.type2);
+  const matchingItem = ACCOMMODATION_TYPES.find(
+    (item) => item.label === data.type2,
+  );
   const issuperhost = data.superhost;
   const isluggage = data.luggage;
   const ischeckin = data.selfcheckin;
@@ -37,11 +39,11 @@ const Info = ({ data }: InfoProps) => {
       </div>
       <div className="flex justify-between border border-gray-300 rounded-md p-6 w-full my-8">
         <div className="flex justify-center align-center gap-1 flex-1 border-r border-r-gray-300">
-          <img src={crownleft} />
-          <div className="text-center">
+          <img src={crownleft} className="basis-1/10" />
+          <div className="text-sm text-center">
             게스트<br></br>선호
           </div>
-          <img src={crownright} />
+          <img src={crownright} className="basis-1/10" />
         </div>
         <div className="flex flex-col flex-1 items-center border-r border-r-gray-300">
           <div>{data.avgrating}</div>
@@ -58,7 +60,7 @@ const Info = ({ data }: InfoProps) => {
           <div className="text-xs underline">후기</div>
         </div>
       </div>
-      <div className="grid grid-cols-2 grid-rows-3 w-full h-[150px] pb-[30px] border-b border-b-gray-300">
+      <div className="grid grid-cols-2 grid-rows-3 w-full h-fit pb-[30px] border-b border-b-gray-300 gap-4">
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
           {matchingItem !== undefined ? (
             <>
@@ -120,7 +122,7 @@ const Info = ({ data }: InfoProps) => {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-start w-full h-[100px] py-4 px-8 border-b border-b-gray-300">
+      <div className="flex items-center justify-start w-full h-fit py-4 px-8 border-b border-b-gray-300">
         <div className="mr-5 bg-gray-300 p-4 rounded-full">
           <PhotoSizeSelectActualIcon className="text-white" />
         </div>
@@ -131,7 +133,7 @@ const Info = ({ data }: InfoProps) => {
           </div>
         </div>
       </div>
-      <div className="text-wrap px-4 py-8">{data.info}</div>
+      <div className="w-full h-fit text-wrap px-4 py-8">{data.info}</div>
     </div>
   );
 };
