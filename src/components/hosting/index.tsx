@@ -1,34 +1,25 @@
-// components/hosting/HostingForm.tsx
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import LogoIcon from '@/components/common/LogoIcon';
+import { RoomType } from '@/types/room';
 
-import { createHosting } from '../../api/hosting';
 import AccommodationType from './AccommodationType';
 import AddressInput from './AddressInput';
-// import ImageUpload from './ImageUpload';
 
 type Address = {
-  sido: string; // 시/도
-  sigungu: string; // 시/군/구
-  street: string; // 도로명 주소
-  detail: string; // 상세 주소
+  sido: string;
+  sigungu: string;
+  street: string;
+  detail: string;
 };
 
-// type ImageFile = {
-// file: File;
-// preview: string;
-// isCover: boolean;
-// }
-
 export default function HostingForm() {
-  const [type, setType] = useState('');
+  const [type, setType] = useState<RoomType | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [price, setPrice] = useState('');
-  //   const [images, setImages] = useState<ImageFile[]>([]);
-  const [maxOccupancy, setMaxOccupancy] = useState<string>('');
+  const [maxOccupancy, setMaxOccupancy] = useState('');
   const [address, setAddress] = useState<Address>({
     sido: '',
     sigungu: '',
@@ -37,7 +28,6 @@ export default function HostingForm() {
   });
 
   const navigate = useNavigate();
-
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,27 +36,61 @@ export default function HostingForm() {
       setIsLoading(true);
       setError(null);
 
-      const responseData = await createHosting({
-        type,
-        address,
-        // images,
-        name,
-        description,
-        price,
-        maxOccupancy,
+      const token = localStorage.getItem('token');
+      if (token == null) {
+        throw new Error('로그인이 필요합니다.');
+      }
+
+      // 입력값 검증
+      if (
+        type == null ||
+        name === '' ||
+        description === '' ||
+        price === '' ||
+        maxOccupancy === '' ||
+        address.sido === '' ||
+        address.sigungu === '' ||
+        address.street === '' ||
+        address.detail === ''
+      ) {
+        throw new Error('모든 필드를 입력해주세요.');
+      }
+
+      const response = await fetch('/api/v1/rooms', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          name,
+          description,
+          type,
+          address,
+          roomDetails: {
+            wifi: true,
+            selfCheckin: true,
+            luggage: true,
+            tv: true,
+            bedroom: 1,
+            bathroom: 1,
+            bed: 1,
+          },
+          price: Number(price),
+          maxOccupancy: Number(maxOccupancy),
+        }),
       });
 
-      if (responseData.id !== '') {
-        // 성공 처리
-        console.error('숙소 등록 성공');
-        setIsLoading(false);
-        // 여기서 다른 페이지로 이동하거나 성공 메시지를 표시할 수 있습니다
+      if (!response.ok) {
+        throw new Error('숙소 등록에 실패했습니다.');
       }
+
+      await response.json();
+      alert('숙소가 성공적으로 등록되었습니다!');
+      void navigate('/');
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : '오류가 발생했습니다.';
+      const errorMessage = err instanceof Error ? err.message : '오류가 발생했습니다.';
       setError(errorMessage);
-      console.error('숙소 등록 실패:', err);
     } finally {
       setIsLoading(false);
     }
@@ -101,13 +125,6 @@ export default function HostingForm() {
             <label className="block text-lg font-medium mb-3">위치</label>
             <AddressInput onAddressChange={setAddress} />
           </div>
-
-          {/* <div className="mb-8">
-              <label className="block text-lg font-medium mb-3">
-                  숙소 사진
-              </label>
-              <ImageUpload onImagesChange={setImages} />
-          </div> */}
 
           {/* 숙소 이름 입력 */}
           <div className="mb-6">
