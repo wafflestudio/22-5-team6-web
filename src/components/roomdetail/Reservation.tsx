@@ -23,7 +23,7 @@ const Reservation = ({ data }: InfoProps) => {
       return;
     }
     const token =
-      'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3MzYzOTcxODgsImV4cCI6MTczNjQ4MzU4OH0.AqocOzrkeh_dEWr3H8fjQTSJZM_q52AHD5FDh-nw7xlTqiDGUldzERT9k_58eudyaANAdB9lfaM_HD4YdAbv6A';
+      'yJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3MzY0MjI1NjksImV4cCI6MTczNjUwODk2OX0.cFzAyM2pdQ3WXZqAp05J3Uhdk4tGIlrkVTUpR-pSnDw3UxeKnrH9AS98xn1SEpBFGh0mf_00UHvvEUoEkCbpSQ';
     const reservationData = {
       roomId: data.id,
       startDate: checkIn.toISOString().split('T')[0],
@@ -42,6 +42,7 @@ const Reservation = ({ data }: InfoProps) => {
           },
         },
       );
+      console.debug('응답 데이터:', response.data);
 
       if (response.status === 200) {
         alert('예약이 성공적으로 완료되었습니다!');

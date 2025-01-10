@@ -9,6 +9,7 @@ import gallery from '@/components/common/gallery.svg';
 import Topbar from '@/components/home/Topbar';
 import Info from '@/components/roomdetail/Info';
 import Reservation from '@/components/roomdetail/Reservation';
+import ShareModal from '@/components/roomdetail/ShareModal';
 import { mockRoom } from '@/mock/mockRoom';
 import type { roomType } from '@/types/roomType';
 
@@ -16,9 +17,10 @@ export const Roomdetail = () => {
   const [data, setData] = useState<roomType>(mockRoom); // 서버 응답 데이터를 저장
   const [error, setError] = useState<string | null>(null); // 에러 메시지 저장
   const [isLoading, setIsLoading] = useState<boolean>(true); // API 호출 상태 저장
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const { id } = useParams<{ id?: string }>();
   const token =
-    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3MzYzOTcxODgsImV4cCI6MTczNjQ4MzU4OH0.AqocOzrkeh_dEWr3H8fjQTSJZM_q52AHD5FDh-nw7xlTqiDGUldzERT9k_58eudyaANAdB9lfaM_HD4YdAbv6A';
+    'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJzdHJpbmciLCJpYXQiOjE3MzY0MTU4MzMsImV4cCI6MTczNjUwMjIzM30.QaxGhTrFspUrk4BrfemB9gaDL3DlYVvAMjSRzWW_-PMkNi9ifjakW54hyXkPy9WS7tMtqueukJ2ciQPrejyAzQ';
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -55,7 +57,12 @@ export const Roomdetail = () => {
         <div className="flex w-full items-end justify-between py-4">
           <div className="text-2xl font-normal">{data.name}</div>
           <div className="flex space-x-[13px]">
-            <div className="flex items-center space-x-[5px] px-2 py-1 rounded-md hover:bg-[#F7F7F7] cursor-pointer">
+            <div
+              className="flex items-center space-x-[5px] px-2 py-1 rounded-md hover:bg-[#F7F7F7] cursor-pointer"
+              onClick={() => {
+                setIsModalOpen(true);
+              }}
+            >
               <IosShareIcon style={{ width: 15, height: 15 }} />
               <div className="text-sm underline">공유하기</div>
             </div>
@@ -115,6 +122,13 @@ export const Roomdetail = () => {
         <p>서버 응답: ${data.id}</p>
       ) : (
         <p>데이터가 없습니다.</p>
+      )}
+      {isModalOpen && (
+        <ShareModal
+          onClose={() => {
+            setIsModalOpen(false);
+          }}
+        />
       )}
     </div>
   );
