@@ -19,11 +19,11 @@ const Info = ({ data }: InfoProps) => {
   const matchingItem = ACCOMMODATION_TYPES.find(
     (item) => item.label === data.type2,
   );
-  const issuperhost = data.superhost;
-  const isluggage = data.luggage;
-  const ischeckin = data.selfcheckin;
-  const iswifi = data.wifi;
-  const istv = data.tv;
+  const issuperhost = data.isSuperhost;
+  const isluggage = data.isLuggage;
+  const ischeckin = data.isSelfcheckin;
+  const iswifi = data.isWifi;
+  const istv = data.isTv;
   return (
     <div className="flex flex-col items-start w-full h-fit mt-8 pr-8">
       <div className="w-full overflow-hidden text-xl break-words">
