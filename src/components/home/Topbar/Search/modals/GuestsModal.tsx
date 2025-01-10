@@ -51,7 +51,7 @@ const GuestsModal = ({ onClose }: GuestsModalProps) => {
         </div>
       </div>
 
-      <div className="flex items-center mt-6 pt-4 border-t">
+      <div className="flex items-center mt-6 pt-4 border-t gap-8">
         <button onClick={onClose} className="text-base underline font-medium">
           취소
         </button>
