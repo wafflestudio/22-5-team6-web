@@ -3,9 +3,14 @@ import { createContext, useContext, useState } from 'react';
 
 type ModalType = 'location' | 'calendar' | 'guests' | null;
 
-interface SearchContextType {
-  location: string;
-  setLocation: (location: string) => void;
+type Location = {
+  sido: string;
+  sigungu?: string;
+};
+
+type SearchContextType = {
+  location: Location;
+  setLocation: (location: Location) => void;
   checkIn: Date | null;
   setCheckIn: (date: Date | null) => void;
   checkOut: Date | null;
@@ -16,12 +21,12 @@ interface SearchContextType {
   currentModal: ModalType;
   openModal: (modal: ModalType) => void;
   closeModal: () => void;
-}
+};
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
 
 export function SearchProvider({ children }: { children: ReactNode }) {
-  const [location, setLocation] = useState('');
+  const [location, setLocation] = useState<Location>({ sido: '' });
   const [checkIn, setCheckIn] = useState<Date | null>(null);
   const [checkOut, setCheckOut] = useState<Date | null>(null);
   const [guests, setGuests] = useState(0);

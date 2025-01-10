@@ -1,7 +1,7 @@
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import StarIcon from '@mui/icons-material/Star';
 
-import { filterItems } from '@/components/home/FilterBar/index';
+import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
 import checkin from '@/components/roomdetail/checkin.svg';
 import crownleft from '@/components/roomdetail/crownleft.svg';
 import crownright from '@/components/roomdetail/crownright.svg';
@@ -16,12 +16,14 @@ interface InfoProps {
 }
 
 const Info = ({ data }: InfoProps) => {
-  const matchingItem = filterItems.find((item) => item.label === data.type2);
-  const issuperhost = data.isSuperhost;
-  const isluggage = data.isLuggage;
-  const ischeckin = data.isSelfcheckin;
-  const iswifi = data.isWifi;
-  const istv = data.isTv;
+  const matchingItem = ACCOMMODATION_TYPES.find(
+    (item) => item.label === data.type2,
+  );
+  const issuperhost = data.superhost;
+  const isluggage = data.luggage;
+  const ischeckin = data.selfcheckin;
+  const iswifi = data.wifi;
+  const istv = data.tv;
   return (
     <div className="flex flex-col items-start w-full h-fit mt-8 pr-8">
       <div className="w-full overflow-hidden text-xl break-words">
