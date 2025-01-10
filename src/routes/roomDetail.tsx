@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Shareheart } from '@/components/roomdetail/shareheart';
-
+import PhotoModal from '@/components/roomdetail/PhotoModal'
 import gallery from '@/components/common/gallery.svg';
 import Topbar from '@/components/home/Topbar';
 import Info from '@/components/roomdetail/Info';
@@ -11,7 +11,7 @@ import Reservation from '@/components/roomdetail/Reservation';
 
 import { mockRoom } from '@/mock/mockRoom';
 import type { roomType } from '@/types/roomType';
-import PhotoModal from '@/components/roomdetail/PhotoModal';
+
 
 export const Roomdetail = () => {
   const [data, setData] = useState<roomType>(mockRoom); // 서버 응답 데이터를 저장
@@ -83,10 +83,11 @@ export const Roomdetail = () => {
             <PhotoSizeSelectActualIcon
               style={{ width: '50%', height: '50%', color: 'white' }}
             />
-            <button className="absolute bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit"
-              onClick={() => {
-                setIsPhotoOpen(true);
-              }}>
+            <button
+              onClick={() =>
+                setIsPhotoOpen(true)
+              }
+              className="absolute bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit">
               <img src={gallery} className="w-[15px] h-[15px] snap-center" />
               <div className="text-black text-sm text-center">
                 사진 모두 보기
