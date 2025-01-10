@@ -7,8 +7,19 @@ export const ApiTest = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      const token = localStorage.getItem('token');
+      if (token === null || (typeof token === 'string' && token === '')) {
+        setError('로그인되지 않았습니다.');
+        return;
+      }
+
       try {
-        const response = await axios.get<string>('/api/v1/ping'); // 프록시를 통한 요청
+        const response = await axios.get<string>('/api/v1/ping', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          validateStatus: (status) => status < 400,
+        }); // 프록시를 통한 요청
         setText(response.data); // 성공적으로 데이터를 가져온 경우
         setError(null); // 에러 초기화
       } catch (err: unknown) {
