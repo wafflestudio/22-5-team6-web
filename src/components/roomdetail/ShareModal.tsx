@@ -20,7 +20,9 @@ const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
     const currentLink = window.location.href;
     void navigator.clipboard.writeText(currentLink).then(() => {
       setCopied(true);
-      setTimeout(() => { setCopied(false); }, 3000); // 3초 후 알림 숨기기
+      setTimeout(() => {
+        setCopied(false);
+      }, 3000); // 3초 후 알림 숨기기
     });
   };
 
@@ -62,8 +64,10 @@ const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
 
           {/* Share Buttons */}
           <div className="grid grid-cols-3 gap-4 mt-6">
-            <button className="flex justify-start gap-4 items-center p-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-100"
-              onClick={handleCopyLink}>
+            <button
+              className="flex justify-start gap-4 items-center p-3 bg-white border border-gray-300 rounded-lg hover:bg-gray-100"
+              onClick={handleCopyLink}
+            >
               <LinkIcon className="text-gray-700 w-6 h-6" />
               <span className="text-sm">링크 복사</span>
             </button>

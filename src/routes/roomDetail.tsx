@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Shareheart } from '@/components/roomdetail/shareheart';
-import PhotoModal from '@/components/roomdetail/PhotoModal'
+import PhotoModal from '@/components/roomdetail/PhotoModal';
 import gallery from '@/components/common/gallery.svg';
 import Topbar from '@/components/home/Topbar';
 import Info from '@/components/roomdetail/Info';
@@ -12,7 +12,6 @@ import Reservation from '@/components/roomdetail/Reservation';
 import { mockRoom } from '@/mock/mockRoom';
 import type { roomType } from '@/types/roomType';
 
-
 export const Roomdetail = () => {
   const [data, setData] = useState<roomType>(mockRoom); // 서버 응답 데이터를 저장
   const [error, setError] = useState<string | null>(null); // 에러 메시지 저장
@@ -20,7 +19,7 @@ export const Roomdetail = () => {
   const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
   const { id } = useParams<{ id?: string }>();
   const token = localStorage.getItem('token') as string;
-  console.debug(token)
+  console.debug(token);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -84,10 +83,9 @@ export const Roomdetail = () => {
               style={{ width: '50%', height: '50%', color: 'white' }}
             />
             <button
-              onClick={() =>
-                setIsPhotoOpen(true)
-              }
-              className="absolute bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit">
+              onClick={() => setIsPhotoOpen(true)}
+              className="absolute bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit"
+            >
               <img src={gallery} className="w-[15px] h-[15px] snap-center" />
               <div className="text-black text-sm text-center">
                 사진 모두 보기
@@ -120,7 +118,6 @@ export const Roomdetail = () => {
           }}
         />
       )}
-
     </div>
   );
 };

@@ -1,7 +1,7 @@
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import IosShareIcon from '@mui/icons-material/IosShare';
 import ShareModal from '@/components/roomdetail/ShareModal';
-import { useState } from 'react'
+import { useState } from 'react';
 
 export const Shareheart = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
@@ -28,6 +28,5 @@ export const Shareheart = () => {
         />
       )}
     </div>
-  )
-}
-
+  );
+};
