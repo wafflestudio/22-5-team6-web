@@ -16,7 +16,7 @@ const rootElement = document.getElementById('root');
 if (rootElement === null) throw new Error('Root element not found');
 
 // Material-UI 테마 생성 및 Portal 컨테이너 설정
-const theme: Theme = createTheme({ 
+const theme: Theme = createTheme({
   components: {
     MuiPopover: {
       defaultProps: {

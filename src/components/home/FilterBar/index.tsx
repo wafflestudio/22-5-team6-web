@@ -11,7 +11,7 @@ type FilterBarProps = {
   onPriceFilterChange?: (priceRange: { min: number; max: number }) => void;
 };
 
-export const FilterBar = ({ onTypeSelect, onPriceFilterChange }: FilterBarProps) => {
+const FilterBar = ({ onTypeSelect, onPriceFilterChange }: FilterBarProps) => {
   const [selectedType, setSelectedType] = useState<string>('');
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
