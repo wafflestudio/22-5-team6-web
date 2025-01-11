@@ -7,6 +7,7 @@ import Home from '@/routes/Home';
 import Hosting from '@/routes/Hosting';
 import Redirect from '@/routes/Redirect';
 
+import Profile from './routes/Profile';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {
@@ -20,6 +21,7 @@ export const App = () => {
           <Route path="/tests" element={<ApiTest />} />
           <Route path="/redirect" element={<Redirect />} />
           <Route path="/hosting" element={<Hosting />} />
+          <Route path="/profile" element={<Profile />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </SearchProvider>
