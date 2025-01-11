@@ -22,19 +22,21 @@ const PhotoModal = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex justify-center items-center">
       {/* 배경 클릭 시 닫힘 */}
-      <div
-        className="absolute inset-0"
-        onClick={onClose}
-      ></div>
+      <div className="absolute inset-0" onClick={onClose}></div>
 
       {/* 모달 콘텐츠 */}
       <div className="relative bg-white w-[90%] max-h-[90%] overflow-y-auto shadow-lg z-60">
         {/* 헤더 */}
         <div className="flex bg-white justify-between items-center p-4 mb-4 sticky top-0">
           <div className="flex-1">
-            <ChevronLeftIcon className="w-8 h-8 cursor-pointer" onClick={onClose} />
+            <ChevronLeftIcon
+              className="w-8 h-8 cursor-pointer"
+              onClick={onClose}
+            />
           </div>
-          <h2 className="flex-1 text-2xl font-semibold text-center">사진 투어</h2>
+          <h2 className="flex-1 text-2xl font-semibold text-center">
+            사진 투어
+          </h2>
           <div className="flex-1 flex justify-end">
             <Shareheart />
           </div>
@@ -62,11 +64,12 @@ const PhotoModal = ({ onClose }: { onClose: () => void }) => {
               key={index}
               className="flex items-start space-y-2 gap-2 cursor-pointer"
             >
-              <span className="text-sm flex-[30%] w-fit text-gray-700">{photo.title}</span>
+              <span className="text-sm flex-[30%] w-fit text-gray-700">
+                {photo.title}
+              </span>
               <div className="flex-[70%] w-fit h-[500px] bg-gray-300 text-white flex items-center justify-center rounded-sm shadow-md">
                 {photo.icon}
               </div>
-
             </div>
           ))}
         </div>

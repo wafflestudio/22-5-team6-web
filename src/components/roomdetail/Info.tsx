@@ -26,7 +26,7 @@ const Info = ({ data }: InfoProps) => {
   const ischeckin = data.selfcheckin;
   const iswifi = data.wifi;
   const istv = data.tv;
-  const [isReviewOpen, setIsReviewOpen] = useState<boolean>(false)
+  const [isReviewOpen, setIsReviewOpen] = useState<boolean>(false);
   return (
     <div className="flex flex-col items-start w-full h-fit mt-8 pr-8">
       <div className="w-full overflow-hidden text-xl break-words">
@@ -64,7 +64,10 @@ const Info = ({ data }: InfoProps) => {
             onClick={() => {
               setIsReviewOpen(true);
             }}
-            className="text-xs underline cursor-pointer">후기</div>
+            className="text-xs underline cursor-pointer"
+          >
+            후기
+          </div>
         </div>
       </div>
       <div className="grid grid-cols-2 grid-rows-3 w-full h-fit pb-[30px] border-b border-b-gray-300 gap-4">
