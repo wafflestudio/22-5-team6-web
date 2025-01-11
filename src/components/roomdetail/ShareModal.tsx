@@ -79,7 +79,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
               <span className="text-sm">링크 복사</span>
             </button>
             {copied && (
-              <div className="absolute top-[-50px] mt-2 p-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg">
+              <div className="fixed top-[80px] mt-2 p-2 bg-gray-800 text-white text-xs rounded-lg shadow-lg">
                 링크가 복사되었습니다!
               </div>
             )}
