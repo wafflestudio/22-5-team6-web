@@ -17,6 +17,7 @@ export const Roomdetail = () => {
   const [error, setError] = useState<string | null>(null); // 에러 메시지 저장
   const [isLoading, setIsLoading] = useState<boolean>(true); // API 호출 상태 저장
   const [isPhotoOpen, setIsPhotoOpen] = useState<boolean>(false);
+
   const { id } = useParams<{ id: string }>();
   const token = localStorage.getItem('token') as string;
   console.debug(token);
@@ -97,10 +98,10 @@ export const Roomdetail = () => {
           </div>
         </div>
         <div className="flex items-start w-full h-fit">
-          <div className="flex-1">
+          <div className="flex-[70%]">
             <Info data={data} />
           </div>
-          <div className="flex-2">
+          <div className="flex-[30%]">
             <Reservation data={data} />
           </div>
         </div>

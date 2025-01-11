@@ -110,7 +110,7 @@ export const mockRoom = {
   bedroom: 1,
   bathroom: 1,
   bed: 1,
-  avgrating: 4.78,
+  avgrating: 4.92,
   reviewcount: 22,
   createdAt: '2025-01-07T01:36:35.231Z',
   updatedAt: '2025-01-07T01:36:35.231Z',
