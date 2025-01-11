@@ -1,17 +1,17 @@
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import StarIcon from '@mui/icons-material/Star';
-import ReviewModal from '@/components/roomdetail/ReviewModal';
+import { useState } from 'react';
 
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
 import checkin from '@/components/roomdetail/checkin.svg';
 import crownleft from '@/components/roomdetail/crownleft.svg';
 import crownright from '@/components/roomdetail/crownright.svg';
 import luggage from '@/components/roomdetail/luggage.svg';
+import ReviewModal from '@/components/roomdetail/ReviewModal';
 import superhost from '@/components/roomdetail/superhost.svg';
 import tv from '@/components/roomdetail/tv.svg';
 import wifi from '@/components/roomdetail/wifi.svg';
 import type { roomType } from '@/types/roomType';
-import { useState } from 'react';
 
 interface InfoProps {
   data: roomType;

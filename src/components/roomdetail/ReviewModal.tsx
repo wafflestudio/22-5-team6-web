@@ -1,10 +1,12 @@
-import CloseIcon from '@mui/icons-material/Close';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import clean from '@/components/roomdetail/clean.svg';
+import CloseIcon from '@mui/icons-material/Close';
+import { useEffect } from 'react';
+
 import accuracy from '@/components/roomdetail/accuracy.svg';
 import checkin from '@/components/roomdetail/checkin.svg';
-import { useEffect } from 'react';
+import clean from '@/components/roomdetail/clean.svg';
 import type { reviewType } from '@/types/reviewType';
+
 const ReviewModal = ({ onClose }: { onClose: () => void }) => {
   const reviews: reviewType[] = [
     {
@@ -81,7 +83,7 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
                   <span className="text-xs font-bold w-4">{rating}</span>
                   <div className="flex-1 h-1 bg-gray-200 mx-2">
                     <div
-                      className={`h-1 bg-black rounded-lg`}
+                      className="h-1 bg-black rounded-lg"
                       style={{ width: `${rating * 20}%` }}
                     ></div>
                   </div>
@@ -123,7 +125,7 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
               >
                 <div className="flex items-center">
                   <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
-                    {review.name?.charAt(0) ?? '?'}
+                    {review.name !== '' && review.name.charAt(0)}
                   </div>
                   <div className="ml-3">
                     <h5 className="font-medium">{review.name}</h5>
@@ -131,7 +133,7 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
                   </div>
                 </div>
                 <p className="mt-2 text-sm">{review.content}</p>
-                {review.hostReply && (
+                {review.hostReply !== '' && (
                   <div className="mt-2 ml-4 border-l-2 border-gray-300 pl-2 text-xs text-gray-600">
                     {review.hostReply}
                   </div>
