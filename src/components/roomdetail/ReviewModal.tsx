@@ -39,10 +39,10 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
       {/* 배경 클릭 시 닫힘 */}
-      <div className="inset-0 bg-black bg-opacity-50" onClick={onClose}></div>
+      <div className="absolute inset-0" onClick={onClose}></div>
 
       {/* 모달 내용 */}
-      <div className="flex flex-col bg-white rounded-lg shadow-lg w-[70%] h-[80%] p-6 z-60">
+      <div className="relative flex flex-col bg-white rounded-lg shadow-lg w-[70%] h-[80%] p-6 z-60">
         {/* 헤더 */}
         <CloseIcon
           className="cursor-pointer rounded-full hover:bg-gray-100"
