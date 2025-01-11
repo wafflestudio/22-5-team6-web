@@ -16,11 +16,11 @@ type Address = {
 };
 
 type Price = {
-    perNight: string;
-    cleaningFee: string;
-    charge: string;
-    total: string;
-  };
+  perNight: string;
+  cleaningFee: string;
+  charge: string;
+  total: string;
+};
 
 export default function HostingForm() {
   const [type, setType] = useState<RoomType | null>(null);
@@ -38,9 +38,7 @@ export default function HostingForm() {
     cleaningFee: '',
     charge: '',
     total: '',
-  }
-
-  )
+  });
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -68,13 +66,13 @@ export default function HostingForm() {
         address.detail === ''
       ) {
         throw new Error('모든 필드를 입력해주세요.');
-      }      
+      }
 
       const response = await fetch('/api/v1/rooms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: name,
@@ -104,16 +102,16 @@ export default function HostingForm() {
           maxOccupancy: Number(maxOccupancy),
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('숙소 등록에 실패했습니다.');
       }
       const responseData = (await response.json()) as RoomApiResponse;
       alert(`숙소가 성공적으로 등록되었습니다! ID: ${responseData.id}`);
       void navigate('/');
-
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : '오류가 발생했습니다.';
+      const errorMessage =
+        err instanceof Error ? err.message : '오류가 발생했습니다.';
       setError(errorMessage);
     } finally {
       setIsLoading(false);
@@ -196,7 +194,10 @@ export default function HostingForm() {
                 type="number"
                 value={price.perNight}
                 onChange={(e) => {
-                  setPrice((prevPrice) => ({ ...prevPrice, perNight: e.target.value }));
+                  setPrice((prevPrice) => ({
+                    ...prevPrice,
+                    perNight: e.target.value,
+                  }));
                 }}
                 placeholder="1박 요금을 입력해주세요"
                 min="0"
