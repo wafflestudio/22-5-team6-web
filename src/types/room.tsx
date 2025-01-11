@@ -20,16 +20,32 @@ export enum RoomType {
     hostId: number;
     name: string;
     description: string;
-    type: RoomType;  // enum 사용
+    type: RoomType
     address: {
       sido: string;
       sigungu: string;
       street: string;
       detail: string;
     };
-    price: number;
+    roomDetails: {
+      wifi: boolean;
+      selfCheckin: boolean;
+      luggage: boolean;
+      bedroom: number;
+      bathroom: number;
+      bed: number;
+      tv: boolean;
+    };
+    price: {
+      perNight: number;
+      cleaningFee: number;
+      charge: number;
+      total: number;
+    };
     maxOccupancy: number;
     rating: number;
+    reviewCount: number;
+    isSuperhost: boolean;
     createdAt: string;
     updatedAt: string;
-  };
+  }

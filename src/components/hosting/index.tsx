@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import LogoIcon from '@/components/common/LogoIcon';
+import type { RoomApiResponse } from '@/types/room';
 import { RoomType } from '@/types/room';
 
 import AccommodationType from './AccommodationType';
@@ -14,11 +15,17 @@ type Address = {
   detail: string;
 };
 
+type Price = {
+    perNight: string;
+    cleaningFee: string;
+    charge: string;
+    total: string;
+  };
+
 export default function HostingForm() {
   const [type, setType] = useState<RoomType | null>(null);
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
-  const [price, setPrice] = useState('');
   const [maxOccupancy, setMaxOccupancy] = useState('');
   const [address, setAddress] = useState<Address>({
     sido: '',
@@ -26,6 +33,14 @@ export default function HostingForm() {
     street: '',
     detail: '',
   });
+  const [price, setPrice] = useState<Price>({
+    perNight: '',
+    cleaningFee: '',
+    charge: '',
+    total: '',
+  }
+
+  )
 
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
@@ -41,12 +56,11 @@ export default function HostingForm() {
         throw new Error('로그인이 필요합니다.');
       }
 
-      // 입력값 검증
       if (
         type == null ||
         name === '' ||
         description === '' ||
-        price === '' ||
+        price.perNight === '' ||
         maxOccupancy === '' ||
         address.sido === '' ||
         address.sigungu === '' ||
@@ -54,40 +68,50 @@ export default function HostingForm() {
         address.detail === ''
       ) {
         throw new Error('모든 필드를 입력해주세요.');
-      }
+      }      
 
       const response = await fetch('/api/v1/rooms', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
+          'Authorization': `Bearer ${token}`,
         },
         body: JSON.stringify({
-          name,
-          description,
-          type,
-          address,
+          name: name,
+          description: description,
+          type: type,
+          address: {
+            sido: address.sido,
+            sigungu: address.sigungu,
+            street: address.street,
+            detail: address.detail,
+          },
           roomDetails: {
             wifi: true,
             selfCheckin: true,
             luggage: true,
-            tv: true,
+            TV: true,
             bedroom: 1,
             bathroom: 1,
             bed: 1,
           },
-          price: Number(price),
+          price: {
+            perNight: Number(price.perNight),
+            cleaningFee: Number(price.cleaningFee),
+            charge: Number(price.charge),
+            total: Number(price.total),
+          },
           maxOccupancy: Number(maxOccupancy),
         }),
       });
-
+      
       if (!response.ok) {
         throw new Error('숙소 등록에 실패했습니다.');
       }
-
-      await response.json();
-      alert('숙소가 성공적으로 등록되었습니다!');
+      const responseData = (await response.json()) as RoomApiResponse;
+      alert(`숙소가 성공적으로 등록되었습니다! ID: ${responseData.id}`);
       void navigate('/');
+
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : '오류가 발생했습니다.';
       setError(errorMessage);
@@ -170,9 +194,9 @@ export default function HostingForm() {
               </span>
               <input
                 type="number"
-                value={price}
+                value={price.perNight}
                 onChange={(e) => {
-                  setPrice(e.target.value);
+                  setPrice((prevPrice) => ({ ...prevPrice, perNight: e.target.value }));
                 }}
                 placeholder="1박 요금을 입력해주세요"
                 min="0"
