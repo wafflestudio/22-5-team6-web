@@ -1,5 +1,6 @@
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import StarIcon from '@mui/icons-material/Star';
+import ReviewModal from '@/components/roomdetail/ReviewModal';
 
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
 import checkin from '@/components/roomdetail/checkin.svg';
@@ -10,6 +11,7 @@ import superhost from '@/components/roomdetail/superhost.svg';
 import tv from '@/components/roomdetail/tv.svg';
 import wifi from '@/components/roomdetail/wifi.svg';
 import type { roomType } from '@/types/roomType';
+import { useState } from 'react';
 
 interface InfoProps {
   data: roomType;
@@ -24,6 +26,7 @@ const Info = ({ data }: InfoProps) => {
   const ischeckin = data.selfcheckin;
   const iswifi = data.wifi;
   const istv = data.tv;
+  const [isReviewOpen, setIsReviewOpen] = useState<boolean>(false)
   return (
     <div className="flex flex-col items-start w-full h-fit mt-8 pr-8">
       <div className="w-full overflow-hidden text-xl break-words">
@@ -57,7 +60,11 @@ const Info = ({ data }: InfoProps) => {
         </div>
         <div className="text-center flex-1">
           <span className="font-semibold">{data.reviewcount}</span>개<br></br>
-          <div className="text-xs underline">후기</div>
+          <div
+            onClick={() => {
+              setIsReviewOpen(true);
+            }}
+            className="text-xs underline cursor-pointer">후기</div>
         </div>
       </div>
       <div className="grid grid-cols-2 grid-rows-3 w-full h-fit pb-[30px] border-b border-b-gray-300 gap-4">
@@ -134,6 +141,13 @@ const Info = ({ data }: InfoProps) => {
         </div>
       </div>
       <div className="w-full h-fit text-wrap px-4 py-8">{data.info}</div>
+      {isReviewOpen && (
+        <ReviewModal
+          onClose={() => {
+            setIsReviewOpen(false);
+          }}
+        />
+      )}
     </div>
   );
 };

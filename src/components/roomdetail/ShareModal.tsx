@@ -8,7 +8,7 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import SendIcon from '@mui/icons-material/Send';
 import TwitterIcon from '@mui/icons-material/Twitter';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 interface ShareModalProps {
   onClose: () => void; // 닫기 핸들러
@@ -26,6 +26,13 @@ const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
     });
   };
 
+  useEffect(() => {
+    document.body.style.overflow = 'hidden'; // 배경 스크롤 비활성화
+    return () => {
+      document.body.style.overflow = 'auto'; // 모달 닫힐 때 스크롤 복원
+    };
+  }, []);
+
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
       {/* 배경 클릭 시 닫힘 */}
@@ -35,7 +42,7 @@ const ShareModal: React.FC<ShareModalProps> = ({ onClose }) => {
       ></div>
 
       {/* 모달 내용 */}
-      <div className="relative bg-white rounded-lg shadow-lg w-[50%] h-fit p-6 z-60">
+      <div className="relative bg-white rounded-lg shadow-lg w-[50%] h-fit p-6 z-60 overflow-y-auto max-h-[80%]">
         {/* Header */}
         <div className="flex justify-between items-center border-b pb-4">
           <h2 className="text-lg font-semibold">숙소 공유하기</h2>
