@@ -19,7 +19,18 @@ module.exports = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hidden': {
+          'scrollbar-width': 'none' /* Firefox */,
+          '&::-webkit-scrollbar': {
+            display: 'none' /* Chrome, Safari */,
+          },
+        },
+      });
+    },
+  ],
   corePlugins: {
     preflight: true,
   },
