@@ -1,6 +1,6 @@
 // mock 데이터 작성에 참고한 페이지: https://www.airbnb.co.kr/rooms/32653933?adults=1&category_tag=Tag%3A8653&children=0&enable_m3_private_room=true&infants=0&pets=0&photo_id=856873117&search_mode=flex_destinations_search&check_in=2025-01-07&check_out=2025-01-12&source_impression_id=p3_1736210395_P3sFL0FCHv4elBOr&previous_page_section_name=1000&federated_search_id=77c3d440-96f7-4b58-b2d5-a90fba7cdf54
 export const mockRoom = {
-  id: 15,
+  id: 1,
   host: {
     id: 65,
     username: '성윤',
