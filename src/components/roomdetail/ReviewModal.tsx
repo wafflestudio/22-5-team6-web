@@ -1,6 +1,7 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CloseIcon from '@mui/icons-material/Close';
-import { useEffect } from 'react';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { useEffect, useState } from 'react';
 
 import accuracy from '@/components/roomdetail/accuracy.svg';
 import checkin from '@/components/roomdetail/checkin.svg';
@@ -35,6 +36,15 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
       document.body.style.overflow = 'auto'; // 모달 닫힐 때 스크롤 복원
     };
   }, []);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedOption, setSelectedOption] = useState('최신순');
+  const options = ['최신순', '높은 평점순', '낮은 평점순'];
+
+  const handleOptionClick = (option: string) => {
+    setSelectedOption(option); // 선택한 값을 버튼에 표시
+    setIsModalOpen(false); // 모달 닫기
+  };
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -118,6 +128,37 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
 
           {/* 오른쪽 후기 목록 */}
           <div className="flex-[65%] w-full h-full overflow-y-auto">
+            <div className="flex justify-between items-start">
+              <div className="text-xl ml-8 w-fit h-fit">
+                후기{' '}
+                <span className="font-bold w-fit h-fit">{reviews.length}</span>
+                개
+              </div>
+              <button
+                className="border border-gray-300 rounded-full py-2 px-3 w-fit h-fit text-sm text-center"
+                onClick={() => {
+                  setIsModalOpen(!isModalOpen);
+                }}
+              >
+                <KeyboardArrowDownIcon className="w-5 h-5 mr-2 text-center" />
+                {selectedOption}
+              </button>
+            </div>
+            {isModalOpen && (
+              <div className="absolute right-5 top-20 mt-2 w-40 bg-white border rounded-xl shadow-md">
+                {options.map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => {
+                      handleOptionClick(option);
+                    }}
+                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+            )}
             {reviews.map((review, index) => (
               <div
                 key={index}

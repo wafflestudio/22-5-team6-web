@@ -1,12 +1,13 @@
 import ErrorIcon from '@mui/icons-material/Error';
 import FlagIcon from '@mui/icons-material/Flag';
-import axios from 'axios';
+import { useState } from 'react';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
 import CalendarModal from '@/components/home/Topbar/Search/modals/CalendarModal';
 import GuestsModal from '@/components/home/Topbar/Search/modals/GuestsModal';
 import clock from '@/components/roomdetail/clock.svg';
+import type { roomReservationType } from '@/types/roomReservationType';
 import type { roomType } from '@/types/roomType';
 
 interface InfoProps {
@@ -14,41 +15,54 @@ interface InfoProps {
 }
 
 const Reservation = ({ data }: InfoProps) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const { checkIn, checkOut, guests, currentModal, openModal, closeModal } =
     useSearch();
 
   const handleReservation = async () => {
-    if (data.id === 0 || checkIn == null || checkOut == null || guests <= 0) {
-      alert('모든 정보를 입력해주세요.');
-      return;
-    }
-    const token = localStorage.getItem('token') as string;
-    const reservationData = {
-      roomId: data.id,
-      startDate: checkIn.toISOString().split('T')[0],
-      endDate: checkOut.toISOString().split('T')[0],
-      numberOfGuests: guests,
-    };
-    console.debug('전송할 데이터:', reservationData);
     try {
-      const response = await axios.post(
-        '/api/v1/reservations',
-        reservationData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`, // 필요한 경우 토큰을 추가
-            'Content-Type': 'application/json',
-          },
-        },
-      );
-      console.debug('응답 데이터:', response.data);
+      setIsLoading(true);
+      setError(null);
 
-      if (response.status === 200) {
-        alert('예약이 성공적으로 완료되었습니다!');
+      const token = localStorage.getItem('token');
+      if (token == null) {
+        throw new Error('로그인이 필요합니다.');
       }
-    } catch (error) {
-      console.error('예약 요청 실패:', error);
-      alert('예약 중 문제가 발생했습니다. 다시 시도해주세요.');
+
+      if (data.id === 0 || checkIn == null || checkOut == null || guests <= 0) {
+        throw new Error('모든 필드를 입력해주세요.');
+      }
+
+      const sendData = {
+        roomId: data.id,
+        startDate: checkIn.toISOString().split('T')[0],
+        endDate: checkOut.toISOString().split('T')[0],
+        numberOfGuests: guests,
+      };
+
+      const response = await fetch('/api/v1/reservations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(sendData),
+      });
+
+      console.debug(sendData);
+
+      if (!response.ok) {
+        throw new Error('숙소 등록에 실패했습니다.');
+      }
+      const responseData = (await response.json()) as roomReservationType;
+      alert(`숙소가 성공적으로 등록되었습니다! ID: ${responseData.roomId}`);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : '오류가 발생했습니다.';
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -110,8 +124,17 @@ const Reservation = ({ data }: InfoProps) => {
             <ErrorIcon className="mr-2" />
             선택하신 날짜는 이용이 불가능합니다.
           </div>
+
+          {/* 에러 메시지 표시 */}
+          {error != null && (
+            <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
+              {error}
+            </div>
+          )}
+
           <button
             className="w-full py-2 px-4 bg-[#D70466] text-white rounded-lg hover:bg-[#E31C5F] cursor-pointer"
+            disabled={isLoading}
             onClick={() => {
               void handleReservation();
             }}
