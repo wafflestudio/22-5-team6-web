@@ -3,15 +3,18 @@ import StarIcon from '@mui/icons-material/Star';
 import { useState } from 'react';
 
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
-import checkin from '@/components/roomdetail/checkin.svg';
 import crownleft from '@/components/roomdetail/crownleft.svg';
 import crownright from '@/components/roomdetail/crownright.svg';
-import luggage from '@/components/roomdetail/luggage.svg';
 import ReviewModal from '@/components/roomdetail/ReviewModal';
 import superhost from '@/components/roomdetail/superhost.svg';
-import tv from '@/components/roomdetail/tv.svg';
-import wifi from '@/components/roomdetail/wifi.svg';
 import type { roomType } from '@/types/roomType';
+
+import {
+  CheckinIcon,
+  LuggageIcon,
+  TvIcon,
+  WifiIcon,
+} from '../common/constants/icons';
 
 interface InfoProps {
   data: roomType;
@@ -99,7 +102,7 @@ const Info = ({ data }: InfoProps) => {
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
           <img
-            src={luggage}
+            src={LuggageIcon}
             className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
           />
           <div className="opacity-60 text-sm">
@@ -108,7 +111,7 @@ const Info = ({ data }: InfoProps) => {
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
           <img
-            src={checkin}
+            src={CheckinIcon}
             className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
           />
           <div className="opacity-60 text-sm">
@@ -117,14 +120,14 @@ const Info = ({ data }: InfoProps) => {
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
           <img
-            src={tv}
+            src={TvIcon}
             className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
           />
           <div className="opacity-60 text-sm">{istv ? 'TV' : 'TV 없음'}</div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
           <img
-            src={wifi}
+            src={WifiIcon}
             className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
           />
           <div className="opacity-60 text-sm">

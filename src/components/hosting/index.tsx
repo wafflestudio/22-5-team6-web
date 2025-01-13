@@ -1,26 +1,19 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import LogoIcon from '@/components/common/LogoIcon';
-import type { RoomApiResponse } from '@/types/room';
-import { RoomType } from '@/types/room';
+import { LogoIcon } from '@/components/common/constants/Logo';
+import type {
+  Address,
+  Price,
+  RoomApiResponse,
+  RoomDetails,
+  RoomType,
+} from '@/types/room';
 
 import AccommodationType from './AccommodationType';
 import AddressInput from './AddressInput';
-
-type Address = {
-  sido: string;
-  sigungu: string;
-  street: string;
-  detail: string;
-};
-
-type Price = {
-  perNight: string;
-  cleaningFee: string;
-  charge: string;
-  total: string;
-};
+import PriceInput from './PriceInput';
+import RoomDetailsInput from './RoomDetailsInput';
 
 export default function HostingForm() {
   const [type, setType] = useState<RoomType | null>(null);
@@ -38,6 +31,15 @@ export default function HostingForm() {
     cleaningFee: '',
     charge: '',
     total: '',
+  });
+  const [roomDetails, setRoomDetails] = useState<RoomDetails>({
+    wifi: false,
+    selfCheckin: false,
+    luggage: false,
+    TV: false,
+    bedroom: '',
+    bathroom: '',
+    bed: '',
   });
 
   const navigate = useNavigate();
@@ -63,7 +65,10 @@ export default function HostingForm() {
         address.sido === '' ||
         address.sigungu === '' ||
         address.street === '' ||
-        address.detail === ''
+        address.detail === '' ||
+        roomDetails.bedroom === '' ||
+        roomDetails.bathroom === '' ||
+        roomDetails.bed === ''
       ) {
         throw new Error('모든 필드를 입력해주세요.');
       }
@@ -85,13 +90,13 @@ export default function HostingForm() {
             detail: address.detail,
           },
           roomDetails: {
-            wifi: true,
-            selfCheckin: true,
-            luggage: true,
-            TV: true,
-            bedroom: 1,
-            bathroom: 1,
-            bed: 1,
+            wifi: roomDetails.wifi,
+            selfCheckin: roomDetails.selfCheckin,
+            luggage: roomDetails.luggage,
+            TV: roomDetails.TV,
+            bedroom: Number(roomDetails.bedroom),
+            bathroom: Number(roomDetails.bathroom),
+            bed: Number(roomDetails.bed),
           },
           price: {
             perNight: Number(price.perNight),
@@ -183,27 +188,19 @@ export default function HostingForm() {
             </div>
           </div>
 
+          {/* 숙소 시설*/}
+          <div className="mb-8">
+            <label className="block text-lg font-medium mb-2">숙소 시설</label>
+            <RoomDetailsInput
+              details={roomDetails}
+              onDetailsChange={setRoomDetails}
+            />
+          </div>
+
           {/* 요금 설정 */}
           <div className="mb-8">
-            <label className="block text-lg font-medium mb-2">1박 요금</label>
-            <div className="relative">
-              <span className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
-                ₩
-              </span>
-              <input
-                type="number"
-                value={price.perNight}
-                onChange={(e) => {
-                  setPrice((prevPrice) => ({
-                    ...prevPrice,
-                    perNight: e.target.value,
-                  }));
-                }}
-                placeholder="1박 요금을 입력해주세요"
-                min="0"
-                className="w-full pl-8 pr-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-airbnb focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-              />
-            </div>
+            <label className="block text-lg font-medium mb-3">요금 설정</label>
+            <PriceInput price={price} onPriceChange={setPrice} />
           </div>
 
           {/* 최대 수용 인원 설정 */}
