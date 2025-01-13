@@ -6,8 +6,8 @@ import { Menu, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import LogoIcon from '@/components/common/LogoIcon';
-import LogoText from '@/components/common/LogoText';
+import LogoIcon from '@/components/common/constants/Logo/LogoIcon';
+import LogoText from '@/components/common/constants/Logo/LogoText';
 import Dropdown from '@/components/home/Topbar/Menu/DropDown';
 import LoginModal from '@/components/home/Topbar/Menu/LoginModal';
 import SignupModal from '@/components/home/Topbar/Menu/RegisterModal';

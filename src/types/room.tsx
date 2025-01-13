@@ -33,3 +33,27 @@ export type RoomApiResponse = {
   createdAt: string;
   updatedAt: string;
 };
+
+export type RoomDetails = {
+  wifi: boolean;
+  selfCheckin: boolean;
+  luggage: boolean;
+  TV: boolean;
+  bedroom: string;
+  bathroom: string;
+  bed: string;
+};
+
+export type Address = {
+  sido: string;
+  sigungu: string;
+  street: string;
+  detail: string;
+};
+
+export type Price = {
+  perNight: string;
+  cleaningFee: string;
+  charge: string;
+  total: string;
+};
