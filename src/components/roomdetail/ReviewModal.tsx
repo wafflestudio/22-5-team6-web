@@ -3,8 +3,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useEffect, useState } from 'react';
 
+import { CheckinIcon } from '@/components/common/constants/icons';
 import accuracy from '@/components/roomdetail/accuracy.svg';
-import checkin from '@/components/roomdetail/checkin.svg';
 import clean from '@/components/roomdetail/clean.svg';
 import type { reviewType } from '@/types/reviewType';
 
@@ -114,7 +114,7 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
                 <span className="ml-auto text-xs font-bold">5.0</span>
               </div>
               <div className="border-b pb-2 flex items-center">
-                <img src={checkin} alt="체크인" className="w-5 h-5 mr-2" />
+                <img src={CheckinIcon} alt="체크인" className="w-5 h-5 mr-2" />
                 <span className="text-sm">체크인</span>
                 <span className="ml-auto text-xs font-bold">5.0</span>
               </div>

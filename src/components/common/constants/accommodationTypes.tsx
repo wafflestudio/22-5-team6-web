@@ -1,4 +1,4 @@
-// constants/accommodationTypes.ts
+// constants/accommodationTypes.tsx
 import { RoomType } from '@/types/room';
 
 type AccommodationType = {
