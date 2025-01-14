@@ -22,7 +22,7 @@ interface InfoProps {
 
 const Info = ({ data }: InfoProps) => {
   const matchingItem = ACCOMMODATION_TYPES.find(
-    (item) => item.label === data.type,
+    (item) => item.type === data.type,
   );
   const issuperhost = data.isSuperhost;
   const isluggage = data.roomDetails.luggage;
