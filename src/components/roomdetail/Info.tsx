@@ -22,26 +22,27 @@ interface InfoProps {
 
 const Info = ({ data }: InfoProps) => {
   const matchingItem = ACCOMMODATION_TYPES.find(
-    (item) => item.label === data.type2,
+    (item) => item.label === data.type,
   );
-  const issuperhost = data.superhost;
-  const isluggage = data.luggage;
-  const ischeckin = data.selfcheckin;
-  const iswifi = data.wifi;
-  const istv = data.tv;
+  const issuperhost = data.isSuperhost;
+  const isluggage = data.roomDetails.luggage;
+  const ischeckin = data.roomDetails.selfCheckin;
+  const iswifi = data.roomDetails.wifi;
+  const istv = data.roomDetails.tv;
   const [isReviewOpen, setIsReviewOpen] = useState<boolean>(false);
   return (
     <div className="flex flex-col items-start w-full h-fit mt-8 pr-8">
       <div className="w-full overflow-hidden text-xl break-words">
         <span className="font-semibold">
-          {data.location.town}, {data.location.suburb},&nbsp;
+          {data.address.street}, {data.address.sigungu},&nbsp;
         </span>
-        {data.location.country}의&nbsp;{data.type1}
+        한국의&nbsp;{data.address.detail}
       </div>
       <div className="w-full overflow-hidden text-base break-words mt-1">
         최대 인원&nbsp;{data.maxOccupancy}명&nbsp;&middot;&nbsp;침실&nbsp;
-        {data.bedroom}개&nbsp;&middot;&nbsp;침대&nbsp;{data.bed}
-        개&nbsp;&middot;&nbsp;욕실&nbsp;{data.bathroom}개
+        {data.roomDetails.bedroom}개&nbsp;&middot;&nbsp;침대&nbsp;
+        {data.roomDetails.bed}
+        개&nbsp;&middot;&nbsp;욕실&nbsp;{data.roomDetails.bathroom}개
       </div>
       <div className="flex justify-between border border-gray-300 rounded-md p-6 w-full my-8">
         <div className="flex justify-center align-center gap-1 flex-1 border-r border-r-gray-300">
@@ -52,7 +53,7 @@ const Info = ({ data }: InfoProps) => {
           <img src={crownright} className="basis-1/10" />
         </div>
         <div className="flex flex-col flex-1 items-center border-r border-r-gray-300">
-          <div>{data.avgrating}</div>
+          <div>{data.rating}</div>
           <div className="flex">
             <StarIcon className="" style={{ width: '10px', height: '10px' }} />
             <StarIcon className="" style={{ width: '10px', height: '10px' }} />
@@ -62,7 +63,7 @@ const Info = ({ data }: InfoProps) => {
           </div>
         </div>
         <div className="text-center flex-1">
-          <span className="font-semibold">{data.reviewcount}</span>개<br></br>
+          <span className="font-semibold">{data.reviewCount}</span>개<br></br>
           <div
             onClick={() => {
               setIsReviewOpen(true);
@@ -140,13 +141,13 @@ const Info = ({ data }: InfoProps) => {
           <PhotoSizeSelectActualIcon className="text-white" />
         </div>
         <div>
-          <div>호스트: {data.host.username}&nbsp;님</div>
+          <div>호스트: {data.hostId}&nbsp;님</div>
           <div className="text-sm text-gray-600">
             {issuperhost ? '슈퍼호스트' : '훌륭한 호스트'}
           </div>
         </div>
       </div>
-      <div className="w-full h-fit text-wrap px-4 py-8">{data.info}</div>
+      <div className="w-full h-fit text-wrap px-4 py-8">{data.description}</div>
       {isReviewOpen && (
         <ReviewModal
           onClose={() => {
