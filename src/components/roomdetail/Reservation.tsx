@@ -6,7 +6,7 @@ import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
 import CalendarModal from '@/components/home/Topbar/Search/modals/CalendarModal';
 import GuestsModal from '@/components/home/Topbar/Search/modals/GuestsModal';
-import clock from '@/components/roomdetail/clock.svg';
+import clock from '@/assets/icons/reservation/clock.svg';
 import type { roomReservationType } from '@/types/roomReservationType';
 import type { roomType } from '@/types/roomType';
 

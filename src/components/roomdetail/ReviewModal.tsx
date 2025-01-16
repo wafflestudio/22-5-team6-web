@@ -4,8 +4,8 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useEffect, useState } from 'react';
 
 import { CheckinIcon } from '@/components/common/constants/icons';
-import accuracy from '@/components/roomdetail/accuracy.svg';
-import clean from '@/components/roomdetail/clean.svg';
+import accuracy from '@/assets/icons/reviews/clean.svg';
+import clean from '@/assets/icons/reviews/clean.svg';
 import type { reviewType } from '@/types/reviewType';
 
 const ReviewModal = ({ onClose }: { onClose: () => void }) => {

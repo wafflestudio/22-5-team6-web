@@ -3,10 +3,10 @@ import StarIcon from '@mui/icons-material/Star';
 import { useState } from 'react';
 
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
-import crownleft from '@/components/roomdetail/crownleft.svg';
-import crownright from '@/components/roomdetail/crownright.svg';
+import crownleft from '@/assets/icons/roomdetail/crownleft.svg';
+import crownright from '@/assets/icons/roomdetail/crownright.svg';
 import ReviewModal from '@/components/roomdetail/ReviewModal';
-import superhost from '@/components/roomdetail/superhost.svg';
+import superhost from '@/assets/icons/superhost.svg';
 import type { roomType } from '@/types/roomType';
 
 import {
