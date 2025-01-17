@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { LogoIcon } from '@/components/common/constants/Logo';
+import Header from '@/components/home/Topbar/Header';
 import type {
   Address,
   Price,
@@ -124,22 +124,13 @@ export default function HostingForm() {
   };
 
   return (
-    <div>
+    <div className="flex flex-col w-full">
       {/* Header */}
-      <header className="fixed top-0 left-0 right-0 h-20 bg-white border-b border-gray-200 z-50">
-        <div className="max-w-screen-xl mx-auto h-full px-6 flex items-center">
-          <button
-            className="flex items-center gap-1"
-            onClick={() => {
-              void navigate('/');
-            }}
-          >
-            <LogoIcon />
-          </button>
-        </div>
-      </header>
+      <div className="h-20 px-10">
+        <Header />
+      </div>
 
-      <div className="w-full max-w-2xl mx-auto p-6 mt-20">
+      <div className="w-full max-w-2xl mx-auto p-6">
         <div className="bg-white rounded-xl shadow-sm p-6">
           {/* 숙소 타입 선택 */}
           <div className="mb-8">

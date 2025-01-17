@@ -1,7 +1,7 @@
 import { StyledEngineProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 
-import { SearchProvider } from '@/components/home/context/SearchContext';
+import { SearchProvider } from '@/components/home/context/RoomSearchContext';
 import { ApiTest } from '@/routes/ApiTest';
 import Home from '@/routes/Home';
 import Hosting from '@/routes/Hosting';

@@ -1,4 +1,3 @@
-// components/hosting/PriceInput.tsx
 import type { Price } from '@/types/room';
 
 type PriceInputProps = {
