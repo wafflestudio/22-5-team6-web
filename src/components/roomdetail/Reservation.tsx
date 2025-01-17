@@ -3,7 +3,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import { useState } from 'react';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
-import { useSearch } from '@/components/home/context/SearchContext';
+import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
 import CalendarModal from '@/components/home/Topbar/Search/modals/CalendarModal';
 import GuestsModal from '@/components/home/Topbar/Search/modals/GuestsModal';
 import clock from '@/components/roomdetail/clock.svg';
@@ -18,7 +18,7 @@ const Reservation = ({ data }: InfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { checkIn, checkOut, guests, currentModal, openModal, closeModal } =
-    useSearch();
+    useRoomSearch();
 
   const handleReservation = async () => {
     try {

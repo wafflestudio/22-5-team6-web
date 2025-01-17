@@ -1,5 +1,5 @@
 // src/components/home/Search/modals/LocationModal/index.tsx
-import { useSearch } from '@/components/home/context/SearchContext';
+import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
 
 import LocationSelector from './LocationSelector';
 import PopularCities from './PopularCities';
@@ -9,10 +9,11 @@ type LocationModalProps = {
 };
 
 export default function LocationModal({ onClose }: LocationModalProps) {
-  const { setLocation } = useSearch();
+  const { setLocation, searchRooms } = useRoomSearch();
 
   const handleSelect = (location: { sido: string; sigungu: string }) => {
     setLocation(location);
+    void searchRooms();
     onClose();
   };
 

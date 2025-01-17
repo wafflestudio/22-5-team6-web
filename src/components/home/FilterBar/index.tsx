@@ -3,25 +3,18 @@ import { SlidersHorizontal } from 'lucide-react';
 import { useState } from 'react';
 
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
+import { RoomType } from '@/types/room';
 
+import { useRoomSearch } from '../context/RoomSearchContext';
 import FilterModal from './FilterModal';
 
-type FilterBarProps = {
-  onTypeSelect?: (type: string) => void;
-  onPriceFilterChange?: (priceRange: { min: number; max: number }) => void;
-};
-
-const FilterBar = ({ onTypeSelect, onPriceFilterChange }: FilterBarProps) => {
-  const [selectedType, setSelectedType] = useState<string>('');
+const FilterBar = () => {
+  const { filter, setFilter, searchRooms } = useRoomSearch();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
-  const handleTypeClick = (type: string) => {
-    setSelectedType(type);
-    onTypeSelect?.(type);
-  };
-
-  const handleApplyFilter = (priceRange: { min: number; max: number }) => {
-    onPriceFilterChange?.(priceRange);
+  const handleTypeClick = (type: RoomType) => {
+    setFilter({ ...filter, roomType: type });
+    void searchRooms();
   };
 
   return (
@@ -31,7 +24,7 @@ const FilterBar = ({ onTypeSelect, onPriceFilterChange }: FilterBarProps) => {
           <button
             key={item.label}
             onClick={() => {
-              handleTypeClick(item.label);
+              handleTypeClick(item.value);
             }}
             className="relative flex flex-col items-center gap-2 pt-4 pb-3 min-w-[56px]"
           >
@@ -39,14 +32,14 @@ const FilterBar = ({ onTypeSelect, onPriceFilterChange }: FilterBarProps) => {
               src={item.imageUrl}
               alt={item.label}
               className={`h-6 w-6 ${
-                selectedType === item.label
+                filter.roomType === item.value
                   ? 'opacity-100'
                   : 'opacity-60 hover:opacity-100'
               } transition-opacity`}
             />
             <span
               className={`text-xs whitespace-nowrap ${
-                selectedType === item.label
+                filter.roomType === item.value
                   ? 'text-black'
                   : 'text-gray-500 hover:text-black'
               } transition-colors`}
@@ -55,7 +48,7 @@ const FilterBar = ({ onTypeSelect, onPriceFilterChange }: FilterBarProps) => {
             </span>
             <div
               className={`absolute bottom-0 left-0 right-0 h-0.5 transition-all ${
-                selectedType === item.label
+                filter.roomType === item.value
                   ? 'bg-black opacity-100'
                   : 'bg-gray-200 opacity-0 hover:opacity-100'
               }`}
@@ -83,7 +76,6 @@ const FilterBar = ({ onTypeSelect, onPriceFilterChange }: FilterBarProps) => {
         onClose={() => {
           setIsFilterModalOpen(false);
         }}
-        onApplyFilter={handleApplyFilter}
       />
     </div>
   );

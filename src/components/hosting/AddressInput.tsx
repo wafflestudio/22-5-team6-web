@@ -4,13 +4,7 @@ import {
   getDistricts,
   SIDO_LIST,
 } from '@/components/common/constants/koreanDistricts';
-
-type Address = {
-  sido: string; // 시/도
-  sigungu: string; // 시/군/구
-  street: string; // 도로명 주소
-  detail: string; // 상세 주소
-};
+import type { Address } from '@/types/room';
 
 type AddressInputProps = {
   onAddressChange: (address: Address) => void;
@@ -29,7 +23,6 @@ export default function AddressInput({ onAddressChange }: AddressInputProps) {
   ) => {
     const { name, value } = e.target;
     const newAddress = { ...address, [name]: value };
-    // sido가 변경되면 sigungu 초기화
     if (name === 'sido') {
       newAddress.sigungu = '';
     }
@@ -37,7 +30,6 @@ export default function AddressInput({ onAddressChange }: AddressInputProps) {
     onAddressChange(newAddress);
   };
 
-  // 선택된 시/도의 시/군/구 목록 가져오기
   const sigunguList = address.sido !== '' ? getDistricts(address.sido) : [];
 
   return (
