@@ -12,7 +12,7 @@ import type {
 type ModalType = 'location' | 'calendar' | 'guests' | 'filter' | null;
 
 type Location = {
-  sido: string;
+  sido?: string;
   sigungu?: string;
 };
 
@@ -110,14 +110,14 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     const searchParams: RoomSearchParams = {
       page: pageInfo.pageNumber,
       size: pageInfo.pageSize,
-      sort: 'id,desc',
+      sort: '',
     };
 
     // 위치 파라미터
     if (location.sido !== '') {
-      searchParams['address.sido'] = location.sido;
+      searchParams['sido'] = location.sido;
       if (location.sigungu != null && location.sigungu !== '') {
-        searchParams['address.sigungu'] = location.sigungu;
+        searchParams['sigungu'] = location.sigungu;
       }
     }
 
@@ -142,7 +142,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       searchParams.maxPrice = filter.maxPrice;
     }
     if (filter.roomType != null) {
-      searchParams.type = filter.roomType;
+      searchParams.roomType = filter.roomType;
     }
 
     return searchParams;
@@ -155,10 +155,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     const urlParams = new URLSearchParams();
 
     Object.entries(params).forEach(([key, value]) => {
-      if (
-        (typeof value === 'number' && value > 0) ||
-        (typeof value === 'string' && value !== '')
-      ) {
+      if (value !== '') {
         urlParams.append(key, value.toString());
       }
     });
@@ -175,7 +172,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       const searchParams = buildSearchParams();
       const urlParams = convertToURLSearchParams(searchParams);
 
-      const hasSearchParams = Object.keys(searchParams).length > 3; // page, size, sort 제외
+      const hasSearchParams = Object.keys(searchParams).length > 3; 
       const endpoint = hasSearchParams
         ? '/api/v1/rooms/main/search'
         : '/api/v1/rooms/main';
@@ -213,7 +210,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         },
         price: item.price,
         rating: item.averageRating,
-        imageUrl: item.imageUrl,
+        imageUrl: item.imageUrl
       }),
     );
 

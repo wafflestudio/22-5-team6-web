@@ -3,17 +3,17 @@ import type { RoomType } from './room';
 
 // API 검색 파라미터 타입
 export type RoomSearchParams = {
-  page?: number;
-  size?: number;
-  sort?: string;
-  'address.sido'?: string;
-  'address.sigungu'?: string;
+  page: number;
+  size: number;
+  sort: string;
+  sido?: string;
+  sigungu?: string;
   startDate?: string;
   endDate?: string;
   maxOccupancy?: number;
   minPrice?: number;
   maxPrice?: number;
-  type?: RoomType;
+  roomType?: RoomType;
 };
 
 // API 응답의 Room 아이템 타입
