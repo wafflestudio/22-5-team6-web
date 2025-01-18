@@ -29,28 +29,25 @@ const ShareModal = ({ onClose }: HeartModalProps) => {
       ></div>
 
       {/* 모달 내용 */}
-      <div className="relative bg-white rounded-lg shadow-lg w-[40%] z-60 overflow-y-auto h-[80%]">
-        <div className="grid grid-cols-3 items-center w-full border-b p-2">
+      <div className="relative bg-white rounded-lg shadow-lg w-[40%] z-60 h-[80%] overflow-y-auto">
+        <div className="sticky top-0 bg-white flex items-center w-full border-b p-2">
           <button
             onClick={onClose}
             className="text-left ml-2 text-3xl text-black"
           >
             &times;
           </button>
-          <div className="text-lg text-center font-bold">
+          <div className="text-base flex-1 text-center font-bold">
             위시리스트에 저장하기
           </div>
           <div></div>
         </div>
-        <div className="grid grid-cols-2 w-full">
+        <div className="grid grid-cols-2 gap-2 px-2">
           {mockHeart.map((list) => (
-            <div
-              className="w-full flex flex-col items-start m-4"
-              key={list.name}
-            >
-              <PhotoSizeSelectActualIcon className="text-white bg-gray-300 w-full h-[200px] rounded-md" />
-              <p className="mt-2 text-lg font-bold">{list.name}</p>
-              <p className="text-gray-500">
+            <div className="flex flex-col items-start p-2" key={list.name}>
+              <PhotoSizeSelectActualIcon className="text-white bg-gray-300 w-full h-[200px] rounded-md shadow-md" />
+              <p className="mt-2 text-base font-bold">{list.name}</p>
+              <p className="text-gray-500 text-sm">
                 저장된 항목&nbsp;{list.itemsCount}개
               </p>
             </div>
@@ -58,8 +55,8 @@ const ShareModal = ({ onClose }: HeartModalProps) => {
         </div>
 
         {/* "새로운 위시리스트 만들기" 버튼, 위치 고정 */}
-        <div className="absolute bottom-4 left-0 right-0 text-center">
-          <button className="w-full bg-blue-500 text-white p-2 rounded-md">
+        <div className="sticky bottom-0 text-center bg-white border-t w-full">
+          <button className="w-full bg-gray-900 text-white text-base p-2 rounded-md m-3">
             새로운 위시리스트 만들기
           </button>
         </div>

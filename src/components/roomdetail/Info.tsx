@@ -2,11 +2,11 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import StarIcon from '@mui/icons-material/Star';
 import { useState } from 'react';
 
+import crownleft from '@/assets/icons/roomdetail/crownleft.svg';
+import crownright from '@/assets/icons/roomdetail/crownright.svg';
+import superhost from '@/assets/icons/superhost.svg';
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
-import crownleft from '@/components/roomdetail/crownleft.svg';
-import crownright from '@/components/roomdetail/crownright.svg';
 import ReviewModal from '@/components/roomdetail/ReviewModal';
-import superhost from '@/components/roomdetail/superhost.svg';
 import type { roomType } from '@/types/roomType';
 
 import {
@@ -22,7 +22,7 @@ interface InfoProps {
 
 const Info = ({ data }: InfoProps) => {
   const matchingItem = ACCOMMODATION_TYPES.find(
-    (item) => item.type === data.type,
+    (item) => item.type === data.roomType,
   );
   const issuperhost = data.isSuperhost;
   const isluggage = data.roomDetails.luggage;
@@ -53,7 +53,7 @@ const Info = ({ data }: InfoProps) => {
           <img src={crownright} className="basis-1/10" />
         </div>
         <div className="flex flex-col flex-1 items-center border-r border-r-gray-300">
-          <div>{data.rating}</div>
+          <div>{data.averageRating}</div>
           <div className="flex">
             <StarIcon className="" style={{ width: '10px', height: '10px' }} />
             <StarIcon className="" style={{ width: '10px', height: '10px' }} />
@@ -81,7 +81,7 @@ const Info = ({ data }: InfoProps) => {
               <img
                 src={matchingItem.imageUrl}
                 alt={matchingItem.label}
-                className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
+                className="h-6 w-6 opacity-60"
               />
               <div className="opacity-60 text-sm">{matchingItem.label}</div>
             </>
@@ -93,44 +93,29 @@ const Info = ({ data }: InfoProps) => {
           )}
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={superhost}
-            className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
-          />
+          <img src={superhost} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {issuperhost ? '슈퍼호스트' : '훌륭한 호스트'}
           </div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={LuggageIcon}
-            className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
-          />
+          <img src={LuggageIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {isluggage ? '여행 가방 보관 가능' : '여행 가방 보관 풀가'}
           </div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={CheckinIcon}
-            className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
-          />
+          <img src={CheckinIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {ischeckin ? '셀프체크인' : '편의성이 뛰어난 체크인 절차'}
           </div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={TvIcon}
-            className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
-          />
+          <img src={TvIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">{istv ? 'TV' : 'TV 없음'}</div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={WifiIcon}
-            className="h-6 w-6 opacity-60 hover:opacity-100 transition-opacity"
-          />
+          <img src={WifiIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {iswifi ? '와이파이' : '와이파이 없음'}
           </div>
@@ -150,6 +135,7 @@ const Info = ({ data }: InfoProps) => {
       <div className="w-full h-fit text-wrap px-4 py-8">{data.description}</div>
       {isReviewOpen && (
         <ReviewModal
+          data={data}
           onClose={() => {
             setIsReviewOpen(false);
           }}

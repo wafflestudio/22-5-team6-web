@@ -23,16 +23,16 @@ type Price = {
 };
 
 export type roomType = {
-  id: number;
+  roomId: number;
   hostId: number;
-  name: string;
+  roomName: string;
   description: string;
-  type: string; // 예시로 더 많은 타입을 추가할 수 있습니다.
+  roomType: string; // 예시로 더 많은 타입을 추가할 수 있습니다.
   address: Address;
   roomDetails: RoomDetails;
   price: Price;
   maxOccupancy: number;
-  rating: number;
+  averageRating: number;
   reviewCount: number;
   isSuperhost: boolean;
   createdAt: string; // ISO 8601 날짜 형식

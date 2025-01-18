@@ -1,18 +1,21 @@
-import ErrorIcon from '@mui/icons-material/Error';
 import FlagIcon from '@mui/icons-material/Flag';
 import { useState } from 'react';
 
+import clock from '@/assets/icons/reservation/clock.svg';
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
-import CalendarModal from '@/components/home/Topbar/Search/modals/CalendarModal';
-import GuestsModal from '@/components/home/Topbar/Search/modals/GuestsModal';
-import clock from '@/components/roomdetail/clock.svg';
-import type { roomReservationType } from '@/types/roomReservationType';
+import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
 import type { roomType } from '@/types/roomType';
+
+import RoomCalendarModal from './roomCalendarModal';
 
 interface InfoProps {
   data: roomType;
 }
+
+type roomReservationResponseType = {
+  reservationId: number;
+};
 
 const Reservation = ({ data }: InfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -29,13 +32,18 @@ const Reservation = ({ data }: InfoProps) => {
       if (token == null) {
         throw new Error('로그인이 필요합니다.');
       }
-
-      if (data.id === 0 || checkIn == null || checkOut == null || guests <= 0) {
+      console.debug(data);
+      if (
+        data.roomId === 0 ||
+        checkIn == null ||
+        checkOut == null ||
+        guests <= 0
+      ) {
         throw new Error('모든 필드를 입력해주세요.');
       }
 
       const sendData = {
-        roomId: data.id,
+        roomId: data.roomId,
         startDate: checkIn.toISOString().split('T')[0],
         endDate: checkOut.toISOString().split('T')[0],
         numberOfGuests: guests,
@@ -53,10 +61,13 @@ const Reservation = ({ data }: InfoProps) => {
       console.debug(sendData);
 
       if (!response.ok) {
-        throw new Error('숙소 등록에 실패했습니다.');
+        throw new Error('숙소 예약에 실패했습니다.');
       }
-      const responseData = (await response.json()) as roomReservationType;
-      alert(`숙소가 성공적으로 등록되었습니다! ID: ${responseData.roomId}`);
+      const responseData =
+        (await response.json()) as roomReservationResponseType;
+      alert(
+        `숙소가 성공적으로 예약되었습니다! ID: ${responseData.reservationId}`,
+      );
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다.';
@@ -75,7 +86,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('calendar');
+                  openModal('roomCalendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -90,7 +101,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('calendar');
+                  openModal('roomCalendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -108,7 +119,7 @@ const Reservation = ({ data }: InfoProps) => {
           <div className="my-4 w-full">
             <button
               onClick={() => {
-                openModal('guests');
+                openModal('roomGuests');
               }}
               className="flex flex-col items-start mt-1 w-full border border-gray-300 rounded-md py-2 px-3 bg-white cursor-pointer text-gray-700"
             >
@@ -120,14 +131,10 @@ const Reservation = ({ data }: InfoProps) => {
               </span>
             </button>
           </div>
-          <div className="flex items-center text-red-600 text-xs mb-4">
-            <ErrorIcon className="mr-2" />
-            선택하신 날짜는 이용이 불가능합니다.
-          </div>
 
           {/* 에러 메시지 표시 */}
           {error != null && (
-            <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
+            <div className="mb-4 p-2 bg-red-50 text-red-700 rounded-sm text-sm">
               {error}
             </div>
           )}
@@ -167,18 +174,21 @@ const Reservation = ({ data }: InfoProps) => {
         </button>
       </div>
       <BaseModal
-        isOpen={currentModal === 'calendar'}
+        isOpen={currentModal === 'roomCalendar'}
         onClose={closeModal}
         title="날짜 선택"
       >
-        <CalendarModal onClose={closeModal} />
+        <RoomCalendarModal id={data.roomId} onClose={closeModal} />
       </BaseModal>
       <BaseModal
-        isOpen={currentModal === 'guests'}
+        isOpen={currentModal === 'roomGuests'}
         onClose={closeModal}
         title="인원 선택"
       >
-        <GuestsModal onClose={closeModal} />
+        <RoomGuestsModal
+          maxOccupancy={data.maxOccupancy}
+          onClose={closeModal}
+        />
       </BaseModal>
     </>
   );

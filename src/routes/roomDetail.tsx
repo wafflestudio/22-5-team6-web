@@ -2,7 +2,7 @@ import { PhotoSizeSelectActual as PhotoSizeSelectActualIcon } from '@mui/icons-m
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import gallery from '@/components/common/gallery.svg';
+import gallery from '@/assets/icons/roomdetail/gallery.svg';
 import Topbar from '@/components/home/Topbar';
 import Info from '@/components/roomdetail/Info';
 import PhotoModal from '@/components/roomdetail/PhotoModal';
@@ -23,10 +23,6 @@ export const Roomdetail = () => {
         setIsLoading(true);
         setError(null);
 
-        const token = localStorage.getItem('token');
-        if (token === null) {
-          throw new Error('로그인이 필요합니다.');
-        }
         if (id === undefined) {
           throw new Error('존재하지 않는 숙소입니다.');
         }
@@ -35,7 +31,6 @@ export const Roomdetail = () => {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
           },
         });
 
@@ -60,7 +55,7 @@ export const Roomdetail = () => {
       <Topbar />
       <div className="flex flex-col w-full px-[55px]">
         <div className="flex w-full items-end justify-between py-4">
-          <div className="text-2xl font-normal">{roomData?.name}</div>
+          <div className="text-2xl font-normal">{roomData?.roomName}</div>
           <Shareheart />
         </div>
         <div className="grid grid-cols-4 grid-rows-2 gap-2 w-full h-[330px]">
