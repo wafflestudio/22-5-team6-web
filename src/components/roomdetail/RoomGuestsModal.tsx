@@ -1,7 +1,7 @@
+import ErrorIcon from '@mui/icons-material/Error';
 import { useState } from 'react';
 
 import { useSearch } from '@/components/home/context/SearchContext';
-import ErrorIcon from '@mui/icons-material/Error';
 
 type GuestsModalProps = {
   onClose: () => void;

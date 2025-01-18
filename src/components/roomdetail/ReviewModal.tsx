@@ -1,11 +1,11 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
-import { CheckinIcon } from '@/components/common/constants/icons';
 import accuracy from '@/assets/icons/reviews/accuracy.svg';
 import clean from '@/assets/icons/reviews/clean.svg';
+import { CheckinIcon } from '@/components/common/constants/icons';
 import type { ReviewsResponse } from '@/types/reviewType';
 import type { roomType } from '@/types/roomType';
 
@@ -27,14 +27,10 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
     setIsModalOpen(false); // 모달 닫기
   };
 
-  const fetchReviews = async () => {
+  const fetchReviews = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-
-      if (data.roomId === undefined) {
-        throw new Error('존재하지 않는 숙소입니다.');
-      }
 
       const page = 0;
       const size = 6;
@@ -70,11 +66,11 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [data.roomId, selectedOption]);
 
   useEffect(() => {
     void fetchReviews();
-  }, [data.roomId, selectedOption]);
+  }, [fetchReviews]);
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -197,17 +193,11 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
                 className="rounded-md mx-2 p-5 cursor-pointer hover:bg-gray-100"
               >
                 <div className="flex items-center">
-                  {review.profileImage !== undefined ? (
-                    <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
-                      {review.nickname && review.nickname.charAt(0)}
-                    </div>
-                  ) : (
-                    review.profileImage && (
-                      <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
-                        {review.profileImage}
-                      </div>
-                    )
-                  )}
+                  <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
+                    {review.profileImage !== ''
+                      ? review.nickname
+                      : review.nickname.charAt(0)}
+                  </div>
                   <div className="ml-3">
                     <h5 className="font-medium">{review.nickname}</h5>
                     <p className="text-xs text-gray-500">

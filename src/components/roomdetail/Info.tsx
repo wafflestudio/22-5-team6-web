@@ -2,11 +2,11 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import StarIcon from '@mui/icons-material/Star';
 import { useState } from 'react';
 
-import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
 import crownleft from '@/assets/icons/roomdetail/crownleft.svg';
 import crownright from '@/assets/icons/roomdetail/crownright.svg';
-import ReviewModal from '@/components/roomdetail/ReviewModal';
 import superhost from '@/assets/icons/superhost.svg';
+import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
+import ReviewModal from '@/components/roomdetail/ReviewModal';
 import type { roomType } from '@/types/roomType';
 
 import {

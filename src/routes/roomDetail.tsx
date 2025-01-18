@@ -48,7 +48,7 @@ export const Roomdetail = () => {
       }
     };
     void handleDetail();
-  }, []);
+  }, [id]);
 
   return (
     <div className="flex flex-col justify-start items-center w-full">

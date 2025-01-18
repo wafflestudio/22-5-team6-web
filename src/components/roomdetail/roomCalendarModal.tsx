@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
 import { useSearch } from '@/components/home/context/SearchContext';
 
@@ -13,7 +14,7 @@ type CalendarModalProps = {
   id: number;
 };
 
-const roomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
+const RoomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
   const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [selecting, setSelecting] = useState<'checkIn' | 'checkOut'>('checkIn');
@@ -30,14 +31,10 @@ const roomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
     setCurrentMonth(currentMonth.subtract(1, 'month'));
   };
 
-  const fetchAvailableDates = async () => {
+  const fetchAvailableDates = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
-
-      if (id === undefined) {
-        throw new Error('존재하지 않는 숙소입니다.');
-      }
 
       const url = `/api/v1/reservations/availability/${id}?year=${currentYear}&month=${currentMonth.month() + 1}`;
 
@@ -62,11 +59,11 @@ const roomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [id, currentYear, currentMonth]);
 
   useEffect(() => {
     void fetchAvailableDates();
-  }, []);
+  }, [fetchAvailableDates]);
 
   // 날짜가 선택 가능한지 확인
   const isDateSelectable = (date: dayjs.Dayjs) => {
@@ -166,7 +163,7 @@ const roomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
           숙소 예약 가능 날짜 로딩중...
         </div>
       )}
-      {error && (
+      {error !== null && (
         <div className="text-sm text-red-700 bg-red-100 rounded-md p-2">
           에러: 숙소 예약 가능 날짜를 불러올 수 없습니다
         </div>
@@ -242,4 +239,4 @@ const roomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
   );
 };
 
-export default roomCalendarModal;
+export default RoomCalendarModal;

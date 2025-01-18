@@ -1,12 +1,13 @@
 import FlagIcon from '@mui/icons-material/Flag';
 import { useState } from 'react';
 
+import clock from '@/assets/icons/reservation/clock.svg';
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
-import RoomCalendarModal from './roomCalendarModal';
 import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
-import clock from '@/assets/icons/reservation/clock.svg';
 import type { roomType } from '@/types/roomType';
+
+import RoomCalendarModal from './roomCalendarModal';
 
 interface InfoProps {
   data: roomType;
