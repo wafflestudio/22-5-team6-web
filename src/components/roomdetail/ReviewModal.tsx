@@ -20,7 +20,7 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
   const [reviewData, setReviewData] = useState<ReviewsResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('최신순');
-  const options = ['최신순', '높은 평점순', '낮은 평점순'];
+  const options = ['최신순', '오래된순', '높은 평점순', '낮은 평점순'];
 
   const handleOptionClick = (option: string) => {
     setSelectedOption(option); // 선택한 값을 버튼에 표시
@@ -33,11 +33,13 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
       setError(null);
 
       const page = 0;
-      const size = 6;
+      const size = 10;
       let sort = '';
 
       if (selectedOption === '최신순') {
         sort = 'createdAt,desc';
+      } else if (selectedOption === '오래된순') {
+        sort = 'rating,asc';
       } else if (selectedOption === '높은 평점순') {
         sort = 'rating,desc';
       } else if (selectedOption === '낮은 평점순') {
@@ -199,7 +201,9 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
                       : review.nickname.charAt(0)}
                   </div>
                   <div className="ml-3">
-                    <h5 className="font-medium">{review.nickname}</h5>
+                    <h5 className="font-medium">
+                      {review.nickname}&nbsp;&middot;&nbsp;{review.rating}
+                    </h5>
                     <p className="text-xs text-gray-500">
                       숙박 일시&nbsp;{review.startDate}~{review.endDate}
                     </p>

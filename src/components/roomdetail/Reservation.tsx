@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import clock from '@/assets/icons/reservation/clock.svg';
 import BaseModal from '@/components/common/Modal/BaseModal';
-import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
 import type { roomType } from '@/types/roomType';
 
@@ -21,7 +21,7 @@ const Reservation = ({ data }: InfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { checkIn, checkOut, guests, currentModal, openModal, closeModal } =
-    useRoomSearch();
+    useSearch();
 
   const handleReservation = async () => {
     try {
@@ -86,7 +86,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('calendar');
+                  openModal('roomCalendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -101,7 +101,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('calendar');
+                  openModal('roomCalendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -119,7 +119,7 @@ const Reservation = ({ data }: InfoProps) => {
           <div className="my-4 w-full">
             <button
               onClick={() => {
-                openModal('guests');
+                openModal('roomGuests');
               }}
               className="flex flex-col items-start mt-1 w-full border border-gray-300 rounded-md py-2 px-3 bg-white cursor-pointer text-gray-700"
             >
@@ -174,14 +174,14 @@ const Reservation = ({ data }: InfoProps) => {
         </button>
       </div>
       <BaseModal
-        isOpen={currentModal === 'calendar'}
+        isOpen={currentModal === 'roomCalendar'}
         onClose={closeModal}
         title="날짜 선택"
       >
         <RoomCalendarModal id={data.roomId} onClose={closeModal} />
       </BaseModal>
       <BaseModal
-        isOpen={currentModal === 'guests'}
+        isOpen={currentModal === 'roomGuests'}
         onClose={closeModal}
         title="인원 선택"
       >

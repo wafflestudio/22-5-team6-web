@@ -1,7 +1,7 @@
 import ErrorIcon from '@mui/icons-material/Error';
 import { useState } from 'react';
 
-import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 
 type GuestsModalProps = {
   onClose: () => void;
@@ -9,7 +9,7 @@ type GuestsModalProps = {
 };
 
 const GuestsModal = ({ onClose, maxOccupancy }: GuestsModalProps) => {
-  const { setGuests } = useRoomSearch();
+  const { setGuests } = useSearch();
   const [guestCount, setGuestCount] = useState(0);
 
   const handleIncrement = () => {
