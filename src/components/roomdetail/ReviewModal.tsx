@@ -6,37 +6,18 @@ import { useEffect, useState } from 'react';
 import { CheckinIcon } from '@/components/common/constants/icons';
 import accuracy from '@/assets/icons/reviews/clean.svg';
 import clean from '@/assets/icons/reviews/clean.svg';
-import type { reviewType } from '@/types/reviewType';
+import type { ReviewsResponse } from '@/types/reviewType';
+import type { roomType } from '@/types/roomType';
 
-const ReviewModal = ({ onClose }: { onClose: () => void }) => {
-  const reviews: reviewType[] = [
-    {
-      name: '연정',
-      joined: '에어비앤비 가입 기간 4개월',
-      date: '2024년 11월',
-      content:
-        '고택체험으로 선택한 숙소였는데 아이들이랑 편안히 쉬다왔어요. 여행지가 안동이라 거리감이 있어 오래 머무르지못해 아쉬움. 깔끔하고 따뜻해서 모두를 만족한 숙소였어요.',
-      hostReply:
-        '토향고택을 찾아주시고 좋은 후기를 남겨주셔서 정말 감사드립니다.^^ 늘 건강하시고 행복하세요~~',
-    },
-    {
-      name: 'Seung-Ho',
-      joined: '에어비앤비 가입 기간 3년',
-      date: '2024년 8월',
-      content:
-        '방문할 때마다 한결같은 편안함을 제공하는 한적하고 아름다운 자연환경 속의 숙소입니다.',
-      hostReply:
-        '토향고택을 찾아주시고 좋은 후기를 남겨주셔서 정말 감사드립니다.^^ 늘 건강하시고 행복하세요~~',
-    },
-  ];
+interface ReviewProps {
+  data: roomType;
+  onClose: () => void;
+}
 
-  useEffect(() => {
-    document.body.style.overflow = 'hidden'; // 배경 스크롤 비활성화
-    return () => {
-      document.body.style.overflow = 'auto'; // 모달 닫힐 때 스크롤 복원
-    };
-  }, []);
-
+const ReviewModal = ({ onClose, data }: ReviewProps) => {
+  const [error, setError] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [reviewData, setReviewData] = useState<ReviewsResponse | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('최신순');
   const options = ['최신순', '높은 평점순', '낮은 평점순'];
@@ -45,6 +26,55 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
     setSelectedOption(option); // 선택한 값을 버튼에 표시
     setIsModalOpen(false); // 모달 닫기
   };
+
+  const fetchReviews = async () => {
+    try {
+      setIsLoading(true);
+      setError(null);
+
+      if (data.roomId === undefined) {
+        throw new Error('존재하지 않는 숙소입니다.');
+      }
+
+      const page = 0;
+      const size = 6;
+      let sort = '';
+
+      if (selectedOption === '최신순') {
+        sort = 'createdAt,desc';
+      } else if (selectedOption === '높은 평점순') {
+        sort = 'rating,desc';
+      } else if (selectedOption === '낮은 평점순') {
+        sort = 'rating,asc';
+      }
+
+      const url = `/api/v1/reviews/room/${data.roomId}?page=${page}&size=${size}&sort=${sort}`;
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('숙소 리뷰 로딩에 실패했습니다.');
+      }
+
+      const responseData = (await response.json()) as ReviewsResponse;
+      setReviewData(responseData);
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error ? err.message : '오류가 발생했습니다.';
+      setError(errorMessage);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    void fetchReviews();
+  }, [data.roomId, selectedOption]);
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -131,7 +161,7 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
             <div className="flex justify-between items-start">
               <div className="text-xl ml-8 w-fit h-fit">
                 후기{' '}
-                <span className="font-bold w-fit h-fit">{reviews.length}</span>
+                <span className="font-bold w-fit h-fit">{reviewData?.content.length}</span>
                 개
               </div>
               <button
@@ -159,32 +189,42 @@ const ReviewModal = ({ onClose }: { onClose: () => void }) => {
                 ))}
               </div>
             )}
-            {reviews.map((review, index) => (
+            {reviewData?.content.map((review, index) => (
               <div
                 key={index}
                 className="rounded-md mx-2 p-5 cursor-pointer hover:bg-gray-100"
               >
                 <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
-                    {review.name !== '' && review.name.charAt(0)}
-                  </div>
+                  {review.profileImage !== undefined ? (
+                    <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
+                      {review.nickname && review.nickname.charAt(0)}
+                    </div>
+                  ) : (
+                    review.profileImage && (
+                      <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
+                        {review.profileImage}
+                      </div>
+                    )
+                  )}
                   <div className="ml-3">
-                    <h5 className="font-medium">{review.name}</h5>
-                    <p className="text-xs text-gray-500">{review.joined}</p>
+                    <h5 className="font-medium">{review.nickname}</h5>
+                    <p className="text-xs text-gray-500">숙박 일시&nbsp;{review.startDate}~{review.endDate}</p>
                   </div>
                 </div>
                 <p className="mt-2 text-sm">{review.content}</p>
-                {review.hostReply !== '' && (
-                  <div className="mt-2 ml-4 border-l-2 border-gray-300 pl-2 text-xs text-gray-600">
-                    {review.hostReply}
-                  </div>
-                )}
               </div>
             ))}
           </div>
         </div>
       </div>
+      {error !== null &&
+        <div className="fixed inset-0 bg-black bg-opacity-50">에러: {error}</div>
+      }
+      {isLoading &&
+        <div className="fixed inset-0 bg-black bg-opacity-50">서버에서 데이터를 가져오는 중...</div>
+      }
     </div>
+
   );
 };
 

@@ -48,14 +48,14 @@ export const Roomdetail = () => {
       }
     };
     void handleDetail();
-  }, [id]);
+  }, []);
 
   return (
     <div className="flex flex-col justify-start items-center w-full">
       <Topbar />
       <div className="flex flex-col w-full px-[55px]">
         <div className="flex w-full items-end justify-between py-4">
-          <div className="text-2xl font-normal">{roomData?.name}</div>
+          <div className="text-2xl font-normal">{roomData?.roomName}</div>
           <Shareheart />
         </div>
         <div className="grid grid-cols-4 grid-rows-2 gap-2 w-full h-[330px]">
