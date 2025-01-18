@@ -3,8 +3,8 @@ import { useState } from 'react';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
-import CalendarModal from '@/components/home/Topbar/Search/modals/CalendarModal';
-import GuestsModal from '@/components/home/Topbar/Search/modals/GuestsModal';
+import RoomCalendarModal from './roomCalendarModal';
+import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
 import clock from '@/assets/icons/reservation/clock.svg';
 import type { roomType } from '@/types/roomType';
 
@@ -13,8 +13,8 @@ interface InfoProps {
 }
 
 type roomReservationResponseType = {
-  reservationId: number
-}
+  reservationId: number;
+};
 
 const Reservation = ({ data }: InfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -31,8 +31,13 @@ const Reservation = ({ data }: InfoProps) => {
       if (token == null) {
         throw new Error('로그인이 필요합니다.');
       }
-      console.debug(data)
-      if (data.roomId === 0 || checkIn == null || checkOut == null || guests <= 0) {
+      console.debug(data);
+      if (
+        data.roomId === 0 ||
+        checkIn == null ||
+        checkOut == null ||
+        guests <= 0
+      ) {
         throw new Error('모든 필드를 입력해주세요.');
       }
 
@@ -57,8 +62,11 @@ const Reservation = ({ data }: InfoProps) => {
       if (!response.ok) {
         throw new Error('숙소 예약에 실패했습니다.');
       }
-      const responseData = (await response.json()) as roomReservationResponseType;
-      alert(`숙소가 성공적으로 예약되었습니다! ID: ${responseData.reservationId}`);
+      const responseData =
+        (await response.json()) as roomReservationResponseType;
+      alert(
+        `숙소가 성공적으로 예약되었습니다! ID: ${responseData.reservationId}`,
+      );
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다.';
@@ -77,7 +85,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('calendar');
+                  openModal('roomCalendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -92,7 +100,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('calendar');
+                  openModal('roomCalendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -110,7 +118,7 @@ const Reservation = ({ data }: InfoProps) => {
           <div className="my-4 w-full">
             <button
               onClick={() => {
-                openModal('guests');
+                openModal('roomGuests');
               }}
               className="flex flex-col items-start mt-1 w-full border border-gray-300 rounded-md py-2 px-3 bg-white cursor-pointer text-gray-700"
             >
@@ -165,18 +173,21 @@ const Reservation = ({ data }: InfoProps) => {
         </button>
       </div>
       <BaseModal
-        isOpen={currentModal === 'calendar'}
+        isOpen={currentModal === 'roomCalendar'}
         onClose={closeModal}
         title="날짜 선택"
       >
-        <CalendarModal onClose={closeModal} />
+        <RoomCalendarModal id={data.roomId} onClose={closeModal} />
       </BaseModal>
       <BaseModal
-        isOpen={currentModal === 'guests'}
+        isOpen={currentModal === 'roomGuests'}
         onClose={closeModal}
         title="인원 선택"
       >
-        <GuestsModal onClose={closeModal} />
+        <RoomGuestsModal
+          maxOccupancy={data.maxOccupancy}
+          onClose={closeModal}
+        />
       </BaseModal>
     </>
   );

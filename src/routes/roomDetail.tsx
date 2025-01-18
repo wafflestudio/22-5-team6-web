@@ -2,7 +2,7 @@ import { PhotoSizeSelectActual as PhotoSizeSelectActualIcon } from '@mui/icons-m
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
-import gallery from '@/assets/icons/roomdetail/gallery.svg'
+import gallery from '@/assets/icons/roomdetail/gallery.svg';
 import Topbar from '@/components/home/Topbar';
 import Info from '@/components/roomdetail/Info';
 import PhotoModal from '@/components/roomdetail/PhotoModal';

@@ -93,44 +93,29 @@ const Info = ({ data }: InfoProps) => {
           )}
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={superhost}
-            className="h-6 w-6 opacity-60"
-          />
+          <img src={superhost} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {issuperhost ? '슈퍼호스트' : '훌륭한 호스트'}
           </div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={LuggageIcon}
-            className="h-6 w-6 opacity-60"
-          />
+          <img src={LuggageIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {isluggage ? '여행 가방 보관 가능' : '여행 가방 보관 풀가'}
           </div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={CheckinIcon}
-            className="h-6 w-6 opacity-60"
-          />
+          <img src={CheckinIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {ischeckin ? '셀프체크인' : '편의성이 뛰어난 체크인 절차'}
           </div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={TvIcon}
-            className="h-6 w-6 opacity-60"
-          />
+          <img src={TvIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">{istv ? 'TV' : 'TV 없음'}</div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
-          <img
-            src={WifiIcon}
-            className="h-6 w-6 opacity-60"
-          />
+          <img src={WifiIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
             {iswifi ? '와이파이' : '와이파이 없음'}
           </div>

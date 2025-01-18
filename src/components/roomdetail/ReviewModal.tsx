@@ -4,7 +4,7 @@ import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useEffect, useState } from 'react';
 
 import { CheckinIcon } from '@/components/common/constants/icons';
-import accuracy from '@/assets/icons/reviews/clean.svg';
+import accuracy from '@/assets/icons/reviews/accuracy.svg';
 import clean from '@/assets/icons/reviews/clean.svg';
 import type { ReviewsResponse } from '@/types/reviewType';
 import type { roomType } from '@/types/roomType';
@@ -161,7 +161,9 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
             <div className="flex justify-between items-start">
               <div className="text-xl ml-8 w-fit h-fit">
                 후기{' '}
-                <span className="font-bold w-fit h-fit">{reviewData?.content.length}</span>
+                <span className="font-bold w-fit h-fit">
+                  {reviewData?.content.length}
+                </span>
                 개
               </div>
               <button
@@ -208,7 +210,9 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
                   )}
                   <div className="ml-3">
                     <h5 className="font-medium">{review.nickname}</h5>
-                    <p className="text-xs text-gray-500">숙박 일시&nbsp;{review.startDate}~{review.endDate}</p>
+                    <p className="text-xs text-gray-500">
+                      숙박 일시&nbsp;{review.startDate}~{review.endDate}
+                    </p>
                   </div>
                 </div>
                 <p className="mt-2 text-sm">{review.content}</p>
@@ -217,14 +221,17 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
           </div>
         </div>
       </div>
-      {error !== null &&
-        <div className="fixed inset-0 bg-black bg-opacity-50">에러: {error}</div>
-      }
-      {isLoading &&
-        <div className="fixed inset-0 bg-black bg-opacity-50">서버에서 데이터를 가져오는 중...</div>
-      }
+      {error !== null && (
+        <div className="fixed inset-0 bg-black bg-opacity-50">
+          에러: {error}
+        </div>
+      )}
+      {isLoading && (
+        <div className="fixed inset-0 bg-black bg-opacity-50">
+          서버에서 데이터를 가져오는 중...
+        </div>
+      )}
     </div>
-
   );
 };
 

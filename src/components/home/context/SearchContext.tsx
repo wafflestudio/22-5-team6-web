@@ -1,7 +1,13 @@
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState } from 'react';
 
-type ModalType = 'location' | 'calendar' | 'guests' | null;
+type ModalType =
+  | 'location'
+  | 'calendar'
+  | 'guests'
+  | 'roomCalendar'
+  | 'roomGuests'
+  | null;
 
 type Location = {
   sido: string;

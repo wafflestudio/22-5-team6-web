@@ -44,10 +44,7 @@ const ShareModal = ({ onClose }: HeartModalProps) => {
         </div>
         <div className="grid grid-cols-2 gap-2 px-2">
           {mockHeart.map((list) => (
-            <div
-              className="flex flex-col items-start p-2"
-              key={list.name}
-            >
+            <div className="flex flex-col items-start p-2" key={list.name}>
               <PhotoSizeSelectActualIcon className="text-white bg-gray-300 w-full h-[200px] rounded-md shadow-md" />
               <p className="mt-2 text-base font-bold">{list.name}</p>
               <p className="text-gray-500 text-sm">
