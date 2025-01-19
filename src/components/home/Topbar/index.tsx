@@ -1,5 +1,5 @@
 import Header from './Header';
-import SearchBar from './Search/SearchBar';
+import SearchBar from './SearchBar';
 
 const Topbar = () => {
   return (

@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useCallback } from 'react';
 import { createContext, useContext, useState } from 'react';
 
 import { RoomType } from '@/types/room';
@@ -106,7 +107,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   };
 
   // searchRooms 함수 내부 로직
-  const buildSearchParams = (): RoomSearchParams => {
+  const buildSearchParams = useCallback((): RoomSearchParams => {
     const searchParams: RoomSearchParams = {
       page: pageInfo.pageNumber,
       size: pageInfo.pageSize,
@@ -146,7 +147,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     }
 
     return searchParams;
-  };
+  }, [location, checkIn, checkOut, guests, filter, pageInfo]);
 
   // URLSearchParams로 변환하는 함수
   const convertToURLSearchParams = (
@@ -164,7 +165,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   };
 
   // searchRooms 함수 수정
-  const searchRooms = async () => {
+  const searchRooms = useCallback(async () => {
     setIsLoading(true);
     setError(null);
 
@@ -195,7 +196,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [buildSearchParams]); 
 
   // 공통 응답 처리 함수
   const handleResponseData = (data: RoomListResponse) => {
