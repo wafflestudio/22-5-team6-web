@@ -10,9 +10,9 @@ const Listings = () => {
   const { rooms, isLoading, error, searchRooms, pageInfo, handlePageChange } =
     useRoomSearch();
 
-  useEffect(() => {
-    void searchRooms();
-  }, [searchRooms]);
+  // useEffect(() => {
+  //   void searchRooms();
+  // }, [searchRooms]);
 
   const handleRoomClick = (id: string) => {
     void navigate(`/${id}`);

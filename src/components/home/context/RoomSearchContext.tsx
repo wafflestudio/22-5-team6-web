@@ -51,7 +51,6 @@ type RoomSearchContextType = {
 
   // 페이지네이션
   pageInfo: PageInfo;
-  setPage: (page: number) => void;
   handlePageChange: (page: number) => void;
 
   // 필터 관련
@@ -99,11 +98,6 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   };
   const closeModal = () => {
     setCurrentModal(null);
-  };
-
-  // 페이지 변경 핸들러
-  const setPage = (page: number) => {
-    setPageInfo((prev) => ({ ...prev, pageNumber: page }));
   };
 
   // searchRooms 함수 내부 로직
@@ -173,7 +167,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       const searchParams = buildSearchParams();
       const urlParams = convertToURLSearchParams(searchParams);
 
-      const hasSearchParams = Object.keys(searchParams).length > 3; 
+      const hasSearchParams = Object.keys(searchParams).length > 3;
       const endpoint = hasSearchParams
         ? '/api/v1/rooms/main/search'
         : '/api/v1/rooms/main';
@@ -196,7 +190,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [buildSearchParams]); 
+  }, [buildSearchParams]);
 
   // 공통 응답 처리 함수
   const handleResponseData = (data: RoomListResponse) => {
@@ -211,7 +205,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         },
         price: item.price,
         rating: item.averageRating,
-        imageUrl: item.imageUrl
+        imageUrl: item.imageUrl,
       }),
     );
 
@@ -232,10 +226,18 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   };
 
   // 페이지 변경 시
-  const handlePageChange = (page: number) => {
-    setPageInfo((prev) => ({ ...prev, pageNumber: page }));
+  // const handlePageChange = (page: number) => {
+  //   setPageInfo((prev) => ({ ...prev, pageNumber: page }));
+  //   void searchRooms();
+  // };
+  const handlePageChange = useCallback((page: number) => {
+    setPageInfo((prev) =>
+      prev.pageNumber !== page ? { ...prev, pageNumber: page } : prev
+    );
     void searchRooms();
-  };
+  }, [searchRooms]);
+
+  
 
   return (
     <SearchContext.Provider
@@ -255,7 +257,6 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         isLoading,
         error,
         pageInfo,
-        setPage,
         filter,
         setFilter,
         searchRooms,
