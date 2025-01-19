@@ -59,47 +59,106 @@ export const Roomdetail = () => {
           <Shareheart />
         </div>
         <div className="grid grid-cols-4 grid-rows-2 gap-2 w-full h-[330px]">
-          <div className="col-span-2 row-span-2 flex items-center justify-center rounded-l-xl bg-gray-300 hover:bg-gray-400 cursor-pointer">
-            <PhotoSizeSelectActualIcon
-              style={{ width: '50%', height: '50%', color: 'white' }}
-            />
-          </div>
-          <div className="col-span-1 flex items-center justify-center bg-gray-300 hover:bg-gray-400 cursor-pointer">
-            <PhotoSizeSelectActualIcon
-              style={{ width: '50%', height: '50%', color: 'white' }}
-            />
-          </div>
-          <div className="col-span-1 flex items-center justify-center bg-gray-300 hover:bg-gray-400 cursor-pointer rounded-tr-xl">
-            <PhotoSizeSelectActualIcon
-              style={{ width: '50%', height: '50%', color: 'white' }}
-            />
-          </div>
-          <div className="col-span-1 flex items-center justify-center bg-gray-300 hover:bg-gray-400 cursor-pointer">
-            <PhotoSizeSelectActualIcon
-              style={{ width: '50%', height: '50%', color: 'white' }}
-            />
-          </div>
-          <div className="col-span-1 relative flex items-center justify-center bg-gray-300 hover:bg-gray-400 cursor-pointer rounded-br-xl">
-            <PhotoSizeSelectActualIcon
-              style={{ width: '50%', height: '50%', color: 'white' }}
-            />
-            <button
-              onClick={() => {
-                setIsPhotoOpen(true);
-              }}
-              className="absolute bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit"
-            >
-              <img
-                src={gallery}
-                className="w-[15px] h-[15px] snap-center"
-                alt="gallery icon"
-              />
-              <div className="text-black text-sm text-center">
-                사진 모두 보기
-              </div>
-            </button>
-          </div>
+          {roomData?.imageUrlList && roomData.imageUrlList.length > 0
+            ? (
+              <>
+                {/* 이미지 채우기 */}
+                {roomData.imageUrlList.slice(0, 5).map((url, index) => (
+                  <div
+                    key={index}
+                    className={`relative flex items-center justify-center ${index === 0 ? 'col-span-2 row-span-2 rounded-l-xl' : ''
+                      } ${index === 2 ? 'rounded-tr-xl' : ''} ${index === 4 ? 'rounded-br-xl' : ''
+                      } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
+                  >
+                    <img
+                      src={url}
+                      alt={`Room image ${index + 1}`}
+                      className="w-full h-full object-cover"
+                    />
+                    {index === 4 && <button
+                      onClick={() => {
+                        setIsPhotoOpen(true);
+                      }}
+                      className="absolute bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit"
+                    >
+                      <img
+                        src={gallery}
+                        className="w-[15px] h-[15px] snap-center"
+                        alt="gallery icon"
+                      />
+                      <div className="text-black text-sm text-center">
+                        사진 모두 보기
+                      </div>
+                    </button>}
+                  </div>
+                ))}
+
+                {/* 부족한 칸을 아이콘으로 채우기 */}
+                {Array.from({ length: 5 - roomData.imageUrlList.length }).map((_, index) => (
+                  <div
+                    key={`icon-${index}`}
+                    className={`relative flex items-center justify-center ${roomData.imageUrlList.length + index === 0
+                      ? 'col-span-2 row-span-2 rounded-l-xl'
+                      : ''
+                      } ${roomData.imageUrlList.length + index === 2 ? 'rounded-tr-xl' : ''
+                      } ${roomData.imageUrlList.length + index === 4 ? 'rounded-br-xl' : ''
+                      } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
+                  >
+                    <PhotoSizeSelectActualIcon
+                      style={{ width: '50%', height: '50%', color: 'white' }}
+                    />
+                    {roomData.imageUrlList.length + index === 4 && <button
+                      onClick={() => {
+                        setIsPhotoOpen(true);
+                      }}
+                      className="absolute z-10 bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit"
+                    >
+                      <img
+                        src={gallery}
+                        className="w-[15px] h-[15px] snap-center"
+                        alt="gallery icon"
+                      />
+                      <div className="text-black text-sm text-center">
+                        사진 모두 보기
+                      </div>
+                    </button>}
+                  </div>
+                ))}
+              </>
+            )
+            : (
+              // roomData.imageUrlList가 비었을 경우 아이콘만 표시
+              Array.from({ length: 5 }).map((_, index) => (
+                <div
+                  key={index}
+                  className={`relative flex items-center justify-center ${index === 0 ? 'col-span-2 row-span-2 rounded-l-xl' : ''
+                    } ${index === 2 ? 'rounded-tr-xl' : ''} ${index === 4 ? 'rounded-br-xl' : ''
+                    } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
+                >
+                  <PhotoSizeSelectActualIcon
+                    style={{ width: '50%', height: '50%', color: 'white' }}
+                  />
+                  {index === 4 && <button
+                    onClick={() => {
+                      setIsPhotoOpen(true);
+                    }}
+                    className="absolute bottom-3 right-3 px-3 py-1 gap-[5px] rounded-lg border border-black bg-white flex justify-center items-center w-fit"
+                  >
+                    <img
+                      src={gallery}
+                      className="w-[15px] h-[15px] snap-center"
+                      alt="gallery icon"
+                    />
+                    <div className="text-black text-sm text-center">
+                      사진 모두 보기
+                    </div>
+                  </button>}
+                </div>
+              ))
+            )}
         </div>
+
+
         <div className="flex items-start w-full h-fit">
           <div className="flex-[70%]">
             {roomData !== null ? <Info data={roomData} /> : <p>로딩 중...</p>}

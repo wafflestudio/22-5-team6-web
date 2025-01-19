@@ -37,4 +37,5 @@ export type roomType = {
   isSuperhost: boolean;
   createdAt: string; // ISO 8601 날짜 형식
   updatedAt: string; // ISO 8601 날짜 형식
+  imageUrlList: string[]
 };
