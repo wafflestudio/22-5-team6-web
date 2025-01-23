@@ -9,6 +9,8 @@ import HostingImage from '@/routes/HostingImageUpload';
 import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
+import MyReservationDetails from './components/profile/MyReservationDetails';
+import MyReservations from './routes/MyReservations';
 import Profile from './routes/Profile';
 import ProfileEdit from './routes/ProfileEdit';
 import { Roomdetail } from './routes/roomDetail';
@@ -28,6 +30,11 @@ export const App = () => {
           <Route path="/profile" element={<Profile />} />
           <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/MyReservations" element={<MyReservations />} />
+          <Route
+            path="/reservations/:reservationId"
+            element={<MyReservationDetails />}
+          />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
       </SearchProvider>

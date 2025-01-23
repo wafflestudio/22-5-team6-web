@@ -148,7 +148,13 @@ const UserProfile = () => {
               </p>
             </div>
           </div>
-          <button className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100">
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              void navigate('/MyReservations');
+            }}
+            className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
+          >
             지난 여행 보기
           </button>
           <hr className="w-full my-8 border-t border-gray-300" />
