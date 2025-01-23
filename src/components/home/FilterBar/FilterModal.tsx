@@ -8,7 +8,7 @@ interface FilterModalProps {
   onClose: () => void;
 }
 
-const initialMinPrice = 10000;
+const initialMinPrice = 1000;
 const initialMaxPrice = 1000000;
 
 export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
