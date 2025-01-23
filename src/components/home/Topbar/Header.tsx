@@ -7,14 +7,12 @@ import { LogoIcon, LogoText } from '@/components/common/constants/Logo';
 
 import Dropdown from './Menu/DropDown';
 import LoginModal from './Menu/LoginModal';
-import SignupModal from './Menu/RegisterModal';
 
 const Topbar = () => {
   const navigate = useNavigate();
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isSignupModalOpen, setSignupModalOpen] = useState(false);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -34,17 +32,8 @@ const Topbar = () => {
     setDropdownOpen(false);
   };
 
-  const handleSignupModalOpen = () => {
-    setSignupModalOpen(true);
-    setDropdownOpen(false);
-  };
-
   const handleLoginModalClose = () => {
     setLoginModalOpen(false);
-  };
-
-  const handleSignupModalClose = () => {
-    setSignupModalOpen(false);
   };
 
   const handleLogout = () => {
@@ -96,7 +85,6 @@ const Topbar = () => {
                   setDropdownOpen(false);
                 }}
                 onLogin={handleLoginModalOpen}
-                onSignup={handleSignupModalOpen}
                 onLogout={handleLogout}
               />
             </div>
@@ -108,20 +96,9 @@ const Topbar = () => {
         <LoginModal
           isOpen={isLoginModalOpen}
           onClose={handleLoginModalClose}
-          onSwitchToSignup={() => {
+          navigateToSignup={() => {
             handleLoginModalClose();
-            handleSignupModalOpen();
-          }}
-        />
-      )}
-
-      {isSignupModalOpen && (
-        <SignupModal
-          isOpen={isSignupModalOpen}
-          onClose={handleSignupModalClose}
-          onSwitchToLogin={() => {
-            handleSignupModalClose();
-            handleLoginModalOpen();
+            void navigate('/register');
           }}
         />
       )}
