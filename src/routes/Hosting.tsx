@@ -1,4 +1,3 @@
-// routes/Hosting.tsx
 import HostingForm from '../components/hosting';
 
 export default function Hosting() {

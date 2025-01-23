@@ -1,10 +1,11 @@
 import { StyledEngineProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 
-import { SearchProvider } from '@/components/home/context/SearchContext';
+import { SearchProvider } from '@/components/home/context/RoomSearchContext';
 import { ApiTest } from '@/routes/ApiTest';
 import Home from '@/routes/Home';
 import Hosting from '@/routes/Hosting';
+import HostingImage from '@/routes/HostingImageUpload';
 import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
@@ -22,6 +23,7 @@ export const App = () => {
           <Route path="/tests" element={<ApiTest />} />
           <Route path="/redirect" element={<Redirect />} />
           <Route path="/hosting" element={<Hosting />} />
+          <Route path="/hosting/images" element={<HostingImage />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />

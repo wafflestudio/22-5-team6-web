@@ -38,20 +38,6 @@ export type Price = {
 };
 
 export type RoomApiResponse = {
-  id: number;
-  hostId: number;
-  name: string;
-  description: string;
-  type: RoomType;
-  address: {
-    sido: string;
-    sigungu: string;
-    street: string;
-    detail: string;
-  };
-  price: number;
-  maxOccupancy: number;
-  rating: number;
-  createdAt: string;
-  updatedAt: string;
+  roomId: number;
+  imageUploadUrlList: string[];
 };

@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
 type BaseModalProps = {
@@ -28,7 +28,7 @@ const BaseModal = ({ isOpen, onClose, title, children }: BaseModalProps) => {
             onClick={onClose}
             className="absolute left-4 p-2 rounded-full hover:bg-gray-100"
           >
-            <X size={18} />
+            <CloseIcon sx={{ fontSize: 18 }} />
           </button>
 
           {/* Title */}

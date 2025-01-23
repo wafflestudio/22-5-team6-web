@@ -2,7 +2,7 @@ import dayjs from 'dayjs';
 import { useEffect, useState } from 'react';
 import { useCallback } from 'react';
 
-import { useSearch } from '@/components/home/context/SearchContext';
+import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
 
 type AvailabilityResponse = {
   availableDates: string[];
@@ -15,7 +15,7 @@ type CalendarModalProps = {
 };
 
 const RoomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
-  const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();
+  const { checkIn, checkOut, setCheckIn, setCheckOut } = useRoomSearch();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [selecting, setSelecting] = useState<'checkIn' | 'checkOut'>('checkIn');
   const [availableDates, setAvailableDates] = useState<string[]>([]);
