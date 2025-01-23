@@ -10,7 +10,14 @@ import type {
   RoomSearchParams,
 } from '@/types/roomSearch';
 
-type ModalType = 'location' | 'calendar' | 'guests' | 'filter' | null;
+type ModalType =
+  | 'location'
+  | 'calendar'
+  | 'guests'
+  | 'filter'
+  | 'roomCalendar'
+  | 'roomGuests'
+  | null;
 
 type Location = {
   sido?: string;

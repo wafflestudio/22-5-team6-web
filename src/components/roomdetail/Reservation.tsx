@@ -3,7 +3,7 @@ import { useState } from 'react';
 
 import clock from '@/assets/icons/reservation/clock.svg';
 import BaseModal from '@/components/common/Modal/BaseModal';
-import { useSearch } from '@/components/home/context/SearchContext';
+import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
 import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
 import type { roomType } from '@/types/roomType';
 
@@ -21,7 +21,7 @@ const Reservation = ({ data }: InfoProps) => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { checkIn, checkOut, guests, currentModal, openModal, closeModal } =
-    useSearch();
+    useRoomSearch();
 
   const handleReservation = async () => {
     try {
