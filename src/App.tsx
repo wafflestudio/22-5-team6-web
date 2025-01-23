@@ -10,6 +10,7 @@ import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
 import Profile from './routes/Profile';
+import ProfileEdit from './routes/ProfileEdit';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {
@@ -25,6 +26,7 @@ export const App = () => {
           <Route path="/hosting" element={<Hosting />} />
           <Route path="/hosting/images" element={<HostingImage />} />
           <Route path="/profile" element={<Profile />} />
+          <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>

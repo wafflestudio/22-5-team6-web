@@ -13,6 +13,7 @@ const RegisterPage: React.FC = () => {
     bio: '',
     showMyReviews: false,
     showMyReservations: false,
+    showMyWishlist: false,
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [showPassword, setShowPassword] = useState(false);
@@ -61,12 +62,13 @@ const RegisterPage: React.FC = () => {
       'showMyReservations',
       formData.showMyReservations.toString(),
     );
+    formDataToSend.append('showMyWishlist', formData.showMyWishlist.toString());
     if (profileImage !== null) {
       formDataToSend.append('profileImage', profileImage);
     }
 
     type RegisterResponseData = {
-      imageUploadurl: string;
+      imageUploadUrl: string;
     };
 
     try {
@@ -82,7 +84,7 @@ const RegisterPage: React.FC = () => {
 
       alert('회원가입 성공');
 
-      const presignedUrl = RegisterResponse.data.imageUploadurl;
+      const presignedUrl = RegisterResponse.data.imageUploadUrl;
 
       if (profileImage !== null && presignedUrl !== '') {
         const uploadSuccess = await uploadImageWithPresignedUrl(
