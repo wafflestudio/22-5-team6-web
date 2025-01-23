@@ -91,7 +91,9 @@ const SearchBar = () => {
                 </span>
               </button>
               <button
-                onClick={void searchRooms}
+                onClick={() => {
+                  void searchRooms();
+                }}
                 className="p-3 rounded-full bg-airbnb"
                 aria-label="검색"
               >

@@ -16,10 +16,11 @@ import PriceInput from './PriceInput';
 import RoomDetailsInput from './RoomDetailsInput';
 
 export default function HostingForm() {
-  const [type, setType] = useState<RoomType | null>(null);
-  const [name, setName] = useState('');
+  const [roomType, setRoomType] = useState<RoomType | null>(null);
+  const [roomName, setRoomName] = useState('');
   const [description, setDescription] = useState('');
   const [maxOccupancy, setMaxOccupancy] = useState('');
+  const [imageSlot, setImageSlot] = useState('');
   const [address, setAddress] = useState<Address>({
     sido: '',
     sigungu: '',
@@ -57,8 +58,8 @@ export default function HostingForm() {
       }
 
       if (
-        type == null ||
-        name === '' ||
+        roomType == null ||
+        roomName === '' ||
         description === '' ||
         price.perNight === '' ||
         maxOccupancy === '' ||
@@ -68,7 +69,8 @@ export default function HostingForm() {
         address.detail === '' ||
         roomDetails.bedroom === '' ||
         roomDetails.bathroom === '' ||
-        roomDetails.bed === ''
+        roomDetails.bed === '' ||
+        imageSlot === ''
       ) {
         throw new Error('모든 필드를 입력해주세요.');
       }
@@ -80,9 +82,9 @@ export default function HostingForm() {
           Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
-          name: name,
+          roomName: roomName,
           description: description,
-          type: type,
+          roomType: roomType,
           address: {
             sido: address.sido,
             sigungu: address.sigungu,
@@ -105,6 +107,7 @@ export default function HostingForm() {
             total: Number(price.total),
           },
           maxOccupancy: Number(maxOccupancy),
+          imageSlot: Number(imageSlot),
         }),
       });
 
@@ -112,8 +115,13 @@ export default function HostingForm() {
         throw new Error('숙소 등록에 실패했습니다.');
       }
       const responseData = (await response.json()) as RoomApiResponse;
-      alert(`숙소가 성공적으로 등록되었습니다! ID: ${responseData.id}`);
-      void navigate('/');
+
+      void navigate('/hosting/images', {
+        state: {
+          imageUploadUrls: responseData.imageUploadUrlList,
+          totalImages: Number(imageSlot),
+        },
+      });
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다.';
@@ -135,7 +143,10 @@ export default function HostingForm() {
           {/* 숙소 타입 선택 */}
           <div className="mb-8">
             <label className="block text-lg font-medium mb-3">숙소 타입</label>
-            <AccommodationType selectedType={type} onTypeSelect={setType} />
+            <AccommodationType
+              selectedType={roomType}
+              onTypeSelect={setRoomType}
+            />
           </div>
 
           {/* 위치 정보 */}
@@ -149,16 +160,16 @@ export default function HostingForm() {
             <label className="block text-lg font-medium mb-2">숙소 이름</label>
             <input
               type="text"
-              value={name}
+              value={roomName}
               onChange={(e) => {
-                setName(e.target.value);
+                setRoomName(e.target.value);
               }}
               maxLength={32}
               placeholder="숙소의 특징을 잘 나타내는 이름을 지어주세요"
               className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-airbnb focus:border-transparent"
             />
             <div className="text-right mt-1 text-sm text-gray-500">
-              {name.length}/32
+              {roomName.length}/32
             </div>
           </div>
 
@@ -215,6 +226,31 @@ export default function HostingForm() {
             </div>
           </div>
 
+          {/* 이미지 개수 입력 */}
+          <div className="mb-8">
+            <label className="block text-lg font-medium mb-2">
+              업로드할 숙소 이미지 개수
+            </label>
+            <div className="relative">
+              <input
+                type="number"
+                value={imageSlot}
+                onChange={(e) => {
+                  setImageSlot(e.target.value);
+                }}
+                min="5"
+                className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-airbnb focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+                placeholder="최소 5장 이상의 숫자를 입력해주세요"
+              />
+              <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
+                장
+              </span>
+            </div>
+            <p className="mt-2 text-sm text-gray-600">
+              ⚠️ 설정한 개수만큼 정확히 이미지를 업로드해야 합니다
+            </p>
+          </div>
+
           {/* 에러 메시지 표시 */}
           {error != null && (
             <div className="mb-4 p-4 bg-red-50 text-red-600 rounded-lg">
@@ -231,7 +267,7 @@ export default function HostingForm() {
               isLoading ? 'bg-gray-400' : 'bg-airbnb hover:bg-airbnb-hover'
             } text-white rounded-lg py-3 font-medium transition-colors`}
           >
-            {isLoading ? '등록 중...' : '숙소 등록하기'}
+            {isLoading ? '등록 중...' : '이미지 등록하기'}
           </button>
         </div>
       </div>

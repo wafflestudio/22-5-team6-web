@@ -8,8 +8,8 @@ interface FilterModalProps {
   onClose: () => void;
 }
 
-const initialMinPrice = 15000;
-const initialMaxPrice = 310000;
+const initialMinPrice = 10000;
+const initialMaxPrice = 1000000;
 
 export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
   const { filter, setFilter, searchRooms } = useRoomSearch();
@@ -38,9 +38,7 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
       <div className="space-y-8">
         <div>
           <h3 className="text-lg font-medium mb-4">가격 범위</h3>
-          <p className="text-sm text-gray-500 mb-4">
-            1박 요금 (수수료 및 세금 포함)
-          </p>
+          <p className="text-sm text-gray-500 mb-4">1박 요금</p>
           <div className="flex gap-4">
             <div className="flex-1">
               <div className="relative">

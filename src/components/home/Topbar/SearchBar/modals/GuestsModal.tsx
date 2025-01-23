@@ -51,16 +51,18 @@ const GuestsModal = ({ onClose }: GuestsModalProps) => {
         </div>
       </div>
 
-      <div className="flex items-center mt-6 pt-4 border-t gap-8">
-        <button onClick={onClose} className="text-base underline font-medium">
-          취소
-        </button>
-        <button
-          onClick={handleSave}
-          className="px-6 py-3 bg-black text-white rounded-lg font-medium"
-        >
-          저장하기
-        </button>
+      <div className="flex items-center mt-6 pt-4 border-t justify-end">
+        <div className="flex items-center gap-8">
+          <button onClick={onClose} className="text-base underline font-medium">
+            취소
+          </button>
+          <button
+            onClick={handleSave}
+            className="px-6 py-3 bg-black text-white rounded-lg font-medium"
+          >
+            저장하기
+          </button>
+        </div>
       </div>
     </div>
   );

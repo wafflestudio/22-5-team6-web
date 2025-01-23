@@ -1,4 +1,3 @@
-// src/components/home/Search/modals/LocationModal/PopularCities.tsx
 import { POPULAR_CITIES } from './constants';
 
 type PopularCitiesProps = {

@@ -1,5 +1,4 @@
-// components/home/Listings/index.tsx
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { useRoomSearch } from '../context/RoomSearchContext';
@@ -10,9 +9,14 @@ const Listings = () => {
   const { rooms, isLoading, error, searchRooms, pageInfo, handlePageChange } =
     useRoomSearch();
 
-  // useEffect(() => {
-  //   void searchRooms();
-  // }, [searchRooms]);
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (isInitialMount.current) {
+      void searchRooms();
+      isInitialMount.current = false;
+    }
+  }, [searchRooms]);
 
   const handleRoomClick = (id: string) => {
     void navigate(`/${id}`);

@@ -4,10 +4,7 @@ import { useState } from 'react';
 import clock from '@/assets/icons/reservation/clock.svg';
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
-import CalendarModal from '@/components/home/Topbar/SearchBar/modals/CalendarModal';
-import GuestsModal from '@/components/home/Topbar/SearchBar/modals/GuestsModal';
-import clock from '@/components/roomdetail/clock.svg';
-import type { roomReservationType } from '@/types/roomReservationType';
+import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
 import type { roomType } from '@/types/roomType';
 
 import RoomCalendarModal from './roomCalendarModal';
@@ -89,7 +86,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('roomCalendar');
+                  openModal('calendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -104,7 +101,7 @@ const Reservation = ({ data }: InfoProps) => {
             <div className="w-full">
               <button
                 onClick={() => {
-                  openModal('roomCalendar');
+                  openModal('calendar');
                 }}
                 className="flex flex-col items-start mt-1 w-full border border-red-700 rounded-md py-2 px-3 text-gray-700 bg-white cursor-pointer"
               >
@@ -122,7 +119,7 @@ const Reservation = ({ data }: InfoProps) => {
           <div className="my-4 w-full">
             <button
               onClick={() => {
-                openModal('roomGuests');
+                openModal('guests');
               }}
               className="flex flex-col items-start mt-1 w-full border border-gray-300 rounded-md py-2 px-3 bg-white cursor-pointer text-gray-700"
             >
@@ -177,14 +174,14 @@ const Reservation = ({ data }: InfoProps) => {
         </button>
       </div>
       <BaseModal
-        isOpen={currentModal === 'roomCalendar'}
+        isOpen={currentModal === 'calendar'}
         onClose={closeModal}
         title="날짜 선택"
       >
         <RoomCalendarModal id={data.roomId} onClose={closeModal} />
       </BaseModal>
       <BaseModal
-        isOpen={currentModal === 'roomGuests'}
+        isOpen={currentModal === 'guests'}
         onClose={closeModal}
         title="인원 선택"
       >

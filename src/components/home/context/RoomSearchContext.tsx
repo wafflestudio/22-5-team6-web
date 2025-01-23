@@ -81,7 +81,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   // 페이지네이션 상태
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageNumber: 0,
-    pageSize: 20,
+    pageSize: 4,
     totalElements: 0,
     totalPages: 0,
   });
@@ -158,7 +158,6 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     return urlParams;
   };
 
-  // searchRooms 함수 수정
   const searchRooms = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -201,7 +200,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         type: item.roomType,
         address: {
           sido: item.sido,
-          sigungu: '',
+          sigungu: item.sigungu,
         },
         price: item.price,
         rating: item.averageRating,
@@ -225,19 +224,15 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     setError(errorMessage);
   };
 
-  // 페이지 변경 시
-  // const handlePageChange = (page: number) => {
-  //   setPageInfo((prev) => ({ ...prev, pageNumber: page }));
-  //   void searchRooms();
-  // };
-  const handlePageChange = useCallback((page: number) => {
-    setPageInfo((prev) =>
-      prev.pageNumber !== page ? { ...prev, pageNumber: page } : prev
-    );
-    void searchRooms();
-  }, [searchRooms]);
-
-  
+  const handlePageChange = useCallback(
+    (page: number) => {
+      if (pageInfo.pageNumber !== page) {
+        setPageInfo((prev) => ({ ...prev, pageNumber: page }));
+        void searchRooms();
+      }
+    },
+    [searchRooms, pageInfo.pageNumber],
+  );
 
   return (
     <SearchContext.Provider

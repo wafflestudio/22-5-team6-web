@@ -1,3 +1,4 @@
+import { WifiIcon } from '@/components/common/constants/icons';
 import type { RoomMain } from '@/types/roomSearch';
 
 type ListingItemProps = {
@@ -14,7 +15,7 @@ const ListingItem = ({ listing }: ListingItemProps) => {
           alt={listing.name}
           className="h-full w-full object-cover transition-transform group-hover:scale-105"
           onError={(e) => {
-            e.currentTarget.src = '/api/placeholder/400/400';
+            e.currentTarget.src = WifiIcon;
           }}
         />
       </div>
@@ -32,14 +33,12 @@ const ListingItem = ({ listing }: ListingItemProps) => {
 
         {/* 위치 정보 */}
         <p className="text-gray-500">
-          {/* {listing.address} */}
           {listing.address.sido} {listing.address.sigungu}
         </p>
 
         {/* 가격 정보 */}
         <p className="mt-1">
           <span className="font-semibold">
-            {/* ₩{listing.price.perNight.toLocaleString()} */}₩
             {listing.price.toLocaleString()}
           </span>
           <span className="text-gray-500">/박</span>

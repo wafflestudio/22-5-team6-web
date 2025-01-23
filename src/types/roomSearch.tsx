@@ -1,7 +1,6 @@
 import type { PageResponse } from './pagination';
 import type { RoomType } from './room';
 
-// API 검색 파라미터 타입
 export type RoomSearchParams = {
   page: number;
   size: number;
@@ -16,21 +15,19 @@ export type RoomSearchParams = {
   roomType?: RoomType;
 };
 
-// API 응답의 Room 아이템 타입
 export type RoomMainResponse = {
   roomId: number;
   roomName: string;
   roomType: RoomType;
   sido: string;
+  sigungu: string;
   price: number;
   averageRating: number;
   imageUrl: string;
 };
 
-// room/main 엔드포인트의 전체 응답 타입
 export type RoomListResponse = PageResponse<RoomMainResponse>;
 
-// 내부에서 사용할 매핑된 Room 타입
 export type RoomMain = {
   id: number;
   name: string;

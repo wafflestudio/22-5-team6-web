@@ -13,7 +13,10 @@ const FilterBar = () => {
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const handleTypeClick = (type: RoomType) => {
-    setFilter({ ...filter, roomType: type });
+    setFilter({
+      ...filter,
+      roomType: filter.roomType === type ? null : type,
+    });
     void searchRooms();
   };
 
