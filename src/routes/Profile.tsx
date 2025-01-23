@@ -1,149 +1,87 @@
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+// import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import CheckIcon from '@mui/icons-material/Check';
 import ImageIcon from '@mui/icons-material/Image';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import { Menu, User } from 'lucide-react';
+import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 
-import LogoIcon from '@/assets/Logo/LogoIcon';
-import LogoText from '@/assets/Logo/LogoText';
-import Dropdown from '@/components/home/Topbar/Menu/DropDown';
-import LoginModal from '@/components/home/Topbar/Menu/LoginModal';
-import SignupModal from '@/components/home/Topbar/Menu/RegisterModal';
+import Header from '@/components/home/Topbar/Header';
+
+type UserProfile = {
+  userId: 0;
+  nickname: 'string';
+  bio: 'string';
+  isSuperHost: true;
+  showMyReviews: true;
+  showMyReservations: true;
+  imageUrl: 'string';
+};
 
 const Profile = () => {
-  const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [isDropdownOpen, setDropdownOpen] = useState(false);
-  const [isLoginModalOpen, setLoginModalOpen] = useState(false);
-  const [isSignupModalOpen, setSignupModalOpen] = useState(false);
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [error, setError] = useState<string>('');
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    setIsLoggedIn(token !== null && token.trim() !== '');
+    if (token === null || (typeof token === 'string' && token === '')) {
+      setError('로그인되지 않았습니다.');
+      return;
+    }
+
+    const fetchProfile = async () => {
+      try {
+        const response = await axios.get<UserProfile>('/api/v1/profile', {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          validateStatus: (status) => status < 400,
+        });
+        setProfile(response.data);
+      } catch (err) {
+        if (err instanceof AxiosError) {
+          console.error('프로필 데이터를 가져오는 중 오류 발생:', err.message);
+
+          setError(
+            err.response?.status === 401
+              ? '로그인이 필요합니다. 다시 로그인해주세요.'
+              : '프로필 데이터를 가져오는 데 실패했습니다.',
+          );
+        } else {
+          console.error('예상치 못한 오류 발생:', err);
+          setError('알 수 없는 오류가 발생했습니다.');
+        }
+      }
+    };
+
+    void fetchProfile();
   }, []);
 
-  const handleLogoClick = () => {
-    void navigate(`/`);
-  };
+  if (error !== '') {
+    return <p className="text-red-500">{error}</p>;
+  }
 
-  const toggleDropdown = () => {
-    setDropdownOpen((prev) => !prev);
-  };
-
-  const handleLoginModalOpen = () => {
-    setLoginModalOpen(true);
-    setDropdownOpen(false);
-  };
-
-  const handleSignupModalOpen = () => {
-    setSignupModalOpen(true);
-    setDropdownOpen(false);
-  };
-
-  const handleLoginModalClose = () => {
-    setLoginModalOpen(false);
-  };
-
-  const handleSignupModalClose = () => {
-    setSignupModalOpen(false);
-  };
-
-  const handleLogout = () => {
-    setIsLoggedIn(false);
-    setDropdownOpen(false);
-    localStorage.removeItem('token');
-    alert('로그아웃 되었습니다.');
-  };
+  if (profile === null) {
+    return <p>로딩 중...</p>;
+  }
 
   return (
     <>
-      <header className="sticky top-0 z-50 bg-white border-b shadow-sm">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex flex-col w-full">
-            <div className="h-20 px-10">
-              <div className="flex items-center justify-between h-full">
-                <div className="flex-1">
-                  <button
-                    className="flex items-center gap-1"
-                    onClick={handleLogoClick}
-                  >
-                    <LogoIcon />
-                    <div className="hidden md:block">
-                      <LogoText />
-                    </div>
-                  </button>
-                </div>
-
-                <div className="flex-1 flex items-center justify-end gap-4">
-                  <button
-                    className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm"
-                    onClick={() => {
-                      void navigate('/hosting');
-                    }}
-                  >
-                    당신의 공간을 에어비앤비하세요
-                  </button>
-
-                  <div className="flex items-center justify-end space-x-4 relative">
-                    <button
-                      className="flex items-center gap-3 border border-gray-300 rounded-full p-2 hover:shadow-md transition-shadow"
-                      onClick={toggleDropdown}
-                    >
-                      <Menu size={18} />
-                      <User size={30} className="text-gray-500" />
-                    </button>
-
-                    <Dropdown
-                      isOpen={isDropdownOpen}
-                      isLoggedIn={isLoggedIn}
-                      onClose={() => {
-                        setDropdownOpen(false);
-                      }}
-                      onLogin={handleLoginModalOpen}
-                      onSignup={handleSignupModalOpen}
-                      onLogout={handleLogout}
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {isLoginModalOpen && (
-              <LoginModal
-                isOpen={isLoginModalOpen}
-                onClose={handleLoginModalClose}
-                onSwitchToSignup={() => {
-                  handleLoginModalClose();
-                  handleSignupModalOpen();
-                }}
-              />
-            )}
-
-            {isSignupModalOpen && (
-              <SignupModal
-                isOpen={isSignupModalOpen}
-                onClose={handleSignupModalClose}
-                onSwitchToLogin={() => {
-                  handleSignupModalClose();
-                  handleLoginModalOpen();
-                }}
-              />
-            )}
-          </div>
-        </div>
-      </header>
+      <Header />
 
       <div className="flex justify-self-center mb-28 px-10 py-12 min-w-[950px] w-2/3 gap-x-20">
         <div className="h-full sticky top-32">
           <div className="flex w-[342px] h-[230px] justify-center items-center gap-10 bg-white rounded-3xl shadow-[0_10px_30px_-5px_rgba(0,0,0,0.3)]">
             <div className="justify-items-center">
               <div className="relative inline-block">
-                <AccountCircleIcon className="w-32 h-32 text-gray-400" />
-                <VerifiedUserIcon className="absolute bottom-4 right-1 w-9 h-9 p-2 rounded-full bg-gradient-to-tl from-[#BD1E59] from-20% to-airbnb text-white" />
+                {/* 프로필 이미지 */}
+                <img
+                  src={profile.imageUrl}
+                  alt={`${profile.nickname}님의 프로필`}
+                  className="w-32 h-32 rounded-full border border-gray-300"
+                />
+                <VerifiedUserIcon className="absolute bottom-1 right-0.5 w-9 h-9 p-2 rounded-full bg-gradient-to-tl from-[#BD1E59] from-20% to-airbnb text-white" />
               </div>
-              <p className="mb-2 font-semibold text-3xl">비앤비</p>
+              <p className="mb-2 font-semibold text-3xl">{profile.nickname}</p>
             </div>
             <div className="mr-2">
               <div className="w-24">
@@ -164,7 +102,7 @@ const Profile = () => {
             </div>
           </div>
           <div className="mt-8 px-6 py-8 w-[342px] h-[200px] bg-white rounded-3xl border border-gray-300">
-            <p className="text-2xl">비앤비 님의 인증 정보</p>
+            <p className="text-2xl">{`${profile.nickname} 님의 인증 정보`}</p>
             <div className="mt-6 grid gap-y-3">
               <div className="flex items-center gap-3">
                 <CheckIcon className="w-8 h-8" />
@@ -179,11 +117,11 @@ const Profile = () => {
         </div>
 
         <div className="w-3/5 h-dvh">
-          <p className="font-semibold text-3xl">비앤비 님 소개</p>
+          <p className="font-semibold text-3xl">{`${profile.nickname} 님 소개`}</p>
           <button className="mt-6 mb-8 px-[15px] py-[7px] border border-gray-500 rounded-lg bg-white hover:bg-slate-100 text-sm">
             프로필 수정하기
           </button>
-          <p className="text-s">즐거운 여행 ✿</p>
+          <p className="text-s">{profile.bio}</p>
           <hr className="w-full mt-10 mb-8 border-t border-gray-300" />
           <p className="text-xl">다가오는 여행</p>
           <div className="flex w-full scrollbar-hidden overflow-x-auto gap-2">

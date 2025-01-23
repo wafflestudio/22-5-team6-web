@@ -5,14 +5,10 @@ import React, { useState } from 'react';
 type LoginModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  onSwitchToSignup: () => void;
+  navigateToSignup: () => void;
 };
 
-const LoginModal: React.FC<LoginModalProps> = ({
-  isOpen,
-  onClose,
-  onSwitchToSignup,
-}) => {
+const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -24,8 +20,8 @@ const LoginModal: React.FC<LoginModalProps> = ({
     try {
       window.location.href = '/api/oauth2/authorization/naver';
     } catch (error) {
-      console.error('구글 로그인 중 오류 발생:', error);
-      setErrorMessage('구글 로그인 요청 중 오류가 발생했습니다.');
+      console.error('네이버 로그인 중 오류 발생:', error);
+      setErrorMessage('네이버 로그인 요청 중 오류가 발생했습니다.');
     }
   };
 
@@ -33,8 +29,8 @@ const LoginModal: React.FC<LoginModalProps> = ({
     try {
       window.location.href = '/api/oauth2/authorization/kakao';
     } catch (error) {
-      console.error('구글 로그인 중 오류 발생:', error);
-      setErrorMessage('구글 로그인 요청 중 오류가 발생했습니다.');
+      console.error('카카오 로그인 중 오류 발생:', error);
+      setErrorMessage('카카오 로그인 요청 중 오류가 발생했습니다.');
     }
   };
 
@@ -180,7 +176,9 @@ const LoginModal: React.FC<LoginModalProps> = ({
           <p className="mt-4 text-center text-sm text-gray-500">
             에어비앤비가 처음이신가요?{' '}
             <button
-              onClick={onSwitchToSignup}
+              onClick={() => {
+                window.location.href = '/register';
+              }}
               className="text-airbnb hover:underline"
             >
               회원가입

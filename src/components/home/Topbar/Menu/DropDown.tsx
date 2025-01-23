@@ -6,7 +6,6 @@ type DropdownProps = {
   isLoggedIn: boolean;
   onClose: () => void;
   onLogin: () => void;
-  onSignup: () => void;
   onLogout: () => void;
 };
 
@@ -15,7 +14,6 @@ const Dropdown: React.FC<DropdownProps> = ({
   isLoggedIn,
   onClose,
   onLogin,
-  onSignup,
   onLogout,
 }) => {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -42,6 +40,13 @@ const Dropdown: React.FC<DropdownProps> = ({
   const handleMyPageClick = () => {
     void (async () => {
       await navigate('/profile');
+      onClose();
+    })();
+  };
+
+  const handleRegisterClick = () => {
+    void (async () => {
+      await navigate('/register');
       onClose();
     })();
   };
@@ -76,7 +81,7 @@ const Dropdown: React.FC<DropdownProps> = ({
             로그인
           </button>
           <button
-            onClick={onSignup}
+            onClick={handleRegisterClick}
             className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
           >
             회원가입
