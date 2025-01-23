@@ -1,26 +1,36 @@
-// src/components/home/Search/modals/LocationModal/LocationSelector.tsx
-import { useState } from 'react';
-
 import {
   getDistricts,
   SIDO_LIST,
 } from '@/components/common/constants/koreanDistricts';
 
 type LocationSelectorProps = {
+  selectedSido: string;
+  selectedSigungu: string;
+  onSidoChange: (sido: string) => void;
+  onSigunguChange: (sigungu: string) => void;
   onSelect: (location: { sido: string; sigungu: string }) => void;
 };
 
-export default function LocationSelector({ onSelect }: LocationSelectorProps) {
-  const [selectedSido, setSelectedSido] = useState('');
-  const [selectedSigungu, setSelectedSigungu] = useState('');
-
+export default function LocationSelector({
+  selectedSido,
+  selectedSigungu,
+  onSidoChange,
+  onSigunguChange,
+  onSelect,
+}: LocationSelectorProps) {
   const handleSidoChange = (sido: string) => {
-    setSelectedSido(sido);
-    setSelectedSigungu('');
+    onSidoChange(sido);
+    onSigunguChange('');
+    if (sido !== '') {
+      onSelect({
+        sido: sido,
+        sigungu: '',
+      });
+    }
   };
 
   const handleSigunguChange = (sigungu: string) => {
-    setSelectedSigungu(sigungu);
+    onSigunguChange(sigungu);
     if (selectedSido !== '' && sigungu !== '') {
       onSelect({
         sido: selectedSido,
@@ -33,7 +43,6 @@ export default function LocationSelector({ onSelect }: LocationSelectorProps) {
     <div>
       <h3 className="text-lg font-semibold mb-4">지역으로 검색</h3>
       <div className="space-y-4">
-        {/* 시/도 선택 */}
         <div>
           <select
             value={selectedSido}
@@ -51,7 +60,6 @@ export default function LocationSelector({ onSelect }: LocationSelectorProps) {
           </select>
         </div>
 
-        {/* 시/군/구 선택 */}
         {selectedSido !== '' && (
           <div>
             <select

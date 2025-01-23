@@ -1,18 +1,17 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
-import { useSearch } from '@/components/home/context/SearchContext';
+import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
 
 type CalendarModalProps = {
   onClose: () => void;
 };
 
 const CalendarModal = ({ onClose }: CalendarModalProps) => {
-  const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();
+  const { checkIn, checkOut, setCheckIn, setCheckOut } = useRoomSearch();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [selecting, setSelecting] = useState<'checkIn' | 'checkOut'>('checkIn');
 
-  // 다음/이전 달로 이동
   const goToNextMonth = () => {
     setCurrentMonth(currentMonth.add(1, 'month'));
   };
@@ -20,14 +19,12 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
     setCurrentMonth(currentMonth.subtract(1, 'month'));
   };
 
-  // 날짜가 선택 가능한지 확인
   const isDateSelectable = (date: dayjs.Dayjs) => {
     const today = dayjs().startOf('day');
     const isBeforeToday = date.isBefore(today);
 
-    // 체크아웃 선택 중이고 체크인 날짜가 있는 경우
     if (selecting === 'checkOut' && checkIn !== null) {
-      const checkInDate = dayjs(checkIn); // Date를 dayjs 객체로 변환
+      const checkInDate = dayjs(checkIn);
       const isBeforeCheckIn = date.isBefore(checkInDate);
       return !isBeforeToday && !isBeforeCheckIn;
     }
@@ -35,7 +32,6 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
     return !isBeforeToday;
   };
 
-  // 날짜 선택 핸들러
   const handleDateSelect = (date: dayjs.Dayjs) => {
     if (!isDateSelectable(date)) return;
 
@@ -48,19 +44,16 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
     }
   };
 
-  // 캘린더 생성 함수
   const renderCalendar = (monthDate: dayjs.Dayjs) => {
     const daysInMonth = monthDate.daysInMonth();
     const firstDayOfMonth = monthDate.startOf('month').day();
     const weeks = [];
     let days = [];
 
-    // 첫 주의 빈 날짜 채우기
     for (let i = 0; i < firstDayOfMonth; i++) {
       days.push(<td key={`empty-${i}`} className="p-0"></td>);
     }
 
-    // 날짜 채우기
     for (let day = 1; day <= daysInMonth; day++) {
       const date = monthDate.date(day);
       const isSelectable = isDateSelectable(date);

@@ -1,4 +1,3 @@
-// components/hosting/RoomDetailsInput.tsx
 import {
   ROOM_AMENITIES,
   ROOM_FACILITIES,
@@ -29,7 +28,7 @@ export default function RoomDetailsInput({
   ) => {
     onDetailsChange({
       ...details,
-      [id]: value, // 숫자 변환 로직 제거
+      [id]: value,
     });
   };
 
@@ -73,7 +72,7 @@ export default function RoomDetailsInput({
                   id={id}
                   type="number"
                   min="1"
-                  max="10"
+                  max="100"
                   value={details[id] === '' ? '' : details[id]}
                   onChange={(e) => {
                     handleFacilityChange(id, e.target.value);

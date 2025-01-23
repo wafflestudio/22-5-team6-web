@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
-import { useSearch } from '@/components/home/context/SearchContext';
+import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
 
 import CalendarModal from './modals/CalendarModal';
 import GuestsModal from './modals/GuestsModal';
@@ -16,7 +16,8 @@ const SearchBar = () => {
     currentModal,
     openModal,
     closeModal,
-  } = useSearch();
+    searchRooms,
+  } = useRoomSearch();
 
   return (
     <>
@@ -35,8 +36,8 @@ const SearchBar = () => {
             >
               <span className="text-sm font-medium">여행지</span>
               <span className="text-sm text-gray-500">
-                {location.sido !== ''
-                  ? location.sigungu !== undefined
+                {location.sido != null && location.sido !== ''
+                  ? location.sigungu != null
                     ? `${location.sido} ${location.sigungu}`
                     : location.sido
                   : '여행지 검색'}
@@ -90,7 +91,10 @@ const SearchBar = () => {
                 </span>
               </button>
               <button
-                className="p-3 rounded-full bg-[#FF385C] hover:bg-[#E31C5F] transition-colors"
+                onClick={() => {
+                  void searchRooms();
+                }}
+                className="p-3 rounded-full bg-airbnb"
                 aria-label="검색"
               >
                 <Search className="h-5 w-5 text-white" />
