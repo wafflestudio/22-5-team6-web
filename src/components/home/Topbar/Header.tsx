@@ -41,6 +41,7 @@ const Topbar = () => {
     setDropdownOpen(false);
     localStorage.removeItem('token');
     alert('로그아웃 되었습니다.');
+    void navigate('/');
   };
 
   return (
