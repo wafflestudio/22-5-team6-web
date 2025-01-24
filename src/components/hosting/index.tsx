@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { getLabelByType } from '@/components/common/constants/accommodationTypes';
@@ -13,6 +14,7 @@ import type {
 
 import AccommodationType from './AccommodationType';
 import AddressInput from './AddressInput';
+import ImageUpload from './ImageUpload';
 import PriceInput from './PriceInput';
 import RoomDetailsInput from './RoomDetailsInput';
 
@@ -22,7 +24,7 @@ export default function HostingForm() {
   const [roomName, setRoomName] = useState('');
   const [description, setDescription] = useState('');
   const [maxOccupancy, setMaxOccupancy] = useState('');
-  // const [imageSlot, setImageSlot] = useState('');
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [address, setAddress] = useState<Address>({
     sido: '',
     sigungu: '',
@@ -48,6 +50,10 @@ export default function HostingForm() {
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [currentStep]);
 
   const validateStep = (step: number) => {
     setError(null);
@@ -86,14 +92,14 @@ export default function HostingForm() {
           setError('숙소 시설 정보를 모두 입력해주세요.');
           return false;
         }
-        // TODO: 이미지 유효성 검사 추가
+        if (selectedImages.length === 0) {
+          setError('최소 1개 이상의 이미지를 선택해주세요.');
+          return false;
+        }
         break;
 
       case 3:
-        if (
-          price.perNight === '' ||
-          price.cleaningFee === ''
-        ) {
+        if (price.perNight === '' || price.cleaningFee === '') {
           setError('가격 정보를 모두 입력해주세요.');
           return false;
         }
@@ -128,36 +134,12 @@ export default function HostingForm() {
         throw new Error('로그인이 필요합니다.');
       }
 
-      // if (
-      //   roomType == null ||
-      //   roomName === '' ||
-      //   description === '' ||
-      //   price.perNight === '' ||
-      //   maxOccupancy === '' ||
-      //   address.sido === '' ||
-      //   address.sigungu === '' ||
-      //   address.street === '' ||
-      //   address.detail === '' ||
-      //   roomDetails.bedroom === '' ||
-      //   roomDetails.bathroom === '' ||
-      //   roomDetails.bed === '' ||
-      //   imageSlot === ''
-      // ) {
-      //   throw new Error('모든 필드를 입력해주세요.');
-      // }
-
-      // TODO: 이미지 관련 데이터 처리 추가
-
-      const response = await fetch('/api/v1/rooms', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          roomName: roomName,
-          description: description,
-          roomType: roomType,
+      const response = await axios.post(
+        '/api/v1/rooms',
+        {
+          roomName,
+          description,
+          roomType,
           address: {
             sido: address.sido,
             sigungu: address.sigungu,
@@ -180,23 +162,33 @@ export default function HostingForm() {
             total: Number(price.total),
           },
           maxOccupancy: Number(maxOccupancy),
-          // imageSlot: Number(imageSlot),
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('숙소 등록에 실패했습니다.');
-      }
-      //TODO: 이미지 업로드 URL 요청 추가
-      const responseData = (await response.json()) as RoomApiResponse;
-
-      void navigate('/hosting/images', {
-        state: {
-          imageUploadUrls: responseData.imageUploadUrlList,
-          // totalImages: Number(imageSlot),
-          totalImages: Number('1'),
+          imageSlot: selectedImages.length,
         },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        },
+      );
+
+      const responseData = response.data as RoomApiResponse;
+
+      const uploadPromises = selectedImages.map(async (file, index) => {
+        if (responseData.imageUploadUrlList[index] == null) {
+          throw new Error('이미지 업로드 URL이 존재하지 않습니다.');
+        }
+
+        await axios.put(responseData.imageUploadUrlList[index], file, {
+          headers: {
+            'Content-Type': file.type,
+          },
+        });
       });
+
+      await Promise.all(uploadPromises);
+
+      alert('숙소를 성공적으로 등록했습니다!');
+      void navigate('/');
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다.';
@@ -222,28 +214,28 @@ export default function HostingForm() {
           }}
         />
       </div>
-      
 
       <div className="w-full max-w-2xl mx-auto p-6">
         <div className="bg-white rounded-xl shadow-sm p-6">
           {/* Step Title */}
           <h1 className="text-2xl font-semibold mb-8">
-            {currentStep}단계 | {
-              currentStep === 1 
-                ? '숙소 정보를 알려주세요' 
-                : currentStep === 2 
-                  ? '숙소의 매력을 돋보이게 하세요' 
-                  : currentStep === 3 
-                    ? '등록을 완료하세요'
-                    : '등록 전 정보를 확인하세요'
-            }
+            {currentStep}단계 |{' '}
+            {currentStep === 1
+              ? '숙소 정보를 알려주세요'
+              : currentStep === 2
+                ? '숙소의 매력을 돋보이게 하세요'
+                : currentStep === 3
+                  ? '등록을 완료하세요'
+                  : '등록 전 정보를 확인하세요'}
           </h1>
-          
+
           {currentStep === 1 && (
             <>
-            {/* 숙소 타입 선택 */}
+              {/* 숙소 타입 선택 */}
               <div className="mb-8">
-                <label className="block text-lg font-medium mb-3">숙소 타입</label>
+                <label className="block text-lg font-medium mb-3">
+                  숙소 타입
+                </label>
                 <AccommodationType
                   selectedType={roomType}
                   onTypeSelect={setRoomType}
@@ -262,7 +254,9 @@ export default function HostingForm() {
             <>
               {/* 숙소 이름 입력 */}
               <div className="mb-6">
-                <label className="block text-lg font-medium mb-2">숙소 이름</label>
+                <label className="block text-lg font-medium mb-2">
+                  숙소 이름
+                </label>
                 <input
                   type="text"
                   value={roomName}
@@ -280,7 +274,9 @@ export default function HostingForm() {
 
               {/* 숙소 설명 입력 */}
               <div className="mb-6">
-                <label className="block text-lg font-medium mb-2">숙소 설명</label>
+                <label className="block text-lg font-medium mb-2">
+                  숙소 설명
+                </label>
                 <textarea
                   value={description}
                   onChange={(e) => {
@@ -297,33 +293,32 @@ export default function HostingForm() {
 
               {/* 숙소 시설*/}
               <div className="mb-8">
-                <label className="block text-lg font-medium mb-2">숙소 시설</label>
+                <label className="block text-lg font-medium mb-2">
+                  숙소 시설
+                </label>
                 <RoomDetailsInput
                   details={roomDetails}
                   onDetailsChange={setRoomDetails}
                 />
               </div>
 
-              {/* TODO: 이미지 업로드 컴포넌트 추가 */}
+              {/* 이미지 업로드 */}
               <div className="mb-8">
-                  <label className="block text-lg font-medium mb-2">
-                    숙소 이미지
-                  </label>
-                  <div className="p-4 border-2 border-dashed border-gray-300 rounded-lg text-center">
-                    <p className="text-gray-500">
-                      이미지 업로드 컴포넌트가 추가될 예정입니다.
-                    </p>
-                  </div>
-                </div>
+                <label className="block text-lg font-medium mb-2">
+                  숙소 이미지
+                </label>
+                <ImageUpload onImagesChange={setSelectedImages} />
+              </div>
             </>
           )}
 
           {currentStep === 3 && (
-              <>
-
+            <>
               {/* 요금 설정 */}
               <div className="mb-8">
-                <label className="block text-lg font-medium mb-3">요금 설정</label>
+                <label className="block text-lg font-medium mb-3">
+                  요금 설정
+                </label>
                 <PriceInput price={price} onPriceChange={setPrice} />
               </div>
 
@@ -349,47 +344,28 @@ export default function HostingForm() {
               </div>
             </>
           )}
-            {/* 이미지 개수 입력 */}
-            {/* <div className="mb-8">
-              <label className="block text-lg font-medium mb-2">
-                업로드할 숙소 이미지 개수
-              </label>
-              <div className="relative">
-                <input
-                  type="number"
-                  value={imageSlot}
-                  onChange={(e) => {
-                    setImageSlot(e.target.value);
-                  }}
-                  min="5"
-                  className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-airbnb focus:border-transparent [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
-                  placeholder="최소 5장 이상의 숫자를 입력해주세요"
-                />
-                <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500">
-                  장
-                </span>
-              </div>
-              <p className="mt-2 text-sm text-gray-600">
-                ⚠️ 설정한 개수만큼 정확히 이미지를 업로드해야 합니다
-              </p>
-            </div> */}
-
 
           {currentStep === 4 && (
             <div className="space-y-8">
-              
               {/* 기본 정보 섹션 */}
               <section className="bg-gray-50 rounded-xl p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">기본 정보</h2>
+                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                  기본 정보
+                </h2>
                 <div className="grid gap-4">
                   <div className="flex items-baseline">
                     <span className="w-24 text-gray-600">숙소 타입</span>
-                    <span className="font-medium">{roomType !== null ? getLabelByType(roomType) : ''}</span>
+                    <span className="font-medium">
+                      {roomType !== null ? getLabelByType(roomType) : ''}
+                    </span>
                   </div>
                   <div className="flex flex-col">
                     <span className="w-24 text-gray-600 mb-2">주소</span>
                     <div className="font-medium ml-6">
-                      <p>{address.sido} {address.sigungu} {address.street} {address.detail}</p>
+                      <p>
+                        {address.sido} {address.sigungu} {address.street}{' '}
+                        {address.detail}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -397,7 +373,9 @@ export default function HostingForm() {
 
               {/* 상세 정보 섹션 */}
               <section className="bg-gray-50 rounded-xl p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">상세 정보</h2>
+                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                  상세 정보
+                </h2>
                 <div className="grid gap-4">
                   <div className="flex items-baseline">
                     <span className="w-24 text-gray-600">숙소 이름</span>
@@ -405,7 +383,9 @@ export default function HostingForm() {
                   </div>
                   <div className="flex flex-col">
                     <span className="w-24 text-gray-600 mb-2">숙소 설명</span>
-                    <p className="font-medium ml-6 whitespace-pre-wrap">{description}</p>
+                    <p className="font-medium ml-6 whitespace-pre-wrap">
+                      {description}
+                    </p>
                   </div>
                   <div className="flex flex-col">
                     <span className="w-24 text-gray-600 mb-2">시설 정보</span>
@@ -422,28 +402,64 @@ export default function HostingForm() {
                 </div>
               </section>
 
+              {/* 이미지 섹션 */}
+              <section className="bg-gray-50 rounded-xl p-6">
+                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                  숙소 이미지
+                </h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {selectedImages.map((file, index) => (
+                    <div key={file.name} className="relative">
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`Preview ${index + 1}`}
+                        className="w-full h-48 object-cover rounded-lg"
+                      />
+                      {index === 0 && (
+                        <span className="absolute top-2 left-2 px-2 py-1 bg-airbnb text-white text-xs rounded">
+                          대표 사진
+                        </span>
+                      )}
+                    </div>
+                  ))}
+                </div>
+                <p className="mt-4 text-sm text-gray-600">
+                  총 {selectedImages.length}개의 이미지가 업로드됩니다.
+                </p>
+              </section>
+
               {/* 요금 정보 섹션 */}
               <section className="bg-gray-50 rounded-xl p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">요금 정보</h2>
+                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                  요금 정보
+                </h2>
                 <div className="grid gap-4">
                   <div className="grid grid-cols-2 gap-x-8 gap-y-2">
                     <div className="flex items-baseline justify-between">
                       <span className="text-gray-600">1박 요금</span>
-                      <span className="font-medium">{Number(price.perNight).toLocaleString()}원</span>
+                      <span className="font-medium">
+                        {Number(price.perNight).toLocaleString()}원
+                      </span>
                     </div>
                     <div className="flex items-baseline justify-between">
                       <span className="text-gray-600">청소비</span>
-                      <span className="font-medium">{Number(price.cleaningFee).toLocaleString()}원</span>
+                      <span className="font-medium">
+                        {Number(price.cleaningFee).toLocaleString()}원
+                      </span>
                     </div>
                     <div className="flex items-baseline justify-between">
                       <span className="text-gray-600">수수료</span>
-                      <span className="font-medium">{Number(price.charge).toLocaleString()}원</span>
+                      <span className="font-medium">
+                        {Number(price.charge).toLocaleString()}원
+                      </span>
                     </div>
                   </div>
                   <div className="mt-4 pt-4 border-t border-gray-200">
                     <div className="flex items-baseline justify-between">
                       <span className="text-gray-900 font-medium">총 금액</span>
-                      <span className="text-xl font-semibold text-airbnb">{Number(price.total).toLocaleString()}원</span>
+                      <span className="text-xl font-semibold text-airbnb">
+                        {Number(price.total).toLocaleString()}원
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -451,15 +467,14 @@ export default function HostingForm() {
 
               {/* 최대 수용 인원 섹션 */}
               <section className="bg-gray-50 rounded-xl p-6">
-                <h2 className="text-lg font-medium text-gray-900 mb-4">수용 인원</h2>
+                <h2 className="text-lg font-medium text-gray-900 mb-4">
+                  수용 인원
+                </h2>
                 <div className="flex items-baseline">
                   <span className="text-gray-600">최대 수용 가능</span>
                   <span className="font-medium ml-4">{maxOccupancy}명</span>
                 </div>
               </section>
-
-              {/* 이미지 섹션 */}
-              {/* TODO: 이미지 미리보기 그리드 추가 */}
             </div>
           )}
           {/* 에러 메시지 */}
@@ -476,30 +491,35 @@ export default function HostingForm() {
               onClick={handleBack}
               disabled={currentStep === 1}
               className={`px-6 py-3 rounded-lg font-medium
-                ${currentStep === 1 
-                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
+                ${
+                  currentStep === 1
+                    ? 'bg-gray-100 text-gray-400 cursor-not-allowed'
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                }`}
             >
               이전
             </button>
-            
+
             <button
               type="button"
-              onClick={currentStep === 4 ? () => void handleSubmit() : handleNext}
+              onClick={
+                currentStep === 4 ? () => void handleSubmit() : handleNext
+              }
               disabled={isLoading}
               className={`px-6 py-3 rounded-lg font-medium
-                ${isLoading 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-airbnb hover:bg-airbnb-hover'} text-white`}
+                ${
+                  isLoading
+                    ? 'bg-gray-400 cursor-not-allowed'
+                    : 'bg-airbnb hover:bg-airbnb-hover'
+                } text-white`}
             >
-              {isLoading 
-                ? '처리 중...' 
-                : currentStep === 4 
-                  ? '숙소 등록하기' 
+              {isLoading
+                ? '처리 중...'
+                : currentStep === 4
+                  ? '숙소 등록하기'
                   : '다음'}
             </button>
           </div>
-
         </div>
       </div>
     </div>
