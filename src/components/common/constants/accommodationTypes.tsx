@@ -94,3 +94,10 @@ export const ACCOMMODATION_TYPES: AccommodationType[] = [
     value: RoomType.SKI,
   },
 ];
+
+export const getLabelByType = (type: string): string => {
+  const accommodationType = ACCOMMODATION_TYPES.find(
+    (acc) => acc.type === type,
+  );
+  return accommodationType?.label ?? type;
+};
