@@ -145,6 +145,9 @@ const MyReservationItems = () => {
             {pastMyReservationItems.map((reservation) => (
               <div
                 key={reservation.reservationId}
+                onClick={() =>
+                  void navigate(`/reviews/${reservation.reservationId}`)
+                }
                 className="p-4 bg-white rounded-lg shadow-md"
               >
                 <img
