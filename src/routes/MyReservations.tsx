@@ -5,6 +5,7 @@ const MyReservations = () => {
   return (
     <>
       <Header />
+      <hr className="w-full mb-8 border-t border-gray-300" />
       <MyReservationItems />
     </>
   );

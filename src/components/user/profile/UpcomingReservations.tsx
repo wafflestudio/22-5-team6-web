@@ -58,7 +58,7 @@ const UpcomingReservations = ({
         {reservations.map((reservation) => (
           <div
             key={reservation.reservationId}
-            className="p-4 bg-white content-between rounded-2xl min-w-80 min-h-[224px] border border-gray-300 cursor-pointer hover:shadow-lg"
+            className="p-4 bg-white content-between rounded-2xl min-w-80 min-h-[224px] border border-gray-300 cursor-pointer"
             onClick={() => {
               navigate(`/reservations/${reservation.reservationId}`);
             }}
