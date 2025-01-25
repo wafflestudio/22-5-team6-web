@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
-import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 
 type GuestsModalProps = {
   onClose: () => void;
 };
 
 const GuestsModal = ({ onClose }: GuestsModalProps) => {
-  const { setGuests } = useRoomSearch();
+  const { setGuests } = useSearch();
   const [guestCount, setGuestCount] = useState(0);
 
   const handleIncrement = () => {

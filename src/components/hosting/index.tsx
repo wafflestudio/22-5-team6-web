@@ -226,7 +226,7 @@ export default function HostingForm() {
                 ? '숙소의 매력을 돋보이게 하세요'
                 : currentStep === 3
                   ? '등록을 완료하세요'
-                  : '등록 전 정보를 확인하세요'}
+                  : '최종적으로 정보를 확인하세요'}
           </h1>
 
           {currentStep === 1 && (

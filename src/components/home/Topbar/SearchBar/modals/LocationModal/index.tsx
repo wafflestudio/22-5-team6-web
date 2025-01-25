@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 
 import LocationSelector from './LocationSelector';
 import PopularCities from './PopularCities';
@@ -10,7 +10,7 @@ type LocationModalProps = {
 };
 
 export default function LocationModal({ onClose }: LocationModalProps) {
-  const { setLocation } = useRoomSearch();
+  const { setLocation } = useSearch();
   const [selectedSido, setSelectedSido] = useState('');
   const [selectedSigungu, setSelectedSigungu] = useState('');
 

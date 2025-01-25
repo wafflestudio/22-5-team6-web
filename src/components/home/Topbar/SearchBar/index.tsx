@@ -1,7 +1,7 @@
 import { Search } from 'lucide-react';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
-import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 
 import CalendarModal from './modals/CalendarModal';
 import GuestsModal from './modals/GuestsModal';
@@ -17,7 +17,7 @@ const SearchBar = () => {
     openModal,
     closeModal,
     searchRooms,
-  } = useRoomSearch();
+  } = useSearch();
 
   return (
     <>
