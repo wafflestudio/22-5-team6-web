@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
-import { useRoomSearch } from '@/components/home/context/SearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 import CalendarModal from '@/components/home/Topbar/SearchBar/modals/CalendarModal';
 
 type ReservationUpdateModalProps = {
