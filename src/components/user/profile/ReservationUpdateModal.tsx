@@ -31,7 +31,7 @@ const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
     openModal,
     closeModal,
     currentModal,
-  } = useRoomSearch();
+  } = useSearch();
   const [error, setError] = useState<string | null>(null);
   const [guests, setGuests] = useState<number>(numberOfGuests);
 
