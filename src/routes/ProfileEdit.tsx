@@ -1,4 +1,4 @@
-import ProfileEditForm from '@/components/profile/ProfileEditForm';
+import ProfileEditForm from '@/components/user/profile/ProfileEditForm';
 
 const ProfileEdit = () => {
   return <ProfileEditForm />;

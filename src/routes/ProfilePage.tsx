@@ -1,5 +1,5 @@
 import Header from '@/components/home/Topbar/Header';
-import UserProfile from '@/components/profile';
+import UserProfile from '@/components/user/profile/Profile';
 
 const Profile = () => {
   return (

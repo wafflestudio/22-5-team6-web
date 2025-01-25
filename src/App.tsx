@@ -8,11 +8,11 @@ import Hosting from '@/routes/Hosting';
 import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
-import MyReservationDetails from './components/profile/MyReservationDetails';
-import ReviewForm from './components/profile/ReviewForm';
+import MyReservationDetails from './components/user/MyReservationDetails';
+import ReviewForm from './components/user/ReviewForm';
 import MyReservations from './routes/MyReservations';
-import Profile from './routes/Profile';
 import ProfileEdit from './routes/ProfileEdit';
+import Profile from './routes/ProfilePage';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {

@@ -1,5 +1,5 @@
 import Header from '@/components/home/Topbar/Header';
-import MyReservationItems from '@/components/profile/MyReservationItems';
+import MyReservationItems from '@/components/user/MyReservationItems';
 
 const MyReservations = () => {
   return (
