@@ -13,6 +13,13 @@ type ProfileInfo = {
   imageUrl: string;
 };
 
+type Reservation = {
+  reservationId: number;
+  place: string;
+  startDate: string;
+  endDate: string;
+};
+
 const UserProfile = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileInfo | null>(null);
@@ -29,26 +36,39 @@ const UserProfile = () => {
       }
 
       try {
+        // Fetch profile data
         const profileResponse = await axios.get<ProfileInfo>(
           '/api/v1/profile',
           {
             headers: { Authorization: `Bearer ${token}` },
           },
         );
-        setProfile(profileResponse.data);
+        const profileData = profileResponse.data;
+        setProfile(profileData);
 
-        const reservationsResponse = await axios.get<{ totalElements: number }>(
-          `/api/v1/reservations/user/${profileResponse.data.userId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
+        // Fetch reservations
+        const reservationsResponse = await axios.get<{
+          content: Reservation[];
+        }>(`/api/v1/reservations/user/${profileData.userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const reservations = reservationsResponse.data.content;
+
+        // Filter upcoming reservations
+        const now = new Date();
+        const upcomingReservations = reservations.filter(
+          (reservation) => new Date(reservation.startDate) >= now,
         );
-        setUpcomingReservationsCount(reservationsResponse.data.totalElements);
+        setUpcomingReservationsCount(upcomingReservations.length);
 
+        // Fetch review count
         const reviewsResponse = await axios.get<{ totalElements: number }>(
-          `/api/v1/reviews/user/${profileResponse.data.userId}`,
+          `/api/v1/reviews/user/${profileData.userId}`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
         setReviewsCount(reviewsResponse.data.totalElements);
-      } catch {
+      } catch (err) {
+        console.error('데이터를 가져오는 데 실패했습니다:', err);
         setError('데이터를 가져오는 데 실패했습니다.');
       }
     };
@@ -72,10 +92,7 @@ const UserProfile = () => {
       <div className="w-3/5 h-dvh">
         <p className="font-semibold text-3xl">{`${profile.nickname} 님 소개`}</p>
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            void navigate('/profile/edit');
-          }}
+          onClick={() => void navigate('/profile/edit')}
           className="mt-6 mb-8 px-[15px] py-[7px] border border-gray-500 rounded-lg bg-white hover:bg-slate-100 text-sm"
         >
           프로필 수정하기
@@ -87,18 +104,13 @@ const UserProfile = () => {
         <p className="text-xl mb-8">다가오는 여행</p>
         <UpcomingReservations
           userId={profile.userId}
-          navigate={(path: string) => {
-            void navigate(path);
-          }}
+          navigate={(path: string) => void navigate(path)}
         />
         <button
-          onClick={(e) => {
-            e.preventDefault();
-            void navigate('/MyReservations');
-          }}
+          onClick={() => void navigate('/MyReservations')}
           className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
         >
-          지난 여행 보기
+          여행 모두 보기
         </button>
         <hr className="w-full my-8 border-t border-gray-300" />
 

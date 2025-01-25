@@ -122,7 +122,7 @@ const MyReservationItems = () => {
                     e.preventDefault();
                     void navigate(`/reservations/${reservation.reservationId}`);
                   }}
-                  className="p-5 bg-white rounded-lg shadow-md transition-transform transform hover:scale-105"
+                  className="p-5 bg-white rounded-lg shadow-md transition-transform transform hover:scale-105 cursor-pointer"
                 >
                   <img
                     src={reservation.imageUrl}
@@ -168,7 +168,7 @@ const MyReservationItems = () => {
                 onClick={() =>
                   void navigate(`/reviews/${reservation.reservationId}`)
                 }
-                className="flex p-5 bg-white rounded-lg border border-gray-200"
+                className="flex p-5 bg-white rounded-lg border border-gray-200 cursor-pointer"
               >
                 <img
                   src={reservation.imageUrl}

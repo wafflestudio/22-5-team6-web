@@ -8,11 +8,11 @@ import Hosting from '@/routes/Hosting';
 import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
-import MyReservationDetails from './components/user/MyReservationDetails';
 import ReviewForm from './components/user/ReviewForm';
 import MyReservations from './routes/MyReservations';
 import ProfileEdit from './routes/ProfileEdit';
-import Profile from './routes/ProfilePage';
+import ProfilePage from './routes/ProfilePage';
+import ReservationDetails from './routes/ReservationDetails';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {
@@ -26,14 +26,14 @@ export const App = () => {
           <Route path="/tests" element={<ApiTest />} />
           <Route path="/redirect" element={<Redirect />} />
           <Route path="/hosting" element={<Hosting />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/MyReservations" element={<MyReservations />} />
           <Route path="/reviews/:reservationId" element={<ReviewForm />} />
           <Route
             path="/reservations/:reservationId"
-            element={<MyReservationDetails />}
+            element={<ReservationDetails />}
           />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>
