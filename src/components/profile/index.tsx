@@ -231,7 +231,7 @@ const UserProfile = () => {
               reviews.map((review, index) => (
                 <div
                   key={index}
-                  className="p-6 min-w-72 min-h-[224px] bg-white rounded-2xl border border-gray-300"
+                  className="p-6 min-w-80 min-h-[224px] bg-white rounded-2xl border border-gray-300"
                 >
                   <p className="h-2/3 text-base text-ellipsis">
                     &quot;{review.content}&quot;

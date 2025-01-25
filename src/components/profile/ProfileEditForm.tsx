@@ -173,7 +173,7 @@ const ProfileEditForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full py-2 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600"
+          className="w-full py-2 bg-airbnb text-white font-semibold rounded hover:bg-airbnb-hover"
         >
           수정 완료
         </button>
