@@ -6,6 +6,8 @@ import axios, { AxiosError } from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import Reservation from '../roomdetail/Reservation';
+
 type ProfileInfo = {
   userId: 0;
   nickname: 'string';
@@ -16,9 +18,29 @@ type ProfileInfo = {
   imageUrl: 'string';
 };
 
+type Reservation = {
+  reservationId: number;
+  place: string;
+  startDate: string;
+  endDate: string;
+  imageUrl: string;
+};
+
+type Review = {
+  content: string;
+  rating: number;
+  place: string;
+  startDate: string;
+  endDate: string;
+};
+
 const UserProfile = () => {
   const navigate = useNavigate();
   const [profile, setProfile] = useState<ProfileInfo | null>(null);
+  const [upcomingReservations, setUpcomingReservations] = useState<
+    Reservation[]
+  >([]);
+  const [reviews, setReviews] = useState<Review[]>([]);
   const [error, setError] = useState<string>('');
   const [imageError, setImageError] = useState(false);
 
@@ -35,13 +57,35 @@ const UserProfile = () => {
 
     const fetchProfile = async () => {
       try {
-        const response = await axios.get<ProfileInfo>('/api/v1/profile', {
-          headers: {
-            Authorization: `Bearer ${token}`,
+        const profileResponse = await axios.get<ProfileInfo>(
+          '/api/v1/profile',
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
           },
-          validateStatus: (status) => status < 400,
+        );
+        const profileData = profileResponse.data;
+        setProfile(profileData);
+
+        const reservationsResponse = await axios.get<{
+          content: Reservation[];
+        }>(`/api/v1/reservations/user/${profileData.userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
         });
-        setProfile(response.data);
+
+        const now = new Date();
+        const upcoming = reservationsResponse.data.content.filter(
+          (reservation) => new Date(reservation.startDate) >= now,
+        );
+        setUpcomingReservations(upcoming);
+
+        const reviewsResponse = await axios.get<{
+          content: Review[];
+        }>(`/api/v1/reviews/user/${profileData.userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setReviews(reviewsResponse.data.content);
       } catch (err) {
         if (err instanceof AxiosError) {
           console.error('프로필 데이터를 가져오는 중 오류 발생:', err.message);
@@ -97,7 +141,9 @@ const UserProfile = () => {
               <div className="w-24">
                 <p className="text-[0.625rem]">다가오는 여행</p>
                 <div className="flex items-end">
-                  <p className="mr-0.5 text-[1.375rem] font-semibold">1</p>
+                  <p className="mr-0.5 text-[1.375rem] font-semibold">
+                    {upcomingReservations.length}
+                  </p>
                   <p className="py-[4.3px] text-[0.625rem] font-semibold">개</p>
                 </div>
               </div>
@@ -105,7 +151,9 @@ const UserProfile = () => {
               <div className="w-24">
                 <p className="text-[0.625rem]">내가 작성한 후기</p>
                 <div className="flex items-end">
-                  <p className="mr-0.5 text-[1.375rem] font-semibold">5</p>
+                  <p className="mr-0.5 text-[1.375rem] font-semibold">
+                    {reviews.length}
+                  </p>
                   <p className="py-[4.3px] text-[0.625rem] font-semibold">개</p>
                 </div>
               </div>
@@ -136,17 +184,34 @@ const UserProfile = () => {
           </button>
           <p className="text-s">{profile.bio}</p>
           <hr className="w-full mt-10 mb-8 border-t border-gray-300" />
+
+          {/* 예약 */}
           <p className="text-xl">다가오는 여행</p>
-          <div className="flex w-full scrollbar-hidden overflow-x-auto gap-2">
-            <div className="mt-8 p-6 w-80 content-between min-h-[224px] bg-white rounded-2xl border border-gray-300">
-              <div className="flex w-68 h-28 bg-gray-300 hover:bg-gray-400 items-center justify-center">
-                <ImageIcon className="w-14 h-14 text-white" />
-              </div>
-              <p className="mt-2 text-lg">강릉시</p>
-              <p className="text-base text-gray-500">
-                2025년 2월 20일 - 2025년 2월 21일
-              </p>
-            </div>
+          <div className="flex w-full mt-8 scrollbar-hidden overflow-x-auto gap-2">
+            {upcomingReservations.length > 0 ? (
+              upcomingReservations.map((reservation) => (
+                <div
+                  key={reservation.reservationId}
+                  className="p-4 bg-white content-between rounded-2xl min-w-80 min-h-[224px] border border-gray-300 cursor-pointer hover:shadow-lg"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    void navigate(`/reservations/${reservation.reservationId}`);
+                  }}
+                >
+                  <img
+                    src={reservation.imageUrl}
+                    alt={reservation.place}
+                    className="w-full h-32 object-cover rounded-md mb-2"
+                  />
+                  <h3 className="text-lg font-semibold">{reservation.place}</h3>
+                  <p className="text-sm text-gray-500">
+                    {reservation.startDate} ~ {reservation.endDate}
+                  </p>
+                </div>
+              ))
+            ) : (
+              <p>다가오는 여행이 없습니다.</p>
+            )}
           </div>
           <button
             onClick={(e) => {
@@ -158,53 +223,35 @@ const UserProfile = () => {
             지난 여행 보기
           </button>
           <hr className="w-full my-8 border-t border-gray-300" />
+
+          {/* 리뷰 */}
           <p className="text-xl">내가 작성한 후기</p>
-          <div className="flex w-full scrollbar-hidden overflow-x-auto gap-2">
-            <div className="mt-8 p-6 min-w-72 min-h-[224px] bg-white rounded-2xl border border-gray-300">
-              <p className="h-2/3 text-base text-ellipsis">
-                &quot;너무 친절하시고, 숙소도 깔끔해서 잘 쉬었습니다! 간단한
-                한식 조식 주시는데 엄청 맛있었어요. 역시 전주..&quot;
-              </p>
-              <div className="flex items-center">
-                <div className="flex mr-4 w-14 h-14 bg-gray-300 hover:bg-gray-400 items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-white" />
+          <div className="flex w-full scrollbar-hidden overflow-x-auto gap-2 mt-8">
+            {reviews.length > 0 ? (
+              reviews.map((review, index) => (
+                <div
+                  key={index}
+                  className="p-6 min-w-80 min-h-[224px] bg-white rounded-2xl border border-gray-300"
+                >
+                  <p className="h-2/3 text-base text-ellipsis">
+                    &quot;{review.content}&quot;
+                  </p>
+                  <div className="flex items-center">
+                    <div className="flex mr-4 w-14 h-14 bg-gray-300 hover:bg-gray-400 items-center justify-center">
+                      <ImageIcon className="w-8 h-8 text-white" />
+                    </div>
+                    <div>
+                      <p className="text-base text-black">{review.place}</p>
+                      <p className="text-sm text-gray-500">
+                        {review.startDate} - {review.endDate}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-base text-black">전주시</p>
-                  <p className="text-sm text-gray-500">2024년 10월</p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-8 p-6 min-w-72 min-h-[224px] bg-white rounded-2xl border border-gray-300">
-              <p className="h-2/3 text-base text-ellipsis">
-                &quot;숙소 근처에 유명한 시장이 있어서 좋았어요 방도 엄청
-                깨끗해요!&quot;
-              </p>
-              <div className="flex items-center">
-                <div className="flex mr-4 w-14 h-14 bg-gray-300 hover:bg-gray-400 items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <p className="text-base text-black">속초시</p>
-                  <p className="text-sm text-gray-500">2024년 7월</p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-8 p-6 min-w-72 min-h-[224px] bg-white rounded-2xl border border-gray-300">
-              <p className="h-2/3 text-base text-ellipsis">
-                &quot;안쪽 골목에 있어서 처음에 찾을 때 조금 헤맸는데, 큰 길이
-                아니라서 조용히 쉴 수 있었습니다. 다음에 또 갈게요!&quot;
-              </p>
-              <div className="flex items-center">
-                <div className="flex mr-4 w-14 h-14 bg-gray-300 hover:bg-gray-400 items-center justify-center">
-                  <ImageIcon className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <p className="text-base text-black">마포구</p>
-                  <p className="text-sm text-gray-500">2023년 12월</p>
-                </div>
-              </div>
-            </div>
+              ))
+            ) : (
+              <p>작성한 후기가 없습니다.</p>
+            )}
           </div>
           <button className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100">
             후기 모두 보기
