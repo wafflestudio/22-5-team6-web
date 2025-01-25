@@ -123,7 +123,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     return urlParams;
   };
 
-  // 1) 처음 렌더링 할 때
+  // 초기 숙소 목록을 불러오는 함수
   const initRooms = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -153,6 +153,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     }
   }, [pageInfo.pageNumber, pageInfo.pageSize]);
 
+  // 검색바에서 설정한 조건으로 숙소를 검색하는 함수
   const searchRooms = useCallback(async () => {
     setIsLoading(true);
     setError(null);
@@ -199,6 +200,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     }
   }, [location, checkIn, checkOut, guests, pageInfo]);
 
+  // 필터바에서 설정한 조건으로 숙소를 필터링하는 함수
   const filterRooms = useCallback(
     async (newFilter: Filter) => {
       setIsLoading(true);
@@ -241,6 +243,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     [pageInfo],
   );
 
+  // 페이지네이션 시 해당 페이지의 숙소 목록을 불러오는 함수
   const pageRooms = useCallback(
     async (pageNumber: number) => {
       setIsLoading(true);
