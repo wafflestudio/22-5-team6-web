@@ -1,18 +1,18 @@
 import { StyledEngineProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 
-import { SearchProvider } from '@/components/home/context/RoomSearchContext';
+import { SearchProvider } from '@/components/home/context/SearchContext';
 import { ApiTest } from '@/routes/ApiTest';
 import Home from '@/routes/Home';
 import Hosting from '@/routes/Hosting';
 import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
-import MyReservationDetails from './components/profile/MyReservationDetails';
-import ReviewForm from './components/profile/ReviewForm';
+import ReviewForm from './components/user/ReviewForm';
 import MyReservations from './routes/MyReservations';
-import Profile from './routes/Profile';
 import ProfileEdit from './routes/ProfileEdit';
+import ProfilePage from './routes/ProfilePage';
+import ReservationDetails from './routes/ReservationDetails';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {
@@ -26,14 +26,14 @@ export const App = () => {
           <Route path="/tests" element={<ApiTest />} />
           <Route path="/redirect" element={<Redirect />} />
           <Route path="/hosting" element={<Hosting />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/MyReservations" element={<MyReservations />} />
           <Route path="/reviews/:reservationId" element={<ReviewForm />} />
           <Route
             path="/reservations/:reservationId"
-            element={<MyReservationDetails />}
+            element={<ReservationDetails />}
           />
           <Route path="*" element={<h1>404 Not Found</h1>} />
         </Routes>

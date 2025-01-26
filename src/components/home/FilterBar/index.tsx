@@ -5,19 +5,18 @@ import { useState } from 'react';
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
 import { RoomType } from '@/types/room';
 
-import { useRoomSearch } from '../context/RoomSearchContext';
+import { useSearch } from '../context/SearchContext';
 import FilterModal from './FilterModal';
 
 const FilterBar = () => {
-  const { filter, setFilter, searchRooms } = useRoomSearch();
+  const { filter, filterRooms } = useSearch();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
 
   const handleTypeClick = (type: RoomType) => {
-    setFilter({
+    void filterRooms({
       ...filter,
       roomType: filter.roomType === type ? null : type,
     });
-    void searchRooms();
   };
 
   return (

@@ -1,22 +1,22 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { useRoomSearch } from '../context/RoomSearchContext';
+import { useSearch } from '../context/SearchContext';
 import ListingItem from './ListingItem';
 
 const Listings = () => {
   const navigate = useNavigate();
-  const { rooms, isLoading, error, searchRooms, pageInfo, handlePageChange } =
-    useRoomSearch();
+  const { rooms, isLoading, error, initRooms, pageInfo, pageRooms } =
+    useSearch();
 
   const isInitialMount = useRef(true);
 
   useEffect(() => {
     if (isInitialMount.current) {
-      void searchRooms();
+      void initRooms();
       isInitialMount.current = false;
     }
-  }, [searchRooms]);
+  }, [initRooms]);
 
   const handleRoomClick = (id: string) => {
     void navigate(`/${id}`);
@@ -74,7 +74,7 @@ const Listings = () => {
         <div className="mt-8 flex justify-center gap-2">
           <button
             onClick={() => {
-              handlePageChange(pageInfo.pageNumber - 1);
+              void pageRooms(pageInfo.pageNumber - 1);
             }}
             disabled={pageInfo.pageNumber === 0}
             className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -86,7 +86,7 @@ const Listings = () => {
             <button
               key={i}
               onClick={() => {
-                handlePageChange(i);
+                void pageRooms(i);
               }}
               className={`rounded-lg px-4 py-2 ${
                 pageInfo.pageNumber === i
@@ -100,7 +100,7 @@ const Listings = () => {
 
           <button
             onClick={() => {
-              handlePageChange(pageInfo.pageNumber + 1);
+              void pageRooms(pageInfo.pageNumber + 1);
             }}
             disabled={pageInfo.pageNumber === pageInfo.totalPages - 1}
             className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"

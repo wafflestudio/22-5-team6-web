@@ -47,7 +47,7 @@ const ReviewForm = () => {
       );
 
       alert('리뷰가 성공적으로 등록되었습니다.');
-      setTimeout(() => void navigate('/profile'));
+      void navigate('/profile');
     } catch (err) {
       console.error(err);
       setError('리뷰 작성 중 오류가 발생했습니다.');
