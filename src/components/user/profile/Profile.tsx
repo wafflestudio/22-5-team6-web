@@ -10,6 +10,10 @@ type ProfileInfo = {
   userId: number;
   nickname: string;
   bio: string;
+  isSuperHost: false;
+  showMyReviews: false;
+  showMyReservations: false;
+  showMyWishlist: false;
   imageUrl: string;
 };
 
@@ -80,7 +84,7 @@ const UserProfile = () => {
   if (profile === null) return <p>로딩 중...</p>;
 
   return (
-    <div className="flex justify-self-center mb-28 px-10 py-12 min-w-[950px] w-2/3 gap-x-20">
+    <div className="flex justify-self-center mb-4 px-10 py-12 min-w-[950px] w-2/3 gap-x-20">
       {/* ProfileHeader */}
       <ProfileHeader
         profile={profile}
@@ -89,7 +93,7 @@ const UserProfile = () => {
       />
 
       {/* 닉네임, 바이오 */}
-      <div className="w-3/5 h-dvh">
+      <div className="w-3/5 h-full">
         <p className="font-semibold text-3xl">{`${profile.nickname} 님 소개`}</p>
         <button
           onClick={() => void navigate('/profile/edit')}

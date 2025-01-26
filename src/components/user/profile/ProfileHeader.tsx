@@ -1,5 +1,4 @@
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import CheckIcon from '@mui/icons-material/Check';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 import { useState } from 'react';
 
@@ -53,26 +52,13 @@ const ProfileHeader = ({
           </div>
           <hr className="w-full my-3 border-t border-gray-300" />
           <div className="w-24">
-            <p className="text-[0.625rem]">내가 작성한 후기</p>
+            <p className="text-[0.625rem]">작성한 후기</p>
             <div className="flex items-end">
               <p className="mr-0.5 text-[1.375rem] font-semibold">
                 {reviewsCount}
               </p>
               <p className="py-[4.3px] text-[0.625rem] font-semibold">개</p>
             </div>
-          </div>
-        </div>
-      </div>
-      <div className="mt-8 px-6 py-8 w-[342px] h-[200px] bg-white rounded-3xl border border-gray-300">
-        <p className="text-2xl">{`${profile.nickname} 님의 인증 정보`}</p>
-        <div className="mt-6 grid gap-y-3">
-          <div className="flex items-center gap-3">
-            <CheckIcon className="w-8 h-8" />
-            <p className="text-base">전화번호</p>
-          </div>
-          <div className="flex items-center gap-3">
-            <CheckIcon className="w-8 h-8" />
-            <p className="text-base">이메일</p>
           </div>
         </div>
       </div>

@@ -6,18 +6,33 @@ const Redirect = () => {
   const navigate = useNavigate();
 
   const token: string | undefined = searchParams.get('token')?.trim();
+  const refreshToken: string | undefined = searchParams
+    .get('refreshToken')
+    ?.trim();
+  const completeProfile: string | undefined = searchParams
+    .get('complete-profile')
+    ?.trim(); // complete-profile 파라미터 추출
 
   useEffect(() => {
     if (typeof token === 'string' && token !== '') {
-      // token이 string 타입이고 빈 문자열이 아닌 경우
-      localStorage.setItem('token', token); // 로컬 스토리지에 저장
-      void navigate('/'); // navigate 호출
-    } else {
-      console.error('Token not found or is empty in URL');
+      // 토큰 저장
+      localStorage.setItem('token', token);
     }
-  }, [token, navigate]);
 
-  return <h1>Redirect</h1>;
+    if (typeof refreshToken === 'string' && refreshToken !== '') {
+      // refreshToken 저장
+      localStorage.setItem('refreshToken', refreshToken);
+    }
+
+    // complete-profile 파라미터 값에 따라 경로 설정
+    if (completeProfile === 'true') {
+      void navigate('/complete-profile'); // 프로필 정보 입력 페이지로 이동
+    } else {
+      void navigate('/'); // 기본 경로로 이동
+    }
+  }, [token, refreshToken, completeProfile, navigate]);
+
+  return <h1>Redirecting...</h1>;
 };
 
 export default Redirect;
