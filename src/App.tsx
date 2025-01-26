@@ -9,6 +9,7 @@ import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
 import MyReservations from './routes/MyReservations';
+import MyReviews from './routes/MyReviews';
 import ProfileEdit from './routes/ProfileEdit';
 import ProfilePage from './routes/ProfilePage';
 import ReservationDetails from './routes/ReservationDetails';
@@ -30,6 +31,7 @@ export const App = () => {
           <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/MyReservations" element={<MyReservations />} />
+          <Route path="/MyReviews" element={<MyReviews />} />
           <Route path="/reviews/:reservationId" element={<Review />} />
           <Route
             path="/reservations/:reservationId"

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 type Review = {
   content: string;
@@ -15,6 +16,7 @@ type UserReviewsProps = {
 };
 
 const UserReviews = ({ userId }: UserReviewsProps) => {
+  const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [error, setError] = useState<string>('');
 
@@ -42,7 +44,17 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
 
   if (error !== '') return <p className="text-red-500">{error}</p>;
   if (reviews.length === 0)
-    return <p className="text-gray-500 ml-2">아직 작성한 후기가 없습니다.</p>;
+    return (
+      <div>
+        <p className="text-gray-500 ml-2">아직 작성한 후기가 없습니다.</p>
+        <button
+          onClick={() => void navigate('/MyReviews')}
+          className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
+        >
+          후기 작성하기
+        </button>
+      </div>
+    );
 
   return (
     <div>
@@ -50,7 +62,7 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
         {reviews.map((review, index) => (
           <div
             key={index}
-            className="grid p-4 bg-white content-between rounded-2xl min-w-80 h-[200px] border border-gray-300 cursor-pointer"
+            className="grid p-4 bg-white content-between rounded-2xl min-w-80 max-w-80 h-[200px] border border-gray-300 cursor-pointer"
           >
             <p className="text-base line-clamp-4">
               &quot;{review.content}&quot;
@@ -69,7 +81,10 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
           </div>
         ))}
       </div>
-      <button className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100">
+      <button
+        onClick={() => void navigate('/MyReviews')}
+        className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
+      >
         후기 모두 보기
       </button>
     </div>
