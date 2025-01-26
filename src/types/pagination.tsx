@@ -1,4 +1,4 @@
-// types/pagination.ts
+// types/pagination.tsx
 type Sort = {
   empty: boolean;
   sorted: boolean;

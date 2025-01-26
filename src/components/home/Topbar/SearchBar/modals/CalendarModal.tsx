@@ -1,14 +1,14 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
-import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 
 type CalendarModalProps = {
   onClose: () => void;
 };
 
 const CalendarModal = ({ onClose }: CalendarModalProps) => {
-  const { checkIn, checkOut, setCheckIn, setCheckOut } = useRoomSearch();
+  const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [selecting, setSelecting] = useState<'checkIn' | 'checkOut'>('checkIn');
 

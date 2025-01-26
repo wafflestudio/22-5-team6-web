@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
-import { useRoomSearch } from '@/components/home/context/RoomSearchContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 
 interface FilterModalProps {
   isOpen: boolean;
@@ -12,7 +12,7 @@ const initialMinPrice = 1000;
 const initialMaxPrice = 1000000;
 
 export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
-  const { filter, setFilter, searchRooms } = useRoomSearch();
+  const { filter, filterRooms } = useSearch();
   const [minPrice, setMinPrice] = useState(filter.minPrice ?? initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(filter.maxPrice ?? initialMaxPrice);
 
@@ -21,16 +21,19 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
       alert('최소 가격이 최대 가격보다 클 수 없습니다.');
       return;
     }
-    setFilter({ ...filter, minPrice, maxPrice });
-    void searchRooms();
+    void filterRooms({ ...filter, minPrice, maxPrice });
     onClose();
   };
 
   const handleReset = () => {
     setMinPrice(initialMinPrice);
     setMaxPrice(initialMaxPrice);
-    setFilter({ ...filter, minPrice: null, maxPrice: null, roomType: null });
-    void searchRooms();
+    void filterRooms({
+      ...filter,
+      minPrice: null,
+      maxPrice: null,
+      roomType: null,
+    });
   };
 
   return (
