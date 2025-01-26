@@ -1,213 +1,399 @@
+import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import airBalloon from '@/assets/icons/airballoon.svg';
+import LogoIconBlack from '@/assets/Logo/LocoIconBlack';
+
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
+  const [step, setStep] = useState(1); // 현재 단계
   const [formData, setFormData] = useState({
     username: '',
     password: '',
     nickname: '',
     bio: '',
-    showMyReviews: false,
-    showMyReservations: false,
-    showMyWishlist: false,
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [errorMessage, setErrorMessage] = useState<string>('');
+  const [isRegistered, setIsRegistered] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+    setErrorMessage('');
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files !== null && files.length > 0 && files[0] !== undefined) {
-      setProfileImage(files[0]);
+      const file = files[0];
+      setProfileImage(file);
+
+      // 선택한 파일 미리보기
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      setErrorMessage('');
     }
   };
 
-  const uploadImageWithPresignedUrl = async (
-    presignedUrl: string,
-    file: File,
-  ): Promise<boolean> => {
-    try {
-      await axios.put(presignedUrl, file, {
-        headers: {
-          'Content-Type': file.type,
-        },
-      });
-      return true;
-    } catch (error) {
-      console.error('이미지 업로드 실패:', error);
-      return false;
+  const validateStep = () => {
+    if (step === 1) {
+      if (formData.username.trim() === '' || formData.password.trim() === '') {
+        setErrorMessage('아이디와 비밀번호를 모두 입력해주세요.');
+        return false;
+      }
+    } else if (step === 2) {
+      if (profileImage === null) {
+        setErrorMessage('프로필 사진을 선택해주세요.');
+        return false;
+      }
+    } else if (step === 3) {
+      if (formData.nickname.trim() === '') {
+        setErrorMessage('닉네임을 입력해주세요.');
+        return false;
+      }
+    } else if (step === 4) {
+      if (formData.bio.trim() === '') {
+        setErrorMessage('자기소개를 입력해주세요.');
+        return false;
+      }
+    }
+    return true;
+  };
+
+  const nextStep = () => {
+    if (validateStep() && step < 4) {
+      setStep(step + 1);
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setErrorMessage('');
+  const prevStep = () => {
+    if (step > 1) setStep(step - 1);
+  };
 
-    const formDataToSend = new FormData();
-    formDataToSend.append('username', formData.username);
-    formDataToSend.append('password', formData.password);
-    formDataToSend.append('nickname', formData.nickname);
-    formDataToSend.append('bio', formData.bio);
-    formDataToSend.append('showMyReviews', formData.showMyReviews.toString());
-    formDataToSend.append(
-      'showMyReservations',
-      formData.showMyReservations.toString(),
-    );
-    formDataToSend.append('showMyWishlist', formData.showMyWishlist.toString());
-    if (profileImage !== null) {
-      formDataToSend.append('profileImage', profileImage);
-    }
-
-    type RegisterResponseData = {
-      imageUploadUrl: string;
-    };
-
+  const handleSubmit = async (): Promise<void> => {
     try {
-      const RegisterResponse = await axios.post<RegisterResponseData>(
+      if (!validateStep()) return;
+
+      interface RegisterResponse {
+        imageUploadUrl: string;
+      }
+
+      // 회원가입 요청
+      const response = await axios.post<RegisterResponse>(
         '/api/auth/register',
-        formDataToSend,
         {
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          username: formData.username,
+          password: formData.password,
+          nickname: formData.nickname,
+          bio: formData.bio,
         },
       );
 
-      alert('회원가입 성공');
+      const imageUploadUrl = response.data.imageUploadUrl;
 
-      const presignedUrl = RegisterResponse.data.imageUploadUrl;
-
-      if (profileImage !== null && presignedUrl !== '') {
-        const uploadSuccess = await uploadImageWithPresignedUrl(
-          presignedUrl,
-          profileImage,
-        );
-
-        if (uploadSuccess) {
-          console.debug('이미지 업로드 완료');
-        } else {
-          console.error('이미지 업로드 실패');
-        }
+      // 프로필 이미지 업로드
+      if (profileImage !== null && imageUploadUrl !== '') {
+        await axios.put(imageUploadUrl, profileImage, {
+          headers: {
+            'Content-Type': profileImage.type,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+          },
+        });
       }
 
-      await navigate('/');
+      setIsRegistered(true);
     } catch (error) {
-      console.error('회원가입 실패:', error);
-      setErrorMessage('회원가입 요청 중 오류가 발생했습니다.');
+      // 409 상태 코드 처리
+      if (axios.isAxiosError(error) && error.response?.status === 409) {
+        setErrorMessage('이미 사용 중인 아이디입니다. 다시 시도해주세요.');
+        setStep(1); // 첫 번째 단계로 이동
+      } else {
+        console.error('회원가입 실패:', error);
+        setErrorMessage('회원가입 요청 중 오류가 발생했습니다.');
+      }
     }
   };
 
-  return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white rounded-lg shadow-lg w-[500px] p-8">
-        <h2 className="text-2xl font-semibold mb-6">회원가입</h2>
-        <p className="text-gray-700 mb-4">에어비앤비에 오신 것을 환영합니다.</p>
+  const handleLogin = async () => {
+    try {
+      const params = new URLSearchParams();
+      params.append('username', formData.username);
+      params.append('password', formData.password);
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void handleSubmit(e);
-          }}
-        >
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2">Profile Image:</label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleFileChange}
-              className="w-full"
-            />
-          </div>
+      // 로그인 요청
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: params.toString(),
+      });
 
-          <div className="mb-4 relative">
-            <label className="block text-gray-700 mb-2" htmlFor="username">
-              아이디
-            </label>
-            <input
-              id="username"
-              type="text"
-              name="username"
-              placeholder="아이디"
-              value={formData.username}
-              onChange={handleInputChange}
-              className="w-full h-12 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-airbnb"
-            />
-          </div>
+      if (!response.ok) {
+        throw new Error('로그인에 실패했습니다.');
+      }
 
-          <div className="mb-4 relative">
-            <label className="block text-gray-700 mb-2" htmlFor="password">
-              비밀번호
-            </label>
-            <input
-              id="password"
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              placeholder="비밀번호"
-              value={formData.password}
-              onChange={handleInputChange}
-              className="w-full h-12 px-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-airbnb"
-            />
+      window.location.href = response.url;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setErrorMessage(error.message);
+      } else {
+        setErrorMessage('알 수 없는 오류가 발생했습니다.');
+      }
+    }
+  };
+
+  if (isRegistered) {
+    // 회원가입 완료 페이지
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <div className="bg-white w-max flex items-center p-8">
+          <img
+            src={airBalloon}
+            alt="열기구"
+            className="w-96 h-96 mx-auto mb-6"
+          />
+          <div className="w-max">
+            <h2 className="text-5xl mb-6">환영합니다!</h2>
+            <p className="text-gray-700 text-xl mb-8">
+              에어비앤비에 가입해주셔서 감사합니다. 이제부터 멋진 여행을
+              계획해보세요!
+            </p>
             <button
-              type="button"
-              onClick={() => {
-                setShowPassword((prev) => !prev);
-              }}
-              className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+              onClick={() => void handleLogin()}
+              className="py-3 px-6 bg-airbnb text-white rounded-md hover:bg-airbnb-hover transition duration-300"
             >
-              {showPassword ? <Visibility /> : <VisibilityOff />}
+              에어비앤비 시작하기
             </button>
           </div>
+        </div>
+      </div>
+    );
+  }
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="nickname">
-              닉네임
-            </label>
-            <input
-              id="nickname"
-              type="text"
-              name="nickname"
-              placeholder="닉네임"
-              value={formData.nickname}
-              onChange={handleInputChange}
-              className="w-full h-12 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-airbnb"
-            />
+  return (
+    <div className="flex flex-col items-center min-h-screen bg-white">
+      {/* Header */}
+      <div className="w-screen mb-32 pt-8 px-12 top-0 bg-white">
+        <div
+          onClick={() => void navigate('/')}
+          className="w-12 h-12 cursor-pointer"
+        >
+          <LogoIconBlack />
+        </div>
+      </div>
+
+      <div className="bg-white w-max min-w-[500px] h-full p-8">
+        <h2 className="text-lg mb-4">회원가입</h2>
+
+        {/* 단계별 화면 */}
+        {step === 1 && (
+          <div>
+            <h2 className="text-4xl mb-16">
+              아이디와 비밀번호를 입력해주세요.
+            </h2>
+            <div className="flex flex-col items-center w-full">
+              <div className="relative w-3/4 mb-4">
+                <input
+                  id="username"
+                  type="text"
+                  name="username"
+                  placeholder="아이디"
+                  value={formData.username}
+                  onChange={handleInputChange}
+                  className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
+                />
+                <label
+                  htmlFor="username"
+                  className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
+                    formData.username.trim() !== ''
+                      ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
+                      : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
+                  }`}
+                >
+                  아이디
+                </label>
+              </div>
+
+              <div className="relative w-3/4 mb-4">
+                <input
+                  id="password"
+                  type={showPassword ? 'text' : 'password'}
+                  name="password"
+                  placeholder="비밀번호"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
+                />
+                <label
+                  htmlFor="password"
+                  className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
+                    formData.password.trim() !== ''
+                      ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
+                      : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
+                  }`}
+                >
+                  비밀번호
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowPassword((prev) => !prev);
+                  }}
+                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                >
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </button>
+              </div>
+            </div>
           </div>
+        )}
 
-          <div className="mb-4">
-            <label className="block text-gray-700 mb-2" htmlFor="bio">
-              자기소개
-            </label>
-            <input
-              id="bio"
-              type="text"
-              name="bio"
-              placeholder="자기소개"
-              value={formData.bio}
-              onChange={handleInputChange}
-              className="w-full h-12 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-airbnb"
-            />
+        {step === 2 && (
+          <div>
+            <h2 className="text-4xl mb-12">프로필 사진을 선택해주세요.</h2>
+            <div className="flex flex-col items-center">
+              <div className="relative group w-56 h-56">
+                {previewImage !== null ? (
+                  <img
+                    src={previewImage}
+                    alt="프로필 미리보기"
+                    className="w-full h-full rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center transition duration-300 group-hover:bg-gray-300">
+                    <CameraAltOutlinedIcon className="text-gray-500 text-5xl group-hover:text-gray-700 transition duration-300" />
+                  </div>
+                )}
+
+                {previewImage !== null && (
+                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 bg-opacity-50 opacity-0 group-hover:opacity-100 transition duration-300">
+                    <CameraAltOutlinedIcon className="text-white text-5xl" />
+                  </div>
+                )}
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileChange}
+                  className="absolute inset-0 opacity-0 cursor-pointer"
+                />
+              </div>
+            </div>
           </div>
+        )}
 
-          {errorMessage !== '' && (
-            <p className="text-red-500 text-sm mb-4">{errorMessage}</p>
-          )}
+        {step === 3 && (
+          <div>
+            <h2 className="text-4xl mb-12">별명을 입력해주세요.</h2>
+            <div className="relative w-[500px] mb-4">
+              <input
+                id="nickname"
+                type="text"
+                name="nickname"
+                placeholder="별명"
+                value={formData.nickname}
+                onChange={handleInputChange}
+                className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
+              />
+              <label
+                htmlFor="nickname"
+                className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
+                  formData.nickname.trim() !== ''
+                    ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
+                    : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
+                }`}
+              >
+                별명
+              </label>
+            </div>
+          </div>
+        )}
 
+        {step === 4 && (
+          <div>
+            <h2 className="text-4xl mb-12">
+              {formData.nickname} 님을 소개해주세요.
+            </h2>
+            <div className="relative w-[500px]">
+              <textarea
+                id="bio"
+                name="bio"
+                placeholder="자기소개"
+                value={formData.bio}
+                onChange={(e) => {
+                  setFormData({ ...formData, bio: e.target.value });
+                }}
+                maxLength={100}
+                className="w-full h-32 bg-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-2 transition duration-300 ease focus:outline-none focus:ring-2 focus:ring-slate-600 shadow-sm resize-none"
+              ></textarea>
+              <div className="text-right text-xs text-gray-500 mt-1">
+                {formData.bio.length}/100
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* 오류 메시지 */}
+        {errorMessage !== '' && (
+          <p className="text-red-500 text-sm mt-2 mb-4">{errorMessage}</p>
+        )}
+      </div>
+
+      {/* Footer */}
+      <div className="w-screen fixed bottom-0">
+        {/* Progress Bar */}
+        <div className="h-2 bg-gray-200 rounded-md overflow-hidden mb-8">
+          <div
+            className="h-full bg-airbnb transition-all duration-500"
+            style={{
+              width: `${((step - 1) / 3) * 100}%`,
+            }}
+          />
+        </div>
+
+        {/* 버튼 */}
+        <div className="flex justify-between mt-6 pb-8 px-12">
           <button
-            type="submit"
-            className="w-full py-3 bg-airbnb text-white rounded-md hover:bg-airbnb-hover transition duration-300"
+            type="button"
+            disabled={step === 1}
+            onClick={prevStep}
+            className={`py-3 px-8 rounded-lg ${
+              step === 1
+                ? 'bg-gray-100 underline cursor-not-allowed'
+                : 'bg-gray-100 underline text-black hover:bg-gray-200'
+            }`}
           >
-            회원가입
+            뒤로
           </button>
-        </form>
+          {step < 4 ? (
+            <button
+              type="button"
+              onClick={nextStep}
+              className="py-3 px-8 bg-airbnb text-white rounded-lg hover:bg-airbnb-hover"
+            >
+              다음
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={() => void handleSubmit()}
+              className="py-3 px-8 bg-airbnb text-white rounded-lg hover:bg-airbnb-hover"
+            >
+              완료
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -101,6 +101,7 @@ const ProfileEditForm = () => {
         await axios.put(presignedUrl, image, {
           headers: {
             'Content-Type': image.type,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
           },
         });
       }
