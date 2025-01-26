@@ -105,7 +105,9 @@ const ProfileEditForm = () => {
         });
       }
 
-      void navigate('/profile');
+      setTimeout(() => {
+        void navigate('/profile', { state: { refresh: true } });
+      }, 500);
     } catch (err) {
       console.error(err);
       setError('프로필 수정 중 오류가 발생했습니다.');

@@ -7,6 +7,7 @@ type Review = {
   place: string;
   startDate: string;
   endDate: string;
+  imageUrl: string;
 };
 
 type UserReviewsProps = {
@@ -45,17 +46,26 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
 
   return (
     <div>
-      <p className="text-xl">내가 작성한 후기</p>
       <div className="flex w-full scrollbar-hidden overflow-x-auto gap-2 mt-8">
         {reviews.map((review, index) => (
           <div
             key={index}
-            className="p-6 min-w-80 min-h-[224px] bg-white rounded-2xl border border-gray-300"
+            className="grid p-4 bg-white content-between rounded-2xl min-w-80 h-[200px] border border-gray-300 cursor-pointer"
           >
-            <p className="text-base text-ellipsis">
+            <p className="text-base line-clamp-4">
               &quot;{review.content}&quot;
             </p>
-            <p className="text-sm text-gray-500">{`${review.place} - ${review.startDate} ~ ${review.endDate}`}</p>
+            <div className="flex items-center">
+              <img
+                src={review.imageUrl}
+                alt={review.place}
+                className="w-12 h-12 object-cover rounded-md"
+              />
+              <div className="ml-4 ">
+                <p>{review.place}</p>
+                <p className="text-sm text-gray-500">{`${review.startDate} - ${review.endDate}`}</p>
+              </div>
+            </div>
           </div>
         ))}
       </div>
