@@ -1,3 +1,4 @@
+import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import WavingHandTwoToneIcon from '@mui/icons-material/WavingHandTwoTone';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
@@ -105,6 +106,17 @@ const MyReservationItems = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen bg-white">
+      <div className="flex items-center w-3/4 mt-6 mb-4">
+        <p
+          onClick={() => void navigate(`/profile`)}
+          className="text-sm hover:underline hover:cursor-pointer"
+        >
+          마이 페이지
+        </p>
+        <KeyboardArrowRightOutlinedIcon className="text-gray-600" />
+        <p className="text-sm text-gray-600">여행</p>
+      </div>
+
       <div className="w-3/4 mb-6">
         <h1 className="text-3xl font-bold my-4">여행</h1>
       </div>

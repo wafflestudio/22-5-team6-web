@@ -8,11 +8,12 @@ import Hosting from '@/routes/Hosting';
 import Redirect from '@/routes/Redirect';
 
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
-import ReviewForm from './components/user/ReviewForm';
 import MyReservations from './routes/MyReservations';
+import MyReviews from './routes/MyReviews';
 import ProfileEdit from './routes/ProfileEdit';
 import ProfilePage from './routes/ProfilePage';
 import ReservationDetails from './routes/ReservationDetails';
+import Review from './routes/Review';
 import { Roomdetail } from './routes/roomDetail';
 
 export const App = () => {
@@ -30,7 +31,8 @@ export const App = () => {
           <Route path="/profile/edit" element={<ProfileEdit />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/MyReservations" element={<MyReservations />} />
-          <Route path="/reviews/:reservationId" element={<ReviewForm />} />
+          <Route path="/MyReviews" element={<MyReviews />} />
+          <Route path="/reviews/:reservationId" element={<Review />} />
           <Route
             path="/reservations/:reservationId"
             element={<ReservationDetails />}

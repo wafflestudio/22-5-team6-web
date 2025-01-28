@@ -50,7 +50,11 @@ const UpcomingReservations = ({
 
   if (error !== '') return <p className="text-red-500">{error}</p>;
   if (reservations.length === 0)
-    return <p className="text-gray-500 ml-2">다가오는 여행이 없습니다.</p>;
+    return (
+      <p className="text-gray-500 ml-2">
+        다가오는 여행이 없습니다. 다음 여행 계획을 세워보세요!
+      </p>
+    );
 
   return (
     <div>

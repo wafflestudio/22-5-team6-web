@@ -101,11 +101,14 @@ const ProfileEditForm = () => {
         await axios.put(presignedUrl, image, {
           headers: {
             'Content-Type': image.type,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
           },
         });
       }
 
-      void navigate('/profile');
+      setTimeout(() => {
+        void navigate('/profile', { state: { refresh: true } });
+      }, 500);
     } catch (err) {
       console.error(err);
       setError('프로필 수정 중 오류가 발생했습니다.');
