@@ -1,13 +1,13 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import accuracy from '@/assets/icons/reviews/accuracy.svg';
 import clean from '@/assets/icons/reviews/clean.svg';
 import { CheckinIcon } from '@/components/common/constants/icons';
-import type { ReviewsResponse } from '@/types/reviewType';
 import type { roomType } from '@/types/roomType';
+import { useReview } from './ReviewContext';
 
 interface ReviewProps {
   data: roomType;
@@ -15,65 +15,29 @@ interface ReviewProps {
 }
 
 const ReviewModal = ({ onClose, data }: ReviewProps) => {
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [reviewData, setReviewData] = useState<ReviewsResponse | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('최신순');
+  const [page, setPage] = useState(0)
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const options = ['최신순', '오래된순', '높은 평점순', '낮은 평점순'];
-
   const handleOptionClick = (option: string) => {
     setSelectedOption(option); // 선택한 값을 버튼에 표시
     setIsModalOpen(false); // 모달 닫기
   };
 
-  const fetchReviews = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
+  const { isLoading, error, initReviews, reviewData } =
+    useReview();
 
-      const page = 0;
-      const size = 10;
-      let sort = '';
-
-      if (selectedOption === '최신순') {
-        sort = 'createdAt,desc';
-      } else if (selectedOption === '오래된순') {
-        sort = 'rating,asc';
-      } else if (selectedOption === '높은 평점순') {
-        sort = 'rating,desc';
-      } else if (selectedOption === '낮은 평점순') {
-        sort = 'rating,asc';
-      }
-
-      const url = `/api/v1/reviews/room/${data.roomId}?page=${page}&size=${size}&sort=${sort}`;
-
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('숙소 리뷰 로딩에 실패했습니다.');
-      }
-
-      const responseData = (await response.json()) as ReviewsResponse;
-      setReviewData(responseData);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : '오류가 발생했습니다.';
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [data.roomId, selectedOption]);
+  const isInitialMount = useRef(true);
 
   useEffect(() => {
-    void fetchReviews();
-  }, [fetchReviews]);
-
+    if (isInitialMount.current) {
+      void initReviews(data, selectedOption, page);
+      isInitialMount.current = false;
+    }
+  }, [initReviews, data, selectedOption, page]);
+  if (!reviewData) {
+    return <div className="text-center p-4">리뷰 데이터를 불러오는 중...</div>;
+  }
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
       {/* 배경 클릭 시 닫힘 */}
@@ -160,7 +124,7 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
               <div className="text-xl ml-8 w-fit h-fit">
                 후기{' '}
                 <span className="font-bold w-fit h-fit">
-                  {reviewData?.content.length}
+                  {reviewData?.totalElements}
                 </span>
                 개
               </div>
@@ -212,6 +176,44 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
                 <p className="mt-2 text-sm">{review.content}</p>
               </div>
             ))}
+            {reviewData.totalPages > 1 && (
+              <div className="mt-8 flex justify-center gap-2">
+                <button
+                  onClick={() => {
+                    void setPage(1);
+                  }}
+                  disabled={page === 0}
+                  className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  이전
+                </button>
+
+                {Array.from({ length: reviewData.totalPages }, (_, i) => (
+                  <button
+                    key={i}
+                    onClick={() => {
+                      void setPage(i);
+                    }}
+                    className={`rounded-lg px-4 py-2 ${page === i
+                      ? 'bg-black text-white'
+                      : 'border hover:bg-gray-100'
+                      }`}
+                  >
+                    {i + 1}
+                  </button>
+                ))}
+
+                <button
+                  onClick={() => {
+                    void setPage(page + 1);
+                  }}
+                  disabled={page === reviewData.totalPages - 1}
+                  className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                >
+                  다음
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
