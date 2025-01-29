@@ -7,6 +7,7 @@ import Home from '@/routes/Home';
 import Hosting from '@/routes/Hosting';
 import Redirect from '@/routes/Redirect';
 
+import CompleteProfilePage from './components/home/Topbar/Menu/CompleteProfilePage';
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
 import MyReservations from './routes/MyReservations';
 import MyReviews from './routes/MyReviews';
@@ -23,6 +24,7 @@ export const App = () => {
       <SearchProvider>
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="complete-profile" element={<CompleteProfilePage />} />
           <Route path="/:id" element={<Roomdetail />} />
           <Route path="/tests" element={<ApiTest />} />
           <Route path="/redirect" element={<Redirect />} />
