@@ -1,16 +1,16 @@
 import Footer from '@/components/home/Footer';
 import Header from '@/components/home/Topbar/Header';
-import ProfileEditForm from '@/components/user/profile/ProfileEditForm';
+import MyReviewItems from '@/components/user/MyReviewItems';
 
-const ProfileEdit = () => {
+const MyReviews = () => {
   return (
     <>
       <Header />
       <hr className="w-full mb-8 border-t border-gray-300" />
-      <ProfileEditForm />
+      <MyReviewItems />
       <Footer />
     </>
   );
 };
 
-export default ProfileEdit;
+export default MyReviews;

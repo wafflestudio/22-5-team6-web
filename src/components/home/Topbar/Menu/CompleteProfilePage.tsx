@@ -1,6 +1,4 @@
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,22 +6,21 @@ import { useNavigate } from 'react-router-dom';
 import airBalloon from '@/assets/icons/airballoon.svg';
 import LogoIconBlack from '@/assets/Logo/LocoIconBlack';
 
-const RegisterPage: React.FC = () => {
+const CompleteProfilePage: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1); // 현재 단계
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
-    username: '',
-    password: '',
     nickname: '',
     bio: '',
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isRegistered, setIsRegistered] = useState(false);
+  const [isProfileCompleted, setIsProfileCompleted] = useState(false); // 완료 상태
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
+  ) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrorMessage('');
@@ -35,7 +32,7 @@ const RegisterPage: React.FC = () => {
       const file = files[0];
       setProfileImage(file);
 
-      // 선택한 파일 미리보기
+      // 미리보기 이미지 설정
       const reader = new FileReader();
       reader.onloadend = () => {
         setPreviewImage(reader.result as string);
@@ -46,32 +43,23 @@ const RegisterPage: React.FC = () => {
   };
 
   const validateStep = () => {
-    if (step === 1) {
-      if (formData.username.trim() === '' || formData.password.trim() === '') {
-        setErrorMessage('아이디와 비밀번호를 모두 입력해주세요.');
-        return false;
-      }
-    } else if (step === 2) {
-      if (profileImage === null) {
-        setErrorMessage('프로필 사진을 선택해주세요.');
-        return false;
-      }
-    } else if (step === 3) {
-      if (formData.nickname.trim() === '') {
-        setErrorMessage('닉네임을 입력해주세요.');
-        return false;
-      }
-    } else if (step === 4) {
-      if (formData.bio.trim() === '') {
-        setErrorMessage('자기소개를 입력해주세요.');
-        return false;
-      }
+    if (step === 1 && profileImage === null) {
+      setErrorMessage('프로필 사진을 선택해주세요.');
+      return false;
+    }
+    if (step === 2 && formData.nickname.trim() === '') {
+      setErrorMessage('닉네임을 입력해주세요.');
+      return false;
+    }
+    if (step === 3 && formData.bio.trim() === '') {
+      setErrorMessage('자기소개를 입력해주세요.');
+      return false;
     }
     return true;
   };
 
   const nextStep = () => {
-    if (validateStep() && step < 4) {
+    if (validateStep() && step < 3) {
       setStep(step + 1);
     }
   };
@@ -84,16 +72,10 @@ const RegisterPage: React.FC = () => {
     try {
       if (!validateStep()) return;
 
-      interface RegisterResponse {
-        imageUploadUrl: string;
-      }
-
-      // 회원가입 요청
-      const response = await axios.post<RegisterResponse>(
-        '/api/auth/register',
+      // 프로필 업데이트 요청
+      const response = await axios.post<{ imageUploadUrl: string }>(
+        '/api/v1/profile',
         {
-          username: formData.username,
-          password: formData.password,
           nickname: formData.nickname,
           bio: formData.bio,
         },
@@ -111,50 +93,15 @@ const RegisterPage: React.FC = () => {
         });
       }
 
-      setIsRegistered(true);
+      setIsProfileCompleted(true);
     } catch (error) {
-      // 409 상태 코드 처리
-      if (axios.isAxiosError(error) && error.response?.status === 409) {
-        setErrorMessage('이미 사용 중인 아이디입니다. 다시 시도해주세요.');
-        setStep(1); // 첫 번째 단계로 이동
-      } else {
-        console.error('회원가입 실패:', error);
-        setErrorMessage('회원가입 요청 중 오류가 발생했습니다.');
-      }
+      console.error('프로필 업데이트 실패:', error);
+      setErrorMessage('프로필 업데이트 중 오류가 발생했습니다.');
     }
   };
 
-  const handleLogin = async () => {
-    try {
-      const params = new URLSearchParams();
-      params.append('username', formData.username);
-      params.append('password', formData.password);
-
-      // 로그인 요청
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: params.toString(),
-      });
-
-      if (!response.ok) {
-        throw new Error('로그인에 실패했습니다.');
-      }
-
-      window.location.href = response.url;
-    } catch (error: unknown) {
-      if (error instanceof Error) {
-        setErrorMessage(error.message);
-      } else {
-        setErrorMessage('알 수 없는 오류가 발생했습니다.');
-      }
-    }
-  };
-
-  if (isRegistered) {
-    // 회원가입 완료 페이지
+  if (isProfileCompleted) {
+    // 완료 페이지
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <div className="bg-white w-max flex items-center p-8">
@@ -166,11 +113,11 @@ const RegisterPage: React.FC = () => {
           <div className="w-max">
             <h2 className="text-5xl mb-6">환영합니다!</h2>
             <p className="text-gray-700 text-xl mb-8">
-              에어비앤비에 가입해주셔서 감사합니다. 이제부터 멋진 여행을
+              프로필이 성공적으로 설정되었습니다. 이제부터 멋진 여행을
               계획해보세요!
             </p>
             <button
-              onClick={() => void handleLogin()}
+              onClick={() => void navigate('/')}
               className="py-3 px-6 bg-airbnb text-white rounded-md hover:bg-airbnb-hover transition duration-300"
             >
               에어비앤비 시작하기
@@ -194,72 +141,10 @@ const RegisterPage: React.FC = () => {
       </div>
 
       <div className="bg-white w-max min-w-[500px] h-full p-8">
-        <h2 className="text-lg mb-4">회원가입</h2>
+        <h2 className="text-lg mb-4">프로필 설정</h2>
 
         {/* 단계별 화면 */}
         {step === 1 && (
-          <div>
-            <h2 className="text-4xl mb-16">
-              아이디와 비밀번호를 입력해주세요.
-            </h2>
-            <div className="flex flex-col items-center w-full">
-              <div className="relative w-3/4 mb-4">
-                <input
-                  id="username"
-                  type="text"
-                  name="username"
-                  placeholder="아이디"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
-                />
-                <label
-                  htmlFor="username"
-                  className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
-                    formData.username.trim() !== ''
-                      ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
-                      : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
-                  }`}
-                >
-                  아이디
-                </label>
-              </div>
-
-              <div className="relative w-3/4 mb-4">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  placeholder="비밀번호"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
-                />
-                <label
-                  htmlFor="password"
-                  className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
-                    formData.password.trim() !== ''
-                      ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
-                      : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
-                  }`}
-                >
-                  비밀번호
-                </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowPassword((prev) => !prev);
-                  }}
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </button>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {step === 2 && (
           <div>
             <h2 className="text-4xl mb-12">프로필 사진을 선택해주세요.</h2>
             <div className="flex flex-col items-center">
@@ -275,13 +160,6 @@ const RegisterPage: React.FC = () => {
                     <CameraAltOutlinedIcon className="text-gray-500 text-5xl group-hover:text-gray-700 transition duration-300" />
                   </div>
                 )}
-
-                {previewImage !== null && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 bg-opacity-50 opacity-0 group-hover:opacity-100 transition duration-300">
-                    <CameraAltOutlinedIcon className="text-white text-5xl" />
-                  </div>
-                )}
-
                 <input
                   type="file"
                   accept="image/*"
@@ -293,7 +171,7 @@ const RegisterPage: React.FC = () => {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 2 && (
           <div>
             <h2 className="text-4xl mb-12">별명을 입력해주세요.</h2>
             <div className="relative w-[500px] mb-4">
@@ -320,20 +198,16 @@ const RegisterPage: React.FC = () => {
           </div>
         )}
 
-        {step === 4 && (
+        {step === 3 && (
           <div>
-            <h2 className="text-4xl mb-12">
-              {formData.nickname} 님을 소개해주세요.
-            </h2>
+            <h2 className="text-4xl mb-12">자기소개를 입력해주세요.</h2>
             <div className="relative w-[500px]">
               <textarea
                 id="bio"
                 name="bio"
                 placeholder="자기소개"
                 value={formData.bio}
-                onChange={(e) => {
-                  setFormData({ ...formData, bio: e.target.value });
-                }}
+                onChange={handleInputChange}
                 maxLength={100}
                 className="w-full h-32 bg-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-2 transition duration-300 ease focus:outline-none focus:ring-2 focus:ring-slate-600 shadow-sm resize-none"
               ></textarea>
@@ -352,17 +226,15 @@ const RegisterPage: React.FC = () => {
 
       {/* Footer */}
       <div className="w-screen fixed bottom-0">
-        {/* Progress Bar */}
         <div className="h-2 bg-gray-200 rounded-md overflow-hidden mb-8">
           <div
             className="h-full bg-airbnb transition-all duration-500"
             style={{
-              width: `${((step - 1) / 3) * 100}%`,
+              width: `${((step - 1) / 2) * 100}%`,
             }}
           />
         </div>
 
-        {/* 버튼 */}
         <div className="flex justify-between mt-6 pb-8 px-12">
           <button
             type="button"
@@ -376,7 +248,7 @@ const RegisterPage: React.FC = () => {
           >
             뒤로
           </button>
-          {step < 4 ? (
+          {step < 3 ? (
             <button
               type="button"
               onClick={nextStep}
@@ -399,4 +271,4 @@ const RegisterPage: React.FC = () => {
   );
 };
 
-export default RegisterPage;
+export default CompleteProfilePage;

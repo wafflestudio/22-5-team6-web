@@ -15,7 +15,7 @@ const ReviewForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (reservationId === '') {
+    if (reservationId === '' || reservationId === undefined) {
       setError('예약 ID가 유효하지 않습니다.');
       return;
     }
@@ -55,15 +55,18 @@ const ReviewForm = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
+    <div className="flex justify-center items-center h-full bg-white">
       <form
-        onSubmit={void handleSubmit}
-        className="p-6 bg-white rounded-lg shadow-md w-96"
+        onSubmit={(e) => {
+          void handleSubmit(e);
+        }}
+        className="p-6 bg-white w-96"
       >
-        <h1 className="text-2xl font-bold mb-4">리뷰 작성</h1>
+        <h1 className="text-2xl mb-2">리뷰 작성</h1>
+        <p className="text-gray-600 mb-6">숙소에서의 경험을 평가해주세요.</p>
         {error !== null && <p className="text-red-500 mb-4">{error}</p>}
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">평점</label>
+          <label className="block text-lg font-medium mb-2">평점</label>
           <div className="flex">
             {[1, 2, 3, 4, 5].map((star) => (
               <div
@@ -83,9 +86,9 @@ const ReviewForm = () => {
                 className="cursor-pointer"
               >
                 {star <= rating ? (
-                  <StarIcon fontSize="large" className="text-airbnb" />
+                  <StarIcon fontSize="large" className="text-yellow-400" />
                 ) : star <= hoverRating ? (
-                  <StarIcon fontSize="large" className="text-[#ffa8b8]" />
+                  <StarIcon fontSize="large" className="text-yellow-300/75" />
                 ) : (
                   <StarBorderIcon fontSize="large" className="text-gray-300" />
                 )}
@@ -93,8 +96,8 @@ const ReviewForm = () => {
             ))}
           </div>
         </div>
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-2">리뷰 내용</label>
+        <div className="mb-6">
+          <label className="block text-lg font-medium mb-2">리뷰 내용</label>
           <textarea
             value={content}
             onChange={(e) => {
@@ -107,7 +110,7 @@ const ReviewForm = () => {
         </div>
         <button
           type="submit"
-          className="w-full py-2 bg-airbnb text-white font-semibold rounded hover:bg-airbnb-hover"
+          className="w-full py-3 bg-airbnb text-white font-semibold rounded hover:bg-airbnb-hover"
         >
           리뷰 등록하기
         </button>
