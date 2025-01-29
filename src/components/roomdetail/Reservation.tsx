@@ -2,6 +2,7 @@ import FlagIcon from '@mui/icons-material/Flag';
 import { useState } from 'react';
 
 import clock from '@/assets/icons/reservation/clock.svg';
+import axiosInstance from '@/axiosInstance';
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
 import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
@@ -49,22 +50,13 @@ const Reservation = ({ data }: InfoProps) => {
         numberOfGuests: guests,
       };
 
-      const response = await fetch('/api/v1/reservations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(sendData),
-      });
+      const response = await axiosInstance.post<roomReservationResponseType>(
+        '/api/v1/reservations',
+        sendData,
+      );
 
       console.debug(sendData);
-
-      if (!response.ok) {
-        throw new Error('숙소 예약에 실패했습니다.');
-      }
-      const responseData =
-        (await response.json()) as roomReservationResponseType;
+      const responseData = response.data;
       alert(
         `숙소가 성공적으로 예약되었습니다! ID: ${responseData.reservationId}`,
       );

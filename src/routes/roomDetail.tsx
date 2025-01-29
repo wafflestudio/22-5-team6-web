@@ -1,4 +1,5 @@
 import { PhotoSizeSelectActual as PhotoSizeSelectActualIcon } from '@mui/icons-material';
+import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
@@ -27,18 +28,9 @@ export const Roomdetail = () => {
           throw new Error('존재하지 않는 숙소입니다.');
         }
 
-        const response = await fetch(`/api/v1/rooms/main/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await axios.get<roomType>(`/api/v1/rooms/main/${id}`);
 
-        if (!response.ok) {
-          throw new Error('숙소 상세화면 로딩에 실패했습니다.');
-        }
-        const responseData = (await response.json()) as roomType;
-        setRoomData(responseData);
+        setRoomData(response.data);
       } catch (err) {
         const errorMessage =
           err instanceof Error ? err.message : '오류가 발생했습니다.';

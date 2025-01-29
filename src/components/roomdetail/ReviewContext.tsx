@@ -1,3 +1,4 @@
+import axios from 'axios';
 import type { ReactNode } from 'react';
 import { createContext, useContext, useState } from 'react';
 import { useCallback } from 'react';
@@ -45,18 +46,9 @@ export function ReviewProvider({ children }: { children: ReactNode }) {
 
         const url = `/api/v1/reviews/room/${data.roomId}?page=${page}&size=${size}&sort=${sort}`;
 
-        const response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await axios.get<ReviewsResponse>(url);
 
-        if (!response.ok) {
-          throw new Error('숙소 리뷰 로딩에 실패했습니다.');
-        }
-
-        const responseData = (await response.json()) as ReviewsResponse;
+        const responseData = response.data;
 
         setReviewData(responseData);
 
