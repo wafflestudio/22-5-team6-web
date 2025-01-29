@@ -1,3 +1,4 @@
+import axios from 'axios';
 import type { ReactNode } from 'react';
 import { useCallback } from 'react';
 import { createContext, useContext, useState } from 'react';
@@ -146,16 +147,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       };
 
       const urlParams = convertToURLSearchParams(searchParams);
-      const response = await fetch(
+
+      const response = await axios.get<RoomListResponse>(
         `/api/v1/rooms/main?${urlParams.toString()}`,
       );
 
-      if (!response.ok) {
-        throw new Error('방 검색에 실패했습니다.');
-      }
-
-      const data = (await response.json()) as RoomListResponse;
-      handleResponseData(data);
+      handleResponseData(response.data);
     } catch (err) {
       handleError(err);
     } finally {
@@ -186,23 +183,11 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       };
 
       const urlParams = convertToURLSearchParams(searchParams);
-
-      const response = await fetch(
+      const response = await axios.get<RoomListResponse>(
         `/api/v1/rooms/main/search?${urlParams.toString()}`,
-        {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        },
       );
 
-      if (!response.ok) {
-        throw new Error('방 검색에 실패했습니다.');
-      }
-
-      const data = (await response.json()) as RoomListResponse;
-      handleResponseData(data);
+      handleResponseData(response.data);
     } catch (err) {
       handleError(err);
     } finally {
@@ -237,23 +222,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         };
 
         const urlParams = convertToURLSearchParams(searchParams);
-        const response = await fetch(
+        const response = await axios.get<RoomListResponse>(
           `/api/v1/rooms/main/search?${urlParams.toString()}`,
-          {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          },
         );
 
-        if (!response.ok) {
-          throw new Error('방 검색에 실패했습니다.');
-        }
-
-        const data = (await response.json()) as RoomListResponse;
         setFilter(newFilter);
-        handleResponseData(data);
+        handleResponseData(response.data);
       } catch (err) {
         handleError(err);
       } finally {
@@ -296,20 +270,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
           ? '/api/v1/rooms/main/search'
           : '/api/v1/rooms/main';
 
-        const response = await fetch(`${endpoint}?${urlParams.toString()}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
+        const response = await axios.get<RoomListResponse>(
+          `${endpoint}?${urlParams.toString()}`,
+        );
 
-        if (!response.ok) {
-          throw new Error('방 검색에 실패했습니다.');
-        }
-
-        const data = (await response.json()) as RoomListResponse;
         setPageInfo((prev) => ({ ...prev, pageNumber }));
-        handleResponseData(data);
+        handleResponseData(response.data);
       } catch (err) {
         handleError(err);
       } finally {
