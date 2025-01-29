@@ -2,7 +2,6 @@ import { StyledEngineProvider } from '@mui/material/styles';
 import { Route, Routes } from 'react-router-dom';
 
 import { SearchProvider } from '@/components/home/context/SearchContext';
-import { ReviewProvider } from './components/roomdetail/ReviewContext';
 import { ApiTest } from '@/routes/ApiTest';
 import Home from '@/routes/Home';
 import Hosting from '@/routes/Hosting';
@@ -10,6 +9,7 @@ import Redirect from '@/routes/Redirect';
 
 import CompleteProfilePage from './components/home/Topbar/Menu/CompleteProfilePage';
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
+import { ReviewProvider } from './components/roomdetail/ReviewContext';
 import MyReservations from './routes/MyReservations';
 import MyReviews from './routes/MyReviews';
 import ProfileEdit from './routes/ProfileEdit';

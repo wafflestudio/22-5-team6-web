@@ -1,12 +1,13 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import accuracy from '@/assets/icons/reviews/accuracy.svg';
 import clean from '@/assets/icons/reviews/clean.svg';
 import { CheckinIcon } from '@/components/common/constants/icons';
 import type { roomType } from '@/types/roomType';
+
 import { useReview } from './ReviewContext';
 
 interface ReviewProps {
@@ -16,7 +17,7 @@ interface ReviewProps {
 
 const ReviewModal = ({ onClose, data }: ReviewProps) => {
   const [selectedOption, setSelectedOption] = useState('최신순');
-  const [page, setPage] = useState(0)
+  const [page, setPage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const options = ['최신순', '오래된순', '높은 평점순', '낮은 평점순'];
   const handleOptionClick = (option: string) => {
@@ -24,20 +25,12 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
     setIsModalOpen(false); // 모달 닫기
   };
 
-  const { isLoading, error, initReviews, reviewData } =
-    useReview();
-
-  const isInitialMount = useRef(true);
+  const { isLoading, error, initReviews, reviewData } = useReview();
 
   useEffect(() => {
-    if (isInitialMount.current) {
-      void initReviews(data, selectedOption, page);
-      isInitialMount.current = false;
-    }
+    void initReviews(data, selectedOption, page);
   }, [initReviews, data, selectedOption, page]);
-  if (!reviewData) {
-    return <div className="text-center p-4">리뷰 데이터를 불러오는 중...</div>;
-  }
+
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
       {/* 배경 클릭 시 닫힘 */}
@@ -119,102 +112,109 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
           </div>
 
           {/* 오른쪽 후기 목록 */}
-          <div className="flex-[65%] w-full h-full overflow-y-auto">
-            <div className="flex justify-between items-start">
-              <div className="text-xl ml-8 w-fit h-fit">
-                후기{' '}
-                <span className="font-bold w-fit h-fit">
-                  {reviewData?.totalElements}
-                </span>
-                개
-              </div>
-              <button
-                className="border border-gray-300 rounded-full py-2 px-3 w-fit h-fit text-sm text-center"
-                onClick={() => {
-                  setIsModalOpen(!isModalOpen);
-                }}
-              >
-                <KeyboardArrowDownIcon className="w-5 h-5 mr-2 text-center" />
-                {selectedOption}
-              </button>
-            </div>
-            {isModalOpen && (
-              <div className="absolute right-5 top-20 mt-2 w-40 bg-white border rounded-xl shadow-md">
-                {options.map((option) => (
+          {reviewData === null ? (
+            <div className="">리뷰 데이터 없음</div>
+          ) : (
+            <>
+              <div className="flex-[65%] w-full h-full overflow-y-auto">
+                <div className="flex justify-between items-start">
+                  <div className="text-xl ml-8 w-fit h-fit">
+                    후기{' '}
+                    <span className="font-bold w-fit h-fit">
+                      {reviewData.totalElements}
+                    </span>
+                    개
+                  </div>
                   <button
-                    key={option}
+                    className="border border-gray-300 rounded-full py-2 px-3 w-fit h-fit text-sm text-center"
                     onClick={() => {
-                      handleOptionClick(option);
+                      setIsModalOpen(!isModalOpen);
                     }}
-                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
                   >
-                    {option}
+                    <KeyboardArrowDownIcon className="w-5 h-5 mr-2 text-center" />
+                    {selectedOption}
                   </button>
-                ))}
-              </div>
-            )}
-            {reviewData?.content.map((review, index) => (
-              <div
-                key={index}
-                className="rounded-md mx-2 p-5 cursor-pointer hover:bg-gray-100"
-              >
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
-                    {review.profileImage !== ''
-                      ? review.nickname
-                      : review.nickname.charAt(0)}
-                  </div>
-                  <div className="ml-3">
-                    <h5 className="font-medium">
-                      {review.nickname}&nbsp;&middot;&nbsp;{review.rating}
-                    </h5>
-                    <p className="text-xs text-gray-500">
-                      숙박 일시&nbsp;{review.startDate}~{review.endDate}
-                    </p>
-                  </div>
                 </div>
-                <p className="mt-2 text-sm">{review.content}</p>
-              </div>
-            ))}
-            {reviewData.totalPages > 1 && (
-              <div className="mt-8 flex justify-center gap-2">
-                <button
-                  onClick={() => {
-                    void setPage(1);
-                  }}
-                  disabled={page === 0}
-                  className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  이전
-                </button>
-
-                {Array.from({ length: reviewData.totalPages }, (_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => {
-                      void setPage(i);
-                    }}
-                    className={`rounded-lg px-4 py-2 ${page === i
-                      ? 'bg-black text-white'
-                      : 'border hover:bg-gray-100'
-                      }`}
+                {isModalOpen && (
+                  <div className="absolute right-5 top-20 mt-2 w-40 bg-white border rounded-xl shadow-md">
+                    {options.map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => {
+                          handleOptionClick(option);
+                        }}
+                        className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {reviewData.content.map((review, index) => (
+                  <div
+                    key={index}
+                    className="rounded-md mx-2 p-5 cursor-pointer hover:bg-gray-100"
                   >
-                    {i + 1}
-                  </button>
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
+                        {review.profileImage !== ''
+                          ? review.nickname
+                          : review.nickname.charAt(0)}
+                      </div>
+                      <div className="ml-3">
+                        <h5 className="font-medium">
+                          {review.nickname}&nbsp;&middot;&nbsp;{review.rating}
+                        </h5>
+                        <p className="text-xs text-gray-500">
+                          숙박 일시&nbsp;{review.startDate}~{review.endDate}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-sm">{review.content}</p>
+                  </div>
                 ))}
+                {reviewData.totalPages > 1 && (
+                  <div className="mt-8 flex justify-center gap-2">
+                    <button
+                      onClick={() => {
+                        setPage(page - 1);
+                      }}
+                      disabled={page === 0}
+                      className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      이전
+                    </button>
 
-                <button
-                  onClick={() => {
-                    void setPage(page + 1);
-                  }}
-                  disabled={page === reviewData.totalPages - 1}
-                  className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
-                >
-                  다음
-                </button>
+                    {Array.from({ length: reviewData.totalPages }, (_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setPage(i);
+                        }}
+                        className={`rounded-lg px-4 py-2 ${
+                          page === i
+                            ? 'bg-black text-white'
+                            : 'border hover:bg-gray-100'
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+
+                    <button
+                      onClick={() => {
+                        setPage(page + 1);
+                      }}
+                      disabled={page === reviewData.totalPages - 1}
+                      className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      다음
+                    </button>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </>
+          )}
         </div>
       </div>
       {error !== null && (

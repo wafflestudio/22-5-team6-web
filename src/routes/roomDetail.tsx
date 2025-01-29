@@ -64,9 +64,11 @@ export const Roomdetail = () => {
               {roomData.imageUrlList.slice(0, 5).map((url, index) => (
                 <div
                   key={index}
-                  className={`relative flex items-center justify-center ${index === 0 ? 'col-span-2 row-span-2 rounded-l-xl' : ''
-                    } ${index === 2 ? 'rounded-tr-xl' : ''} ${index === 4 ? 'rounded-br-xl' : ''
-                    } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
+                  className={`relative flex items-center justify-center ${
+                    index === 0 ? 'col-span-2 row-span-2 rounded-l-xl' : ''
+                  } ${index === 2 ? 'rounded-tr-xl' : ''} ${
+                    index === 4 ? 'rounded-br-xl' : ''
+                  } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
                 >
                   <img
                     src={url}
@@ -96,16 +98,19 @@ export const Roomdetail = () => {
                 (_, index) => (
                   <div
                     key={`icon-${index}`}
-                    className={`relative flex items-center justify-center ${roomData.imageUrlList.length + index === 0
+                    className={`relative flex items-center justify-center ${
+                      roomData.imageUrlList.length + index === 0
                         ? 'col-span-2 row-span-2 rounded-l-xl'
                         : ''
-                      } ${roomData.imageUrlList.length + index === 2
+                    } ${
+                      roomData.imageUrlList.length + index === 2
                         ? 'rounded-tr-xl'
                         : ''
-                      } ${roomData.imageUrlList.length + index === 4
+                    } ${
+                      roomData.imageUrlList.length + index === 4
                         ? 'rounded-br-xl'
                         : ''
-                      } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
+                    } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
                   >
                     <PhotoSizeSelectActualIcon
                       style={{ width: '50%', height: '50%', color: 'white' }}
@@ -135,9 +140,11 @@ export const Roomdetail = () => {
             Array.from({ length: 5 }).map((_, index) => (
               <div
                 key={index}
-                className={`relative flex items-center justify-center ${index === 0 ? 'col-span-2 row-span-2 rounded-l-xl' : ''
-                  } ${index === 2 ? 'rounded-tr-xl' : ''} ${index === 4 ? 'rounded-br-xl' : ''
-                  } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
+                className={`relative flex items-center justify-center ${
+                  index === 0 ? 'col-span-2 row-span-2 rounded-l-xl' : ''
+                } ${index === 2 ? 'rounded-tr-xl' : ''} ${
+                  index === 4 ? 'rounded-br-xl' : ''
+                } bg-gray-300 hover:bg-gray-400 cursor-pointer`}
               >
                 <PhotoSizeSelectActualIcon
                   style={{ width: '50%', height: '50%', color: 'white' }}
