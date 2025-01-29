@@ -6,9 +6,17 @@ type BaseModalProps = {
   onClose: () => void;
   title?: string;
   children: React.ReactNode;
+  footer?: React.ReactNode;
+  width?: string;
 };
 
-const BaseModal = ({ isOpen, onClose, title, children }: BaseModalProps) => {
+const BaseModal = ({
+  isOpen,
+  onClose,
+  title,
+  children,
+  footer,
+}: BaseModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -20,9 +28,9 @@ const BaseModal = ({ isOpen, onClose, title, children }: BaseModalProps) => {
       />
 
       {/* Modal */}
-      <div className="fixed inset-x-0 top-8 mx-auto w-full max-w-4xl bg-white rounded-xl z-50">
+      <div className="fixed inset-x-0 top-8 mx-auto w-full max-w-4xl max-h-[90vh] bg-white rounded-xl z-50 flex flex-col">
         {/* Header */}
-        <div className="relative flex items-center justify-center py-4 border-b">
+        <div className="flex items-center justify-center py-4 border-b shrink-0">
           {/* Close button */}
           <button
             onClick={onClose}
@@ -35,8 +43,15 @@ const BaseModal = ({ isOpen, onClose, title, children }: BaseModalProps) => {
           {title != null && <h2 className="text-lg font-semibold">{title}</h2>}
         </div>
 
-        {/* Content */}
-        <div className="p-6">{children}</div>
+        {/* Content - Scrollable */}
+        <div className="flex-1 overflow-y-auto">
+          <div className="p-6">{children}</div>
+        </div>
+
+        {/* Footer - Fixed */}
+        {footer != null && (
+          <div className="border-t p-4 shrink-0">{footer}</div>
+        )}
       </div>
     </>
   );

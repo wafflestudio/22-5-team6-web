@@ -1,3 +1,4 @@
+import HeartIcon from '@/assets/icons/Heart';
 import { WifiIcon } from '@/components/common/constants/icons';
 import type { RoomMain } from '@/types/roomSearch';
 
@@ -5,19 +6,39 @@ type ListingItemProps = {
   listing: RoomMain;
 };
 
+const handleWishList = (e: React.MouseEvent) => {
+  e.stopPropagation();
+};
+
 const ListingItem = ({ listing }: ListingItemProps) => {
   return (
     <div className="group cursor-pointer">
-      {/* 이미지 컨테이너 */}
-      <div className="aspect-square overflow-hidden rounded-xl">
-        <img
-          src={listing.imageUrl}
-          alt={listing.name}
-          className="h-full w-full object-cover transition-transform group-hover:scale-105"
-          onError={(e) => {
-            e.currentTarget.src = WifiIcon;
-          }}
-        />
+      {/* 전체를 감싸는 relative 컨테이너 */}
+      <div className="relative">
+        {/* 이미지 컨테이너 */}
+        <div className="aspect-square overflow-hidden rounded-xl">
+          <img
+            src={listing.imageUrl}
+            alt={listing.name}
+            className="h-full w-full object-cover transition-transform"
+            onError={(e) => {
+              e.currentTarget.src = WifiIcon;
+            }}
+          />
+        </div>
+
+        {/* 하트 버튼 */}
+        <div className="absolute top-3 right-3">
+          <HeartIcon
+            size={24}
+            filled={false}
+            onClick={(e: React.MouseEvent) => {
+              e.stopPropagation();
+              // 좋아요 로직
+              handleWishList(e);
+            }}
+          />
+        </div>
       </div>
 
       {/* 정보 컨테이너 */}
