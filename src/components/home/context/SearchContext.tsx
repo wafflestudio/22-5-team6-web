@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { useCallback } from 'react';
 import { createContext, useContext, useState } from 'react';
 
+import type { RoomDetails } from '@/types/room';
 import { RoomType } from '@/types/room';
 import type {
   RoomListResponse,
@@ -35,7 +36,8 @@ type Filter = {
   minPrice: number | null;
   maxPrice: number | null;
   roomType: RoomType | null;
-};
+  rating: number | null;
+} & Partial<RoomDetails>;
 
 type SearchContextType = {
   location: Location;
@@ -89,7 +91,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   // 페이지네이션 상태
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageNumber: 0,
-    pageSize: 2,
+    pageSize: 8,
     totalElements: 0,
     totalPages: 0,
   });
@@ -99,6 +101,14 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     minPrice: null,
     maxPrice: null,
     roomType: null,
+    wifi: false,
+    selfCheckin: false,
+    luggage: false,
+    TV: false,
+    bedroom: '',
+    bathroom: '',
+    bed: '',
+    rating: null,
   });
 
   const openModal = (modal: ModalType) => {
@@ -214,6 +224,16 @@ export function SearchProvider({ children }: { children: ReactNode }) {
           ...(newFilter.minPrice != null && { minPrice: newFilter.minPrice }),
           ...(newFilter.maxPrice != null && { maxPrice: newFilter.maxPrice }),
           ...(newFilter.roomType != null && { roomType: newFilter.roomType }),
+          ...(newFilter.wifi === true && { wifi: newFilter.wifi }),
+          ...(newFilter.selfCheckin === true && {
+            selfCheckin: newFilter.selfCheckin,
+          }),
+          ...(newFilter.luggage === true && { luggage: newFilter.luggage }),
+          ...(newFilter.TV === true && { TV: newFilter.TV }),
+          ...(newFilter.bedroom !== '0' && { bedroom: newFilter.bedroom }),
+          ...(newFilter.bathroom !== '0' && { bathroom: newFilter.bathroom }),
+          ...(newFilter.bed !== '0' && { bed: newFilter.bed }),
+          ...(newFilter.rating != null && { rating: newFilter.rating }),
         };
 
         const urlParams = convertToURLSearchParams(searchParams);
