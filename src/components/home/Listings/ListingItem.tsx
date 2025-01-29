@@ -29,14 +29,14 @@ const ListingItem = ({ listing }: ListingItemProps) => {
 
         {/* 하트 버튼 */}
         <div className="absolute top-3 right-3">
-          <HeartIcon
-            size={24}
+          <HeartIcon 
+            size={24} 
             filled={false}
             onClick={(e: React.MouseEvent) => {
               e.stopPropagation();
               // 좋아요 로직
               handleWishList(e);
-            }}
+            }} 
           />
         </div>
       </div>
