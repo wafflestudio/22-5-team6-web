@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import axiosInstance from '@/axiosInstance';
 import { getLabelByType } from '@/components/common/constants/accommodationTypes';
 import Header from '@/components/home/Topbar/Header';
 import type {
@@ -129,12 +130,8 @@ export default function HostingForm() {
       setIsLoading(true);
       setError(null);
 
-      const token = localStorage.getItem('token');
-      if (token == null) {
-        throw new Error('로그인이 필요합니다.');
-      }
-
-      const response = await axios.post(
+      // axiosInstance 사용 (토큰 처리는 인터셉터에서 자동으로 됨)
+      const response = await axiosInstance.post<RoomApiResponse>(
         '/api/v1/rooms',
         {
           roomName,
@@ -164,15 +161,11 @@ export default function HostingForm() {
           maxOccupancy: Number(maxOccupancy),
           imageSlot: selectedImages.length,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
       );
 
-      const responseData = response.data as RoomApiResponse;
+      const responseData = response.data;
 
+      // 이미지 업로드
       const uploadPromises = selectedImages.map(async (file, index) => {
         if (responseData.imageUploadUrlList[index] == null) {
           throw new Error('이미지 업로드 URL이 존재하지 않습니다.');
@@ -181,6 +174,7 @@ export default function HostingForm() {
         await axios.put(responseData.imageUploadUrlList[index], file, {
           headers: {
             'Content-Type': file.type,
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
           },
         });
       });
@@ -190,9 +184,7 @@ export default function HostingForm() {
       alert('숙소를 성공적으로 등록했습니다!');
       void navigate('/');
     } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : '오류가 발생했습니다.';
-      setError(errorMessage);
+      setError(err instanceof Error ? err.message : '오류가 발생했습니다.');
     } finally {
       setIsLoading(false);
     }
