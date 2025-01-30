@@ -1,6 +1,8 @@
 import { Search } from 'lucide-react';
 
-import BaseModal from '@/components/common/Modal/BaseModal';
+import SearchModal from '@/components/common/Modal/SearchModal';
+import { useHotPlace } from '@/components/home/context/HotplaceContext';
+import { useMode } from '@/components/home/context/ModeContext';
 import { useSearch } from '@/components/home/context/SearchContext';
 
 import CalendarModal from './modals/CalendarModal';
@@ -19,13 +21,70 @@ const SearchBar = () => {
     searchRooms,
   } = useSearch();
 
+  const { mode } = useMode();
+  const { fetchTrendingRooms } = useHotPlace();
+
+  const hasDateSelected = checkIn !== null && checkOut !== null;
+
+  const handleSearch = () => {
+    if (mode === 'hotplace' && checkIn !== null && checkOut !== null) {
+      void fetchTrendingRooms(checkIn, checkOut);
+    }
+  };
+
+  if (mode === 'hotplace') {
+    return (
+      <div className="w-full flex justify-center relative">
+        <div className="w-full max-w-3xl">
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => {
+                openModal('calendar');
+              }}
+              className="w-full p-3 pl-6 border rounded-full shadow-md hover:shadow-lg transition"
+            >
+              <div className="flex items-center justify-between">
+                <div className="flex-1 text-center">
+                  <span className="text-base font-medium">
+                    {hasDateSelected
+                      ? `${checkIn.toLocaleDateString()} - ${checkOut.toLocaleDateString()}`
+                      : '어느 기간의 핫플레이스가 궁금하세요?👀'}
+                  </span>
+                </div>
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleSearch();
+                  }}
+                  className="p-3 rounded-full bg-airbnb hover:bg-airbnb-dark transition-colors"
+                  disabled={!hasDateSelected}
+                >
+                  <Search className="h-5 w-5 text-white" />
+                </button>
+              </div>
+            </button>
+          </div>
+
+          {/* Calendar Modal */}
+          <SearchModal
+            type="calendar"
+            isOpen={currentModal === 'calendar'}
+            onClose={closeModal}
+          >
+            <CalendarModal onClose={closeModal} />
+          </SearchModal>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <>
-      <div className="w-full flex justify-center">
-        <div className="w-full max-w-3xl border rounded-full shadow-md">
+    <div className="w-full flex justify-center">
+      <div className="w-full max-w-3xl relative">
+        {/* Search Bar */}
+        <div className="border rounded-full shadow-md">
           <div className="grid grid-cols-3 relative">
             <div className="absolute top-1/2 left-1/3 -translate-y-1/2 w-px h-8 bg-gray-200" />
-            <div className="absolute top-1/2 left-2/3 -translate-y-1/2 w-px h-8 bg-gray-200" />
 
             {/* 위치 섹션 */}
             <button
@@ -102,33 +161,33 @@ const SearchBar = () => {
             </div>
           </div>
         </div>
+
+        {/* Search Modals */}
+        <SearchModal
+          type="location"
+          isOpen={currentModal === 'location'}
+          onClose={closeModal}
+        >
+          <LocationModal onClose={closeModal} />
+        </SearchModal>
+
+        <SearchModal
+          type="calendar"
+          isOpen={currentModal === 'calendar'}
+          onClose={closeModal}
+        >
+          <CalendarModal onClose={closeModal} />
+        </SearchModal>
+
+        <SearchModal
+          type="guests"
+          isOpen={currentModal === 'guests'}
+          onClose={closeModal}
+        >
+          <GuestsModal />
+        </SearchModal>
       </div>
-
-      {/* 모달들 */}
-      <BaseModal
-        isOpen={currentModal === 'location'}
-        onClose={closeModal}
-        title="여행지 검색"
-      >
-        <LocationModal onClose={closeModal} />
-      </BaseModal>
-
-      <BaseModal
-        isOpen={currentModal === 'calendar'}
-        onClose={closeModal}
-        title="날짜 선택"
-      >
-        <CalendarModal onClose={closeModal} />
-      </BaseModal>
-
-      <BaseModal
-        isOpen={currentModal === 'guests'}
-        onClose={closeModal}
-        title="인원 선택"
-      >
-        <GuestsModal onClose={closeModal} />
-      </BaseModal>
-    </>
+    </div>
   );
 };
 

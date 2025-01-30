@@ -74,6 +74,7 @@ type SearchContextType = {
   searchRooms: () => Promise<void>;
   filterRooms: (newFilter: Filter) => Promise<void>;
 
+  // 정렬
   sort: Sort;
   setSort: (sort: Sort) => void;
 };
