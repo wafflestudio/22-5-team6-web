@@ -6,6 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 import axiosInstance from '@/axiosInstance';
 
+import DeleteReviewModal from './DeleteReviewModal';
+import EditReviewModal from './EditReviewModal';
+
 type Reservation = {
   reservationId: number;
   place: string;
@@ -15,6 +18,7 @@ type Reservation = {
 };
 
 type Review = {
+  reviewId: number;
   reservationId: number;
   content: string;
   rating: number;
@@ -37,6 +41,11 @@ const MyReviewItems = () => {
   >([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+
+  // 모달 상태
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [selectedReview, setSelectedReview] = useState<Review | null>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -84,6 +93,42 @@ const MyReviewItems = () => {
 
     void fetchData();
   }, []);
+
+  // 리뷰 삭제 요청
+  const handleDeleteReview = async (reviewId: number) => {
+    try {
+      await axiosInstance.delete(`/api/v1/reviews/${reviewId}`);
+      // 삭제된 리뷰를 상태에서 제거
+      setReviews((prevReviews) =>
+        prevReviews.filter((review) => review.reviewId !== reviewId),
+      );
+      setIsDeleteModalOpen(false);
+    } catch (err) {
+      console.error('리뷰 삭제 실패:', err);
+      setError('리뷰 삭제 중 오류가 발생했습니다.');
+    }
+  };
+
+  // 리뷰 수정 성공 시 업데이트
+  const handleReviewUpdate = (updatedReview: {
+    content: string;
+    rating: number;
+  }) => {
+    if (selectedReview === null) return;
+
+    setReviews((prevReviews) =>
+      prevReviews.map((review) =>
+        review.reviewId === selectedReview.reviewId
+          ? {
+              ...review,
+              content: updatedReview.content,
+              rating: updatedReview.rating,
+            }
+          : review,
+      ),
+    );
+    setIsEditModalOpen(false);
+  };
 
   if (loading) return <p>로딩 중...</p>;
   if (error !== null) return <p className="text-red-500">{error}</p>;
@@ -144,7 +189,7 @@ const MyReviewItems = () => {
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {reviews.map((review) => (
               <div
-                key={review.reservationId}
+                key={review.reviewId}
                 className="relative grid p-4 bg-white content-between rounded-2xl min-w-80 max-w-80 h-[200px] border border-gray-300 group"
               >
                 <p className="text-base line-clamp-4 mb-2">
@@ -164,8 +209,20 @@ const MyReviewItems = () => {
 
                 {/* Hover Overlay */}
                 <div className="absolute inset-0 bg-black bg-opacity-30 rounded-2xl flex items-center justify-center gap-5 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <EditOutlinedIcon className="w-10 h-10 text-white hover:text-black cursor-pointer" />
-                  <DeleteOutlinedIcon className="w-10 h-10 text-white hover:text-red-500 cursor-pointer" />
+                  <EditOutlinedIcon
+                    className="w-10 h-10 text-white hover:text-black cursor-pointer"
+                    onClick={() => {
+                      setSelectedReview(review);
+                      setIsEditModalOpen(true);
+                    }}
+                  />
+                  <DeleteOutlinedIcon
+                    className="w-10 h-10 text-white hover:text-red-500 cursor-pointer"
+                    onClick={() => {
+                      setSelectedReview(review);
+                      setIsDeleteModalOpen(true);
+                    }}
+                  />
                 </div>
               </div>
             ))}
@@ -174,6 +231,31 @@ const MyReviewItems = () => {
           <p className="text-gray-500">아직 작성한 후기가 없습니다.</p>
         )}
       </div>
+
+      {/* 리뷰 삭제 모달 */}
+      {isDeleteModalOpen && selectedReview !== null && (
+        <DeleteReviewModal
+          isOpen={isDeleteModalOpen}
+          onClose={() => {
+            setIsDeleteModalOpen(false);
+          }}
+          onConfirm={() => void handleDeleteReview(selectedReview.reviewId)}
+        />
+      )}
+
+      {/* 리뷰 수정 모달 */}
+      {isEditModalOpen && selectedReview !== null && (
+        <EditReviewModal
+          reviewId={selectedReview.reviewId}
+          initialContent={selectedReview.content}
+          initialRating={selectedReview.rating}
+          isOpen={isEditModalOpen}
+          onClose={() => {
+            setIsEditModalOpen(false);
+          }}
+          onUpdateSuccess={handleReviewUpdate}
+        />
+      )}
     </div>
   );
 };
