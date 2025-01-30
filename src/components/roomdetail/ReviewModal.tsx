@@ -54,7 +54,9 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
                 alt="왼쪽 월계수"
                 className="w-16 h-24"
               />
-              <h3 className="text-4xl font-bold text-center pb-6">4.92</h3>
+              <h3 className="text-4xl font-bold text-center pb-6">
+                {data.averageRating}
+              </h3>
               <img
                 src="https://a0.muscache.com/im/pictures/airbnb-platform-assets/AirbnbPlatformAssets-GuestFavorite/original/b4005b30-79ff-4287-860c-67829ecd7412.png"
                 alt="오른쪽 월계수"
