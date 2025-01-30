@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
-import CalendarModal from '@/components/home/Topbar/SearchBar/modals/CalendarModal';
+
+import RoomCalendarModal from '../roomdetail/roomCalendarModal';
 
 type ReservationUpdateModalProps = {
+  roomId: number;
   reservationId: string;
   onClose: () => void;
   startDate: string;
@@ -17,6 +19,7 @@ type ReservationUpdateModalProps = {
 };
 
 const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
+  roomId,
   reservationId,
   onClose,
   startDate,
@@ -191,7 +194,7 @@ const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
           onClose={closeModal}
           title="날짜 선택"
         >
-          <CalendarModal onClose={closeModal} />
+          <RoomCalendarModal id={roomId} onClose={closeModal} />
         </BaseModal>
       </div>
     </div>

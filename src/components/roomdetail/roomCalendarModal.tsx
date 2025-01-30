@@ -36,22 +36,33 @@ const RoomCalendarModal = ({ onClose, id }: CalendarModalProps) => {
       setIsLoading(true);
       setError(null);
 
-      const url = `/api/v1/reservations/availability/${id}?year=${currentYear}&month=${currentMonth.month() + 1}`;
+      const currentMonthRequest = `/api/v1/reservations/availability/${id}?year=${currentYear}&month=${currentMonth.month() + 1}`;
+      const nextMonthRequest = `/api/v1/reservations/availability/${id}?year=${currentYear}&month=${currentMonth.add(1, 'month').month() + 1}`;
 
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
+      const [currentMonthResponse, nextMonthResponse] = await Promise.all([
+        fetch(currentMonthRequest, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        }),
+        fetch(nextMonthRequest, {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      ]);
 
-      if (!response.ok) {
+      if (!currentMonthResponse.ok || !nextMonthResponse.ok) {
         throw new Error('숙소 예약 가능 날짜 로딩에 실패했습니다.');
       }
 
-      const responseData = (await response.json()) as AvailabilityResponse;
-      console.debug(responseData);
-      setAvailableDates(responseData.availableDates);
+      const currentMonthData =
+        (await currentMonthResponse.json()) as AvailabilityResponse;
+      const nextMonthData =
+        (await nextMonthResponse.json()) as AvailabilityResponse;
+
+      setAvailableDates([
+        ...currentMonthData.availableDates,
+        ...nextMonthData.availableDates,
+      ]);
     } catch (err) {
       const errorMessage =
         err instanceof Error ? err.message : '오류가 발생했습니다.';
