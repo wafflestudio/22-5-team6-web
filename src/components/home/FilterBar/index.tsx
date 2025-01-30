@@ -1,5 +1,5 @@
 // components/home/FilterBar/index.tsx
-import { SlidersHorizontal } from 'lucide-react';
+import { ImportExport, TuneRounded } from '@mui/icons-material';
 import { useState } from 'react';
 
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
@@ -7,10 +7,12 @@ import { RoomType } from '@/types/room';
 
 import { useSearch } from '../context/SearchContext';
 import FilterModal from './FilterModal';
+import SortModal from './SortModal';
 
 const FilterBar = () => {
   const { filter, filterRooms } = useSearch();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
+  const [isSortModalOpen, setIsSortModalOpen] = useState(false);
 
   const handleTypeClick = (type: RoomType) => {
     void filterRooms({
@@ -21,7 +23,7 @@ const FilterBar = () => {
 
   return (
     <div className="relative flex items-center w-full">
-      <div className="flex-1 overflow-x-auto flex items-center gap-8 px-8 scrollbar-none">
+      <div className="flex-1 overflow-x-auto flex items-center gap-8 px-2 scrollbar-none">
         {ACCOMMODATION_TYPES.map((item) => (
           <button
             key={item.label}
@@ -60,14 +62,23 @@ const FilterBar = () => {
       </div>
 
       {/* 필터 버튼 */}
-      <div className="flex items-center gap-4 pr-8 pl-4">
+      <div className="flex items-center gap-4 px-2">
+        <button
+          onClick={() => {
+            setIsSortModalOpen(true);
+          }}
+          className="px-4 py-2 rounded-xl border border-gray-200 hover:shadow-md transition flex items-center gap-2"
+        >
+          <ImportExport className="h-4 w-4" />
+          <span className="text-sm">정렬</span>
+        </button>
         <button
           onClick={() => {
             setIsFilterModalOpen(true);
           }}
           className="px-4 py-2 rounded-xl border border-gray-200 hover:shadow-md transition flex items-center gap-2"
         >
-          <SlidersHorizontal className="h-4 w-4" />
+          <TuneRounded className="h-4 w-4" />
           <span className="text-sm">필터</span>
         </button>
       </div>
@@ -77,6 +88,14 @@ const FilterBar = () => {
         isOpen={isFilterModalOpen}
         onClose={() => {
           setIsFilterModalOpen(false);
+        }}
+      />
+
+      {/* 정렬 모달 */}
+      <SortModal
+        isOpen={isSortModalOpen}
+        onClose={() => {
+          setIsSortModalOpen(false);
         }}
       />
     </div>

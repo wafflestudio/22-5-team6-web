@@ -10,6 +10,7 @@ import type {
   RoomMain,
   RoomMainResponse,
   RoomSearchParams,
+  Sort,
 } from '@/types/roomSearch';
 
 type ModalType =
@@ -72,6 +73,9 @@ type SearchContextType = {
   initRooms: () => Promise<void>;
   searchRooms: () => Promise<void>;
   filterRooms: (newFilter: Filter) => Promise<void>;
+
+  sort: Sort;
+  setSort: (sort: Sort) => void;
 };
 
 const SearchContext = createContext<SearchContextType | undefined>(undefined);
@@ -112,6 +116,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     rating: null,
   });
 
+  // 정렬 상태
+  const [sort, setSort] = useState<Sort>({
+    field: 'createdAt',
+    direction: 'desc',
+  });
+
   const openModal = (modal: ModalType) => {
     setCurrentModal(modal);
   };
@@ -127,7 +137,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
 
     Object.entries(params).forEach(([key, value]) => {
       if (value !== '') {
-        urlParams.append(key, value.toString());
+        if (typeof value === 'object') {
+          const sortValue = `${value.field},${value.direction}`;
+          urlParams.append(key, sortValue);
+        } else {
+          urlParams.append(key, value.toString());
+        }
       }
     });
 
@@ -143,7 +158,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       const searchParams = {
         page: pageInfo.pageNumber,
         size: pageInfo.pageSize,
-        sort: 'createdAt,desc',
+        sort,
       };
 
       const urlParams = convertToURLSearchParams(searchParams);
@@ -158,7 +173,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [pageInfo.pageNumber, pageInfo.pageSize]);
+  }, [pageInfo.pageNumber, pageInfo.pageSize, sort]);
 
   // 검색바에서 설정한 조건으로 숙소를 검색하는 함수
   const searchRooms = useCallback(async () => {
@@ -169,7 +184,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
       const searchParams: RoomSearchParams = {
         page: pageInfo.pageNumber,
         size: pageInfo.pageSize,
-        sort: 'createdAt,desc',
+        sort,
         ...(location.sido !== '' && { sido: location.sido }),
         ...(location.sigungu != null &&
           location.sigungu !== '' && { sigungu: location.sigungu }),
@@ -193,7 +208,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     } finally {
       setIsLoading(false);
     }
-  }, [location, checkIn, checkOut, guests, pageInfo]);
+  }, [location, checkIn, checkOut, guests, pageInfo, sort]);
 
   // 필터바에서 설정한 조건으로 숙소를 필터링하는 함수
   const filterRooms = useCallback(
@@ -205,7 +220,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         const searchParams: RoomSearchParams = {
           page: pageInfo.pageNumber,
           size: pageInfo.pageSize,
-          sort: 'createdAt,desc',
+          sort,
           ...(newFilter.minPrice != null && { minPrice: newFilter.minPrice }),
           ...(newFilter.maxPrice != null && { maxPrice: newFilter.maxPrice }),
           ...(newFilter.roomType != null && { roomType: newFilter.roomType }),
@@ -234,7 +249,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [pageInfo],
+    [pageInfo, sort],
   );
 
   // 페이지네이션 시 해당 페이지의 숙소 목록을 불러오는 함수
@@ -247,7 +262,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         const searchParams: RoomSearchParams = {
           page: pageNumber,
           size: pageInfo.pageSize,
-          sort: 'createdAt,desc',
+          sort,
           ...(location.sido !== '' && { sido: location.sido }),
           ...(location.sigungu != null &&
             location.sigungu !== '' && { sigungu: location.sigungu }),
@@ -282,7 +297,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [pageInfo.pageSize, location, checkIn, checkOut, guests, filter],
+    [pageInfo.pageSize, location, checkIn, checkOut, guests, filter, sort],
   );
 
   // 공통 응답 처리 함수
@@ -299,6 +314,7 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         price: item.price,
         rating: item.averageRating,
         imageUrl: item.imageUrl,
+        isLiked: item.isLiked,
       }),
     );
 
@@ -352,6 +368,8 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         filterRooms,
         pageRooms,
         handlePageChange,
+        sort,
+        setSort,
       }}
     >
       {children}
