@@ -46,7 +46,9 @@ const GuestsModal = ({ onClose, maxOccupancy }: GuestsModalProps) => {
           <span className="w-6 text-center">{guestCount}</span>
           <button
             onClick={handleIncrement}
-            className="w-8 h-8 rounded-full border border-gray-400 text-gray-400 hover:border-gray-700 hover:text-gray-700 flex items-center justify-center"
+            disabled={guestCount === maxOccupancy}
+            className={`w-8 h-8 rounded-full border flex items-center justify-center
+            ${guestCount === maxOccupancy ? 'border-gray-200 text-gray-200' : 'border-gray-400 text-gray-400 hover:border-gray-700 hover:text-gray-700'}`}
           >
             +
           </button>
@@ -63,11 +65,11 @@ const GuestsModal = ({ onClose, maxOccupancy }: GuestsModalProps) => {
         >
           저장하기
         </button>
-        {maxOccupancy < guestCount && (
+        {maxOccupancy === guestCount && (
           <div className="flex items-center gap-2">
             <ErrorIcon className="text-red-700 text-sm" />
             <div className="text-sm text-red-700">
-              게스트 인원이 최대 인원을 초과했습니다
+              최대 인원은 {maxOccupancy}명입니다
             </div>
           </div>
         )}

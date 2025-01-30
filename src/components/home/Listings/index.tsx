@@ -1,13 +1,24 @@
 import { useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useHotPlace } from '../context/HotplaceContext';
+import { useMode } from '../context/ModeContext';
 import { useSearch } from '../context/SearchContext';
 import ListingItem from './ListingItem';
 
 const Listings = () => {
   const navigate = useNavigate();
-  const { rooms, isLoading, error, initRooms, pageInfo, pageRooms } =
-    useSearch();
+  const {
+    rooms,
+    isLoading: isNormalLoading,
+    error,
+    initRooms,
+    pageInfo,
+    pageRooms,
+  } = useSearch();
+
+  const { mode } = useMode();
+  const { trendingRooms, isLoading: isHotplaceLoading } = useHotPlace();
 
   const isInitialMount = useRef(true);
 
@@ -21,6 +32,9 @@ const Listings = () => {
   const handleRoomClick = (id: string) => {
     void navigate(`/${id}`);
   };
+
+  const displayRooms = mode === 'normal' ? rooms : trendingRooms;
+  const isLoading = mode === 'normal' ? isNormalLoading : isHotplaceLoading;
 
   if (isLoading) {
     return (
@@ -55,8 +69,17 @@ const Listings = () => {
 
   return (
     <div>
+      {mode === 'hotplace' && trendingRooms.length > 0 && (
+        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+          <h2 className="text-lg font-semibold">🔥 실시간 인기 핫플레이스</h2>
+          <p className="text-sm text-gray-600">
+            선택하신 기간 동안 가장 많은 예약이 있었던 지역의 별점 TOP 3
+            숙소입니다.
+          </p>
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {rooms.map((room) => (
+        {displayRooms.map((room) => (
           <div
             key={room.id}
             onClick={() => {
