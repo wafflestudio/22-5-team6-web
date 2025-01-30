@@ -1,7 +1,12 @@
 import type { PageResponse } from './pagination';
 import type { RoomType } from './room';
 
-export type SortField = 'id' | 'name' | 'price.perNight' | 'createdAt';
+export type SortField =
+  | 'id'
+  | 'name'
+  | 'price.perNight'
+  | 'createdAt'
+  | 'ratingStatistics.averageRating';
 export type SortDirection = 'asc' | 'desc';
 
 export type Sort = {
