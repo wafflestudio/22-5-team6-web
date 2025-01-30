@@ -16,6 +16,7 @@ type ReservationDetail = {
   startDate: string;
   endDate: string;
   place: string;
+  price: number;
   numberOfGuests: number;
   imageUrl: string;
 };
