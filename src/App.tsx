@@ -9,6 +9,7 @@ import Redirect from '@/routes/Redirect';
 
 import CompleteProfilePage from './components/home/Topbar/Menu/CompleteProfilePage';
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
+import { ReviewProvider } from './components/roomdetail/ReviewContext';
 import MyReservations from './routes/MyReservations';
 import MyReviews from './routes/MyReviews';
 import ProfileEdit from './routes/ProfileEdit';
@@ -22,25 +23,27 @@ export const App = () => {
     // useSearch 훅을 이용해서 컴포넌트를 감싸 놨습니다. AppProvider 등의 다른 파일을 만들어서 옮겨두는 것도 가능합니다.
     <StyledEngineProvider injectFirst>
       <SearchProvider>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="complete-profile" element={<CompleteProfilePage />} />
-          <Route path="/:id" element={<Roomdetail />} />
-          <Route path="/tests" element={<ApiTest />} />
-          <Route path="/redirect" element={<Redirect />} />
-          <Route path="/hosting" element={<Hosting />} />
-          <Route path="/profile" element={<ProfilePage />} />
-          <Route path="/profile/edit" element={<ProfileEdit />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/MyReservations" element={<MyReservations />} />
-          <Route path="/MyReviews" element={<MyReviews />} />
-          <Route path="/reviews/:reservationId" element={<Review />} />
-          <Route
-            path="/reservations/:reservationId"
-            element={<ReservationDetails />}
-          />
-          <Route path="*" element={<h1>404 Not Found</h1>} />
-        </Routes>
+        <ReviewProvider>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="complete-profile" element={<CompleteProfilePage />} />
+            <Route path="/:id" element={<Roomdetail />} />
+            <Route path="/tests" element={<ApiTest />} />
+            <Route path="/redirect" element={<Redirect />} />
+            <Route path="/hosting" element={<Hosting />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/profile/edit" element={<ProfileEdit />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/MyReservations" element={<MyReservations />} />
+            <Route path="/MyReviews" element={<MyReviews />} />
+            <Route path="/reviews/:reservationId" element={<Review />} />
+            <Route
+              path="/reservations/:reservationId"
+              element={<ReservationDetails />}
+            />
+            <Route path="*" element={<h1>404 Not Found</h1>} />
+          </Routes>
+        </ReviewProvider>
       </SearchProvider>
     </StyledEngineProvider>
   );

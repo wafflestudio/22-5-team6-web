@@ -1,22 +1,53 @@
+import AddHomeWorkOutlinedIcon from '@mui/icons-material/AddHomeWorkOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
+import { Avatar, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import axiosInstance from '@/axiosInstance';
 import { LogoIcon, LogoText } from '@/components/common/constants/Logo';
 
 import Dropdown from './Menu/DropDown';
 import LoginModal from './Menu/LoginModal';
 
+type CurrentUserProfile = {
+  userId: number;
+  imageUrl: string;
+  nickname: string;
+  bio: string;
+  isSuperHost: boolean;
+  showMyReviews: boolean;
+  showMyReservations: boolean;
+  showMyWishlist: boolean;
+};
+
 const Topbar = () => {
   const navigate = useNavigate();
+  const isWideScreen = useMediaQuery('(min-width: 960px)');
+
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileImage, setProfileImage] = useState<string | undefined>(
+    undefined,
+  );
   const [isDropdownOpen, setDropdownOpen] = useState(false);
   const [isLoginModalOpen, setLoginModalOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    setIsLoggedIn(token !== null && token.trim() !== '');
+    const fetchProfile = async () => {
+      try {
+        const { data } =
+          await axiosInstance.get<CurrentUserProfile>('/api/v1/profile');
+        if (data.imageUrl !== '') {
+          setProfileImage(data.imageUrl);
+        }
+        setIsLoggedIn(true);
+      } catch {
+        setIsLoggedIn(false);
+      }
+    };
+
+    void fetchProfile();
   }, []);
 
   const handleLogoClick = () => {
@@ -44,6 +75,13 @@ const Topbar = () => {
     void navigate('/');
   };
 
+  const renderHostingButton = () => {
+    if (isWideScreen) {
+      return '당신의 공간을 에어비앤비하세요';
+    }
+    return <AddHomeWorkOutlinedIcon sx={{ fontSize: 24 }} />;
+  };
+
   return (
     <div className="flex flex-col w-full">
       <div className="h-20 px-10">
@@ -62,12 +100,12 @@ const Topbar = () => {
 
           <div className="flex-1 flex items-center justify-end gap-4">
             <button
-              className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm"
+              className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm flex items-center"
               onClick={() => {
                 void navigate('/hosting');
               }}
             >
-              당신의 공간을 에어비앤비하세요
+              {renderHostingButton()}
             </button>
 
             <div className="flex items-center justify-end space-x-4 relative">
@@ -76,7 +114,15 @@ const Topbar = () => {
                 onClick={toggleDropdown}
               >
                 <MenuIcon sx={{ fontSize: 18 }} />
-                <PersonIcon sx={{ fontSize: 30, color: 'gray' }} />
+                {isLoggedIn && profileImage !== '' ? (
+                  <Avatar
+                    src={profileImage}
+                    alt="프로필"
+                    sx={{ width: 30, height: 30 }}
+                  />
+                ) : (
+                  <PersonIcon sx={{ fontSize: 30, color: 'gray' }} />
+                )}
               </button>
 
               <Dropdown
