@@ -1,13 +1,14 @@
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { useCallback, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import accuracy from '@/assets/icons/reviews/accuracy.svg';
 import clean from '@/assets/icons/reviews/clean.svg';
 import { CheckinIcon } from '@/components/common/constants/icons';
-import type { ReviewsResponse } from '@/types/reviewType';
 import type { roomType } from '@/types/roomType';
+
+import { useReview } from './ReviewContext';
 
 interface ReviewProps {
   data: roomType;
@@ -15,64 +16,20 @@ interface ReviewProps {
 }
 
 const ReviewModal = ({ onClose, data }: ReviewProps) => {
-  const [error, setError] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [reviewData, setReviewData] = useState<ReviewsResponse | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('최신순');
+  const [page, setPage] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const options = ['최신순', '오래된순', '높은 평점순', '낮은 평점순'];
-
   const handleOptionClick = (option: string) => {
     setSelectedOption(option); // 선택한 값을 버튼에 표시
     setIsModalOpen(false); // 모달 닫기
   };
 
-  const fetchReviews = useCallback(async () => {
-    try {
-      setIsLoading(true);
-      setError(null);
-
-      const page = 0;
-      const size = 10;
-      let sort = '';
-
-      if (selectedOption === '최신순') {
-        sort = 'createdAt,desc';
-      } else if (selectedOption === '오래된순') {
-        sort = 'rating,asc';
-      } else if (selectedOption === '높은 평점순') {
-        sort = 'rating,desc';
-      } else if (selectedOption === '낮은 평점순') {
-        sort = 'rating,asc';
-      }
-
-      const url = `/api/v1/reviews/room/${data.roomId}?page=${page}&size=${size}&sort=${sort}`;
-
-      const response = await fetch(url, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error('숙소 리뷰 로딩에 실패했습니다.');
-      }
-
-      const responseData = (await response.json()) as ReviewsResponse;
-      setReviewData(responseData);
-    } catch (err) {
-      const errorMessage =
-        err instanceof Error ? err.message : '오류가 발생했습니다.';
-      setError(errorMessage);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [data.roomId, selectedOption]);
+  const { isLoading, error, initReviews, reviewData } = useReview();
 
   useEffect(() => {
-    void fetchReviews();
-  }, [fetchReviews]);
+    void initReviews(data, selectedOption, page);
+  }, [initReviews, data, selectedOption, page]);
 
   return (
     <div className="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center z-50">
@@ -155,64 +112,109 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
           </div>
 
           {/* 오른쪽 후기 목록 */}
-          <div className="flex-[65%] w-full h-full overflow-y-auto">
-            <div className="flex justify-between items-start">
-              <div className="text-xl ml-8 w-fit h-fit">
-                후기{' '}
-                <span className="font-bold w-fit h-fit">
-                  {reviewData?.content.length}
-                </span>
-                개
-              </div>
-              <button
-                className="border border-gray-300 rounded-full py-2 px-3 w-fit h-fit text-sm text-center"
-                onClick={() => {
-                  setIsModalOpen(!isModalOpen);
-                }}
-              >
-                <KeyboardArrowDownIcon className="w-5 h-5 mr-2 text-center" />
-                {selectedOption}
-              </button>
-            </div>
-            {isModalOpen && (
-              <div className="absolute right-5 top-20 mt-2 w-40 bg-white border rounded-xl shadow-md">
-                {options.map((option) => (
+          {reviewData === null ? (
+            <div className="">리뷰 데이터 없음</div>
+          ) : (
+            <>
+              <div className="flex-[65%] w-full h-full overflow-y-auto">
+                <div className="flex justify-between items-start">
+                  <div className="text-xl ml-8 w-fit h-fit">
+                    후기{' '}
+                    <span className="font-bold w-fit h-fit">
+                      {reviewData.totalElements}
+                    </span>
+                    개
+                  </div>
                   <button
-                    key={option}
+                    className="border border-gray-300 rounded-full py-2 px-3 w-fit h-fit text-sm text-center"
                     onClick={() => {
-                      handleOptionClick(option);
+                      setIsModalOpen(!isModalOpen);
                     }}
-                    className="block w-full px-4 py-2 text-left hover:bg-gray-100"
                   >
-                    {option}
+                    <KeyboardArrowDownIcon className="w-5 h-5 mr-2 text-center" />
+                    {selectedOption}
                   </button>
-                ))}
-              </div>
-            )}
-            {reviewData?.content.map((review, index) => (
-              <div
-                key={index}
-                className="rounded-md mx-2 p-5 cursor-pointer hover:bg-gray-100"
-              >
-                <div className="flex items-center">
-                  <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
-                    {review.profileImage !== ''
-                      ? review.nickname
-                      : review.nickname.charAt(0)}
-                  </div>
-                  <div className="ml-3">
-                    <h5 className="font-medium">
-                      {review.nickname}&nbsp;&middot;&nbsp;{review.rating}
-                    </h5>
-                    <p className="text-xs text-gray-500">
-                      숙박 일시&nbsp;{review.startDate}~{review.endDate}
-                    </p>
-                  </div>
                 </div>
-                <p className="mt-2 text-sm">{review.content}</p>
+                {isModalOpen && (
+                  <div className="absolute right-5 top-20 mt-2 w-40 bg-white border rounded-xl shadow-md">
+                    {options.map((option) => (
+                      <button
+                        key={option}
+                        onClick={() => {
+                          handleOptionClick(option);
+                        }}
+                        className="block w-full px-4 py-2 text-left hover:bg-gray-100"
+                      >
+                        {option}
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {reviewData.content.map((review, index) => (
+                  <div
+                    key={index}
+                    className="rounded-md mx-2 p-5 cursor-pointer hover:bg-gray-100"
+                  >
+                    <div className="flex items-center">
+                      <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
+                        {review.profileImage !== ''
+                          ? review.nickname
+                          : review.nickname.charAt(0)}
+                      </div>
+                      <div className="ml-3">
+                        <h5 className="font-medium">
+                          {review.nickname}&nbsp;&middot;&nbsp;{review.rating}
+                        </h5>
+                        <p className="text-xs text-gray-500">
+                          숙박 일시&nbsp;{review.startDate}~{review.endDate}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="mt-2 text-sm">{review.content}</p>
+                  </div>
+                ))}
+                {reviewData.totalPages > 1 && (
+                  <div className="mt-8 flex justify-center gap-2">
+                    <button
+                      onClick={() => {
+                        setPage(page - 1);
+                      }}
+                      disabled={page === 0}
+                      className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      이전
+                    </button>
+
+                    {Array.from({ length: reviewData.totalPages }, (_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => {
+                          setPage(i);
+                        }}
+                        className={`rounded-lg px-4 py-2 ${
+                          page === i
+                            ? 'bg-black text-white'
+                            : 'border hover:bg-gray-100'
+                        }`}
+                      >
+                        {i + 1}
+                      </button>
+                    ))}
+
+                    <button
+                      onClick={() => {
+                        setPage(page + 1);
+                      }}
+                      disabled={page === reviewData.totalPages - 1}
+                      className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      다음
+                    </button>
+                  </div>
+                )}
               </div>
-            ))}
-          </div>
+            </>
+          )}
         </div>
       </div>
       {error !== null && (

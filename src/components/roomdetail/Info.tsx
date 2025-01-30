@@ -101,7 +101,7 @@ const Info = ({ data }: InfoProps) => {
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
           <img src={LuggageIcon} className="h-6 w-6 opacity-60" />
           <div className="opacity-60 text-sm">
-            {isluggage ? '여행 가방 보관 가능' : '여행 가방 보관 풀가'}
+            {isluggage ? '여행 가방 보관 가능' : '여행 가방 보관 불가'}
           </div>
         </div>
         <div className="col-span-1 row-span-1 flex gap-2 items-center px-4">
