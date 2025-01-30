@@ -39,7 +39,10 @@ export const App = () => {
                 <Route path="/redirect" element={<Redirect />} />
                 <Route path="/hosting" element={<Hosting />} />
                 <Route path="/profile" element={<ProfilePage />} />
-                <Route path="/profile/:userId" element={<OtherUserProfilePage />} />
+                <Route
+                  path="/profile/:userId"
+                  element={<OtherUserProfilePage />}
+                />
                 <Route path="/profile/edit" element={<ProfileEdit />} />
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/MyReservations" element={<MyReservations />} />
