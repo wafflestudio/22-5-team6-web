@@ -98,7 +98,6 @@ const MyReviewItems = () => {
   const handleDeleteReview = async (reviewId: number) => {
     try {
       await axiosInstance.delete(`/api/v1/reviews/${reviewId}`);
-      // 삭제된 리뷰를 상태에서 제거
       setReviews((prevReviews) =>
         prevReviews.filter((review) => review.reviewId !== reviewId),
       );

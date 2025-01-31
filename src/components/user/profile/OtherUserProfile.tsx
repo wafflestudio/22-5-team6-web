@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import PastReservations from './PastReservations';
 import ProfileHeader from './ProfileHeader';
 
 type ProfileInfo = {
@@ -69,6 +70,15 @@ const OtherUserProfile = () => {
         <p className="font-semibold text-3xl">{`${profile.nickname} 님 소개`}</p>
         <p className="text-s mt-6 mb-8">{profile.bio}</p>
         <hr className="w-full mt-10 mb-8 border-t border-gray-300" />
+      </div>
+
+      {/* 방문한 여행지 */}
+      <div>
+        <p className="text-xl mb-8">
+          {profile.nickname} 님이 지금까지 가 본 여행지
+        </p>
+        <PastReservations userId={profile.userId} />
+        <hr className="w-full my-8 border-t border-gray-300" />
       </div>
     </div>
   );
