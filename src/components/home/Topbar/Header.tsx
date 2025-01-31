@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axiosInstance from '@/axiosInstance';
 import { LogoIcon, LogoText } from '@/components/common/constants/Logo';
+import { useMode } from '@/components/home/context/ModeContext';
 
 import Dropdown from './Menu/DropDown';
 import LoginModal from './Menu/LoginModal';
@@ -22,9 +23,30 @@ type CurrentUserProfile = {
   showMyWishlist: boolean;
 };
 
-const Topbar = () => {
+type TabButtonProps = {
+  active: boolean;
+  children: React.ReactNode;
+  onClick: () => void;
+};
+
+const TabButton = ({ active, children, onClick }: TabButtonProps) => (
+  <button
+    onClick={onClick}
+    className={`py-2 px-4 transition-all ${
+      active
+        ? 'border-gray-900 text-gray-900'
+        : 'text-gray-500 hover:text-gray-700'
+    }`}
+  >
+    {children}
+  </button>
+);
+
+const Header = () => {
   const navigate = useNavigate();
   const isWideScreen = useMediaQuery('(min-width: 960px)');
+
+  const { mode, setMode } = useMode();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profileImage, setProfileImage] = useState<string | undefined>(
@@ -98,6 +120,26 @@ const Topbar = () => {
             </button>
           </div>
 
+          {/* 모드 전환 탭 */}
+          <nav className="flex gap-2">
+            <TabButton
+              active={mode === 'normal'}
+              onClick={() => {
+                setMode('normal');
+              }}
+            >
+              숙소
+            </TabButton>
+            <TabButton
+              active={mode === 'hotplace'}
+              onClick={() => {
+                setMode('hotplace');
+              }}
+            >
+              핫플
+            </TabButton>
+          </nav>
+
           <div className="flex-1 flex items-center justify-end gap-4">
             <button
               className="hover:bg-gray-100 px-4 py-2 rounded-full text-sm flex items-center"
@@ -153,4 +195,4 @@ const Topbar = () => {
   );
 };
 
-export default Topbar;
+export default Header;

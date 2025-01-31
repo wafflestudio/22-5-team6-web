@@ -4,6 +4,7 @@ import {
   KeyboardArrowUp,
   Schedule,
   SortByAlpha,
+  Star,
 } from '@mui/icons-material';
 import { useEffect, useRef } from 'react';
 
@@ -48,6 +49,14 @@ const sortOptions = [
       direction: 'desc' as const,
     },
     icon: <Schedule className="h-5 w-5" />,
+  },
+  {
+    label: '평점 높은 순',
+    sort: {
+      field: 'ratingStatistics.averageRating' as const,
+      direction: 'desc' as const,
+    },
+    icon: <Star className="h-5 w-5" />,
   },
 ];
 

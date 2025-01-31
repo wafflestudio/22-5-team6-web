@@ -6,6 +6,9 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import airBalloon from '@/assets/icons/airballoon.svg';
+import googleIcon from '@/assets/icons/socialLogin/googleIcon.svg';
+import kakaoIcon from '@/assets/icons/socialLogin/kakaoIcon.svg';
+import naverIcon from '@/assets/icons/socialLogin/naverIcon.svg';
 import LogoIconBlack from '@/assets/Logo/LocoIconBlack';
 
 const RegisterPage: React.FC = () => {
@@ -22,6 +25,33 @@ const RegisterPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>('');
   const [isRegistered, setIsRegistered] = useState(false);
+
+  const handleNaverLogin = () => {
+    try {
+      window.location.href = '/api/oauth2/authorization/naver';
+    } catch (error) {
+      console.error('네이버 로그인 중 오류 발생:', error);
+      setErrorMessage('네이버 로그인 요청 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleKakaoLogin = () => {
+    try {
+      window.location.href = '/api/oauth2/authorization/kakao';
+    } catch (error) {
+      console.error('카카오 로그인 중 오류 발생:', error);
+      setErrorMessage('카카오 로그인 요청 중 오류가 발생했습니다.');
+    }
+  };
+
+  const handleGoogleLogin = () => {
+    try {
+      window.location.href = '/api/oauth2/authorization/google';
+    } catch (error) {
+      console.error('구글 로그인 중 오류 발생:', error);
+      setErrorMessage('구글 로그인 요청 중 오류가 발생했습니다.');
+    }
+  };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -254,6 +284,24 @@ const RegisterPage: React.FC = () => {
                 >
                   {showPassword ? <Visibility /> : <VisibilityOff />}
                 </button>
+              </div>
+              <p className="mt-4 text-gray-400">또는 SNS 간편 가입</p>
+              <div className="flex gap-8 mt-4">
+                <img
+                  src={naverIcon}
+                  onClick={handleNaverLogin}
+                  className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
+                />
+                <img
+                  src={kakaoIcon}
+                  onClick={handleKakaoLogin}
+                  className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
+                />
+                <img
+                  src={googleIcon}
+                  onClick={handleGoogleLogin}
+                  className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
+                />
               </div>
             </div>
           </div>

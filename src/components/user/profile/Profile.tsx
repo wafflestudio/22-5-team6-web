@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import PastReservations from './PastReservations';
 import ProfileHeader from './ProfileHeader';
 import UpcomingReservations from './UpcomingReservations';
 import UserReviews from './UserReviews';
@@ -116,6 +117,16 @@ const UserProfile = () => {
         >
           여행 모두 보기
         </button>
+        <hr className="w-full my-8 border-t border-gray-300" />
+
+        {/* 지난 여행지 */}
+        <p className="text-xl mb-8">
+          {profile.nickname} 님이 지금까지 가 본 여행지
+        </p>
+        <PastReservations
+          userId={profile.userId}
+          navigate={(path: string) => void navigate(path)}
+        />
         <hr className="w-full my-8 border-t border-gray-300" />
 
         {/* 리뷰 */}

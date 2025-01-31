@@ -1,6 +1,5 @@
-// src/components/home/Search/modals/LocationModal/constants.ts
 export const POPULAR_CITIES = [
-  { name: '서울', description: '대한민국 수도' },
+  { name: '서울', description: '한국의 수도' },
   { name: '부산', description: '해변도시' },
   { name: '제주', description: '휴양지' },
   { name: '속초', description: '동해안 여행' },

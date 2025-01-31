@@ -8,7 +8,7 @@ import Footer from '@/components/home/Footer';
 import Header from '@/components/home/Topbar/Header';
 import CancelModal from '@/components/user/CancelReservationModal';
 import MyReservationDetails from '@/components/user/MyReservationDetails';
-import ReservationUpdateModal from '@/components/user/profile/ReservationUpdateModal';
+import ReservationUpdateModal from '@/components/user/ReservationUpdateModal';
 
 type ReservationDetail = {
   reservationId: number;
@@ -16,6 +16,7 @@ type ReservationDetail = {
   startDate: string;
   endDate: string;
   place: string;
+  price: number;
   numberOfGuests: number;
   imageUrl: string;
 };
