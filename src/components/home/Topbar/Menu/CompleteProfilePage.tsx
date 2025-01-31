@@ -8,7 +8,7 @@ import LogoIconBlack from '@/assets/Logo/LocoIconBlack';
 
 const CompleteProfilePage: React.FC = () => {
   const navigate = useNavigate();
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(2);
   const [formData, setFormData] = useState({
     nickname: '',
     bio: '',
@@ -16,7 +16,13 @@ const CompleteProfilePage: React.FC = () => {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string>('');
-  const [isProfileCompleted, setIsProfileCompleted] = useState(false); // 완료 상태
+  const [isProfileCompleted, setIsProfileCompleted] = useState(false);
+
+  const token = localStorage.getItem('token');
+  if (token === null || (typeof token === 'string' && token === '')) {
+    setErrorMessage('로그인되지 않았습니다.');
+    return;
+  }
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -43,15 +49,15 @@ const CompleteProfilePage: React.FC = () => {
   };
 
   const validateStep = () => {
-    if (step === 1 && profileImage === null) {
+    if (step === 2 && profileImage === null) {
       setErrorMessage('프로필 사진을 선택해주세요.');
       return false;
     }
-    if (step === 2 && formData.nickname.trim() === '') {
+    if (step === 3 && formData.nickname.trim() === '') {
       setErrorMessage('닉네임을 입력해주세요.');
       return false;
     }
-    if (step === 3 && formData.bio.trim() === '') {
+    if (step === 4 && formData.bio.trim() === '') {
       setErrorMessage('자기소개를 입력해주세요.');
       return false;
     }
@@ -59,13 +65,13 @@ const CompleteProfilePage: React.FC = () => {
   };
 
   const nextStep = () => {
-    if (validateStep() && step < 3) {
+    if (validateStep() && step < 4) {
       setStep(step + 1);
     }
   };
 
   const prevStep = () => {
-    if (step > 1) setStep(step - 1);
+    if (step > 2) setStep(step - 1);
   };
 
   const handleSubmit = async (): Promise<void> => {
@@ -78,6 +84,11 @@ const CompleteProfilePage: React.FC = () => {
         {
           nickname: formData.nickname,
           bio: formData.bio,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         },
       );
 
@@ -144,7 +155,7 @@ const CompleteProfilePage: React.FC = () => {
         <h2 className="text-lg mb-4">프로필 설정</h2>
 
         {/* 단계별 화면 */}
-        {step === 1 && (
+        {step === 2 && (
           <div>
             <h2 className="text-4xl mb-12">프로필 사진을 선택해주세요.</h2>
             <div className="flex flex-col items-center">
@@ -171,7 +182,7 @@ const CompleteProfilePage: React.FC = () => {
           </div>
         )}
 
-        {step === 2 && (
+        {step === 3 && (
           <div>
             <h2 className="text-4xl mb-12">별명을 입력해주세요.</h2>
             <div className="relative w-[500px] mb-4">
@@ -198,7 +209,7 @@ const CompleteProfilePage: React.FC = () => {
           </div>
         )}
 
-        {step === 3 && (
+        {step === 4 && (
           <div>
             <h2 className="text-4xl mb-12">자기소개를 입력해주세요.</h2>
             <div className="relative w-[500px]">
@@ -230,7 +241,7 @@ const CompleteProfilePage: React.FC = () => {
           <div
             className="h-full bg-airbnb transition-all duration-500"
             style={{
-              width: `${((step - 1) / 2) * 100}%`,
+              width: `${((step - 1) / 3) * 100}%`,
             }}
           />
         </div>
@@ -248,7 +259,7 @@ const CompleteProfilePage: React.FC = () => {
           >
             뒤로
           </button>
-          {step < 3 ? (
+          {step < 4 ? (
             <button
               type="button"
               onClick={nextStep}

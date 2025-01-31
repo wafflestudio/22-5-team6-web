@@ -2,6 +2,10 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import React, { useState } from 'react';
 
+import googleIcon from '@/assets/icons/socialLogin/googleIcon.svg';
+import kakaoIcon from '@/assets/icons/socialLogin/kakaoIcon.svg';
+import naverIcon from '@/assets/icons/socialLogin/naverIcon.svg';
+
 type LoginModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -195,21 +199,36 @@ const LoginModal: React.FC<LoginModalProps> = ({ isOpen, onClose }) => {
           <div>
             <button
               onClick={handleNaverLogin}
-              className="block mt-2 mb-3.5 px-14 py-2 w-[500px] h-12 text-black text-sm border border-slate-800 rounded-lg bg-white hover:bg-gray-100"
+              className="flex justify-center items-center mt-2 mb-3.5 px-14 py-2 w-[500px] h-12 text-black text-sm border border-slate-800 rounded-lg bg-white hover:bg-gray-100"
             >
-              네이버로 로그인하기
+              <img
+                src={naverIcon}
+                alt="네이버 로고"
+                className="w-5 h-5 absolute left-12"
+              />
+              <p>네이버로 로그인하기</p>
             </button>
             <button
               onClick={handleKakaoLogin}
               className="block mt-2 mb-3.5 px-14 py-2 w-[500px] h-12 text-black text-sm border border-slate-800 rounded-lg bg-white hover:bg-gray-100"
             >
-              카카오로 로그인하기
+              <img
+                src={kakaoIcon}
+                alt="카카오 로고"
+                className="w-5 h-5 absolute left-12"
+              />
+              <p>카카오로 로그인하기</p>
             </button>
             <button
               onClick={handleGoogleLogin}
               className="block mt-2 mb-2 px-14 py-2 w-[500px] h-12 text-black text-sm border border-slate-800 rounded-lg bg-white hover:bg-gray-100"
             >
-              구글로 로그인하기
+              <img
+                src={googleIcon}
+                alt="구글 로고"
+                className="w-5 h-5 absolute left-12"
+              />
+              <p>구글로 로그인하기</p>
             </button>
           </div>
         </div>
