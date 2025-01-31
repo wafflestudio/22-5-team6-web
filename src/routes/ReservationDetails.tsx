@@ -152,6 +152,7 @@ const ReservationDetails = () => {
 
       {isUpdateModalOpen && reservation !== null && (
         <ReservationUpdateModal
+          roomId={reservation.roomId}
           reservationId={reservation.reservationId.toString()}
           startDate={reservation.startDate}
           endDate={reservation.endDate}

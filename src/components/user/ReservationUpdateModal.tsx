@@ -6,9 +6,11 @@ import { useNavigate } from 'react-router-dom';
 
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
-import CalendarModal from '@/components/home/Topbar/SearchBar/modals/CalendarModal';
+
+import RoomCalendarModal from '../roomdetail/roomCalendarModal';
 
 type ReservationUpdateModalProps = {
+  roomId: number;
   reservationId: string;
   onClose: () => void;
   startDate: string;
@@ -17,6 +19,7 @@ type ReservationUpdateModalProps = {
 };
 
 const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
+  roomId,
   reservationId,
   onClose,
   startDate,
@@ -34,17 +37,37 @@ const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
   } = useSearch();
   const [error, setError] = useState<string | null>(null);
   const [guests, setGuests] = useState<number>(numberOfGuests);
+  const [maxOccupancy, setMaxOccupancy] = useState<number | null>(null);
 
   useEffect(() => {
     setCheckIn(new Date(startDate));
     setCheckOut(new Date(endDate));
     setGuests(numberOfGuests);
-  }, [startDate, endDate, numberOfGuests, setCheckIn, setCheckOut]);
+
+    const fetchMaxOccupancy = async () => {
+      try {
+        const response = await axios.get<{ maxOccupancy: number }>(
+          `/api/v1/rooms/main/${roomId}`,
+        );
+        setMaxOccupancy(response.data.maxOccupancy);
+      } catch (err) {
+        console.error('최대 숙박 인원 정보를 불러오는 데 실패했습니다.', err);
+        setError('최대 숙박 인원 정보를 불러오는 데 실패했습니다.');
+      }
+    };
+
+    void fetchMaxOccupancy();
+  }, [roomId, startDate, endDate, numberOfGuests, setCheckIn, setCheckOut]);
 
   const navigate = useNavigate();
 
   const handleGuestChange = (delta: number) => {
-    setGuests((prev) => Math.max(1, prev + delta));
+    setGuests((prev) => {
+      if (delta > 0 && maxOccupancy !== null && prev >= maxOccupancy) {
+        return prev;
+      }
+      return Math.max(1, prev + delta);
+    });
   };
 
   const handleUpdateReservation = async () => {
@@ -166,7 +189,10 @@ const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
               onClick={() => {
                 handleGuestChange(1);
               }}
-              className="w-8 h-8 rounded-full border border-gray-400 text-gray-400 hover:border-gray-700 hover:text-gray-700 flex items-center justify-center"
+              disabled={maxOccupancy !== null && guests >= maxOccupancy}
+              className={`w-8 h-8 rounded-full border flex items-center justify-center
+                ${maxOccupancy !== null && guests >= maxOccupancy ? 'border-gray-300 text-gray-300 cursor-not-allowed' : 'border-gray-400 text-gray-400 hover:border-gray-700 hover:text-gray-700'}
+              `}
             >
               +
             </button>
@@ -191,7 +217,7 @@ const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
           onClose={closeModal}
           title="날짜 선택"
         >
-          <CalendarModal onClose={closeModal} />
+          <RoomCalendarModal id={roomId} onClose={closeModal} />
         </BaseModal>
       </div>
     </div>

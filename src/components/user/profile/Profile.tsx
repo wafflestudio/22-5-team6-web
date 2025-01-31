@@ -123,10 +123,7 @@ const UserProfile = () => {
         <p className="text-xl mb-8">
           {profile.nickname} 님이 지금까지 가 본 여행지
         </p>
-        <PastReservations
-          userId={profile.userId}
-          navigate={(path: string) => void navigate(path)}
-        />
+        <PastReservations userId={profile.userId} />
         <hr className="w-full my-8 border-t border-gray-300" />
 
         {/* 리뷰 */}

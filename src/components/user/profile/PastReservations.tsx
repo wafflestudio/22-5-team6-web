@@ -14,10 +14,9 @@ type Reservation = {
 
 type PastReservationsProps = {
   userId: number;
-  navigate: (path: string) => void;
 };
 
-const PastReservations = ({ userId, navigate }: PastReservationsProps) => {
+const PastReservations = ({ userId }: PastReservationsProps) => {
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [error, setError] = useState<string>('');
 
@@ -59,9 +58,6 @@ const PastReservations = ({ userId, navigate }: PastReservationsProps) => {
           <div
             key={reservation.reservationId}
             className="flex flex-col items-center p-4 bg-white content-between rounded-2xl min-w-60 min-h-32 border-4 border-rose-200"
-            onClick={() => {
-              navigate(`/reservations/${reservation.reservationId}`);
-            }}
           >
             <h3 className="mb-2 text-lg text-rose-400 font-semibold">
               {reservation.place}
