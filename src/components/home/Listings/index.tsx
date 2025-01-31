@@ -18,9 +18,11 @@ const Listings = () => {
   } = useSearch();
 
   const { mode } = useMode();
-  const { trendingRooms, isLoading: isHotplaceLoading } = useHotPlace();
+  const { trendingRooms, isLoading: isHotplaceLoading, hasSearched } = useHotPlace();
 
   const isInitialMount = useRef(true);
+  const displayRooms = mode === 'normal' ? rooms : trendingRooms;
+  const isLoading = mode === 'normal' ? isNormalLoading : isHotplaceLoading;
 
   useEffect(() => {
     if (isInitialMount.current) {
@@ -33,9 +35,6 @@ const Listings = () => {
     void navigate(`/${id}`);
   };
 
-  const displayRooms = mode === 'normal' ? rooms : trendingRooms;
-  const isLoading = mode === 'normal' ? isNormalLoading : isHotplaceLoading;
-
   if (isLoading) {
     return (
       <div className="flex h-96 items-center justify-center">
@@ -43,20 +42,45 @@ const Listings = () => {
       </div>
     );
   }
+
   if (error != null && error !== '') {
     return (
       <div className="flex h-96 items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-red-500">
-            죄송합니다. 오류가 발생했습니다.
-          </p>
+          <p className="text-lg text-red-500">죄송합니다. 오류가 발생했습니다.</p>
           <p className="mt-2 text-gray-600">{error}</p>
         </div>
       </div>
     );
   }
 
-  if (rooms.length === 0) {
+  // 핫플레이스 모드일 때의 초기 안내 화면
+  if (mode === 'hotplace' && !hasSearched) {
+    return (
+      <div className="flex flex-col items-center justify-center h-96 text-center space-y-4">
+        <div className="text-4xl">🏆✨</div>
+        <h2 className="text-2xl font-semibold">실시간 인기 핫플레이스</h2>
+        <div className="text-gray-600 max-w-lg space-y-1">
+          <p>여행 기간을 선택하면</p>
+          <p>해당 기간 동안 가장 많은 예약과 높은 평점을</p>
+          <p>기록한 인기 숙소 TOP 3를 보여드려요!</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (mode === 'hotplace' && hasSearched && trendingRooms.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-96 text-center space-y-4">
+        <div className="text-4xl">🔍</div>
+        <h2 className="text-xl font-medium">선택하신 기간에는 아직 핫플레이스가 없어요</h2>
+        <p className="text-gray-600">다른 날짜를 선택해보시는 건 어떨까요?</p>
+      </div>
+    );
+  }
+
+  // 일반 모드일 때 숙소가 없는 경우
+  if (mode === 'normal' && rooms.length === 0) {
     return (
       <div className="flex h-96 items-center justify-center">
         <div className="text-center">
@@ -69,31 +93,43 @@ const Listings = () => {
 
   return (
     <div>
+      {/* 핫플레이스 모드일 때의 헤더 */}
       {mode === 'hotplace' && trendingRooms.length > 0 && (
-        <div className="mb-6 p-4 bg-gray-50 rounded-lg">
-          <h2 className="text-lg font-semibold">🔥 실시간 인기 핫플레이스</h2>
-          <p className="text-sm text-gray-600">
-            선택하신 기간 동안 가장 많은 예약이 있었던 지역의 별점 TOP 3
-            숙소입니다.
-          </p>
+        <div className="mb-8">
+          <div className="bg-gray-50 rounded-xl py-4">
+            <h2 className="text-center">
+              <span className="text-lg">
+                ✨ 이 기간 핫플레이스는 <strong className="text-xl">{trendingRooms[0]?.address?.sido} {trendingRooms[0]?.address?.sigungu}</strong> ✨
+              </span>
+            </h2>
+            <p className="text-center text-gray-600 text-sm mt-1">
+              가장 많은 예약과 높은 평점을 기록한 TOP 3 숙소를 만나보세요!
+            </p>
+          </div>
         </div>
       )}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+
+      {/* 숙소 목록 */}
+      <div className={`grid gap-6 ${
+        mode === 'hotplace' 
+          ? 'grid-cols-1 md:grid-cols-3' 
+          : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+      }`}>
         {displayRooms.map((room) => (
           <div
             key={room.id}
             onClick={() => {
               handleRoomClick(room.id.toString());
             }}
-            style={{ cursor: 'pointer' }}
+            className="cursor-pointer"
           >
             <ListingItem listing={room} />
           </div>
         ))}
       </div>
 
-      {/* 페이지네이션 UI */}
-      {pageInfo.totalPages > 1 && (
+      {/* 페이지네이션 - 일반 모드일 때만 표시 */}
+      {mode === 'normal' && pageInfo.totalPages > 1 && (
         <div className="mt-8 flex justify-center gap-2">
           <button
             onClick={() => {
@@ -104,7 +140,6 @@ const Listings = () => {
           >
             이전
           </button>
-
           {Array.from({ length: pageInfo.totalPages }, (_, i) => (
             <button
               key={i}
@@ -120,7 +155,6 @@ const Listings = () => {
               {i + 1}
             </button>
           ))}
-
           <button
             onClick={() => {
               void pageRooms(pageInfo.pageNumber + 1);

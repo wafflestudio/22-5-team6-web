@@ -1,6 +1,7 @@
 import dayjs from 'dayjs';
 import { useState } from 'react';
 
+import { useMode } from '@/components/home/context/ModeContext';
 import { useSearch } from '@/components/home/context/SearchContext';
 
 type CalendarModalProps = {
@@ -11,6 +12,7 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
   const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
   const [selecting, setSelecting] = useState<'checkIn' | 'checkOut'>('checkIn');
+  const { mode } = useMode();
 
   const goToNextMonth = () => {
     setCurrentMonth(currentMonth.add(1, 'month'));
@@ -105,10 +107,10 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
 
   return (
     <div className="p-6">
-      <div className="flex justify-between items-center mb-8">
-        <button
+      <div className="relative flex justify-center items-center mb-8">
+      <button
           onClick={goToPrevMonth}
-          className="p-2 hover:bg-gray-100 rounded-full"
+          className="absolute left-0 p-2 hover:bg-gray-100 rounded-full"
         >
           ←
         </button>
@@ -168,9 +170,11 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
       </div>
 
       <div className="text-center text-gray-500">
-        {selecting === 'checkIn'
-          ? '체크인 날짜를 선택해주세요.'
-          : '체크아웃 날짜를 선택해주세요.'}
+        {mode === 'hotplace' 
+          ? '핫플레이스를 검색할 기간을 선택해주세요.'
+          : selecting === 'checkIn'
+            ? '체크인 날짜를 선택해주세요.'
+            : '체크아웃 날짜를 선택해주세요.'}
       </div>
     </div>
   );
