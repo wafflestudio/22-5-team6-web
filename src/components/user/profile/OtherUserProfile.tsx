@@ -2,6 +2,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import LottieLoader from '@/components/common/constants/lottieLoader';
+
 import PastReservations from './PastReservations';
 import ProfileHeader from './ProfileHeader';
 import UserReviews from './UserReviews';
@@ -86,7 +88,7 @@ const OtherUserProfile = () => {
   }, [userId]);
 
   if (error !== '') return <p className="text-red-500">{error}</p>;
-  if (profile === null) return <p>로딩 중...</p>;
+  if (profile === null) return <LottieLoader />;
 
   return (
     <div className="flex justify-self-center mb-4 px-10 py-12 min-w-[950px] w-2/3 min-h-screen gap-x-20">

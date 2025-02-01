@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import LottieLoader from '@/components/common/constants/lottieLoader';
 import Footer from '@/components/home/Footer';
 import Header from '@/components/home/Topbar/Header';
 import CancelModal from '@/components/user/CancelReservationModal';
@@ -108,7 +109,7 @@ const ReservationDetails = () => {
       <hr className="w-full mb-8 border-t border-gray-300" />
       <div className="flex p-20 justify-center min-h-screen bg-white gap-16">
         {loading ? (
-          <p>로딩 중...</p>
+          <LottieLoader />
         ) : reservation !== null ? (
           <MyReservationDetails reservation={reservation} />
         ) : (

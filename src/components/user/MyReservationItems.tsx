@@ -4,6 +4,8 @@ import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import LottieLoader from '../common/constants/lottieLoader';
+
 type Reservation = {
   reservationId: number;
   place: string;
@@ -97,7 +99,7 @@ const MyReservationItems = () => {
   }, []);
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <LottieLoader />;
   }
 
   if (error !== null) {
