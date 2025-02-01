@@ -1,10 +1,10 @@
 import CameraAltOutlinedIcon from '@mui/icons-material/CameraAltOutlined';
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import airBalloon from '@/assets/icons/airballoon.svg';
 import LogoIcon from '@/assets/Logo/LogoIcon';
+import axiosInstance from '@/axiosInstance';
 
 const CompleteProfilePage: React.FC = () => {
   const navigate = useNavigate();
@@ -79,16 +79,11 @@ const CompleteProfilePage: React.FC = () => {
       if (!validateStep()) return;
 
       // 프로필 업데이트 요청
-      const response = await axios.post<{ imageUploadUrl: string }>(
+      const response = await axiosInstance.post<{ imageUploadUrl: string }>(
         '/api/v1/profile',
         {
           nickname: formData.nickname,
           bio: formData.bio,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
         },
       );
 
@@ -96,7 +91,7 @@ const CompleteProfilePage: React.FC = () => {
 
       // 프로필 이미지 업로드
       if (profileImage !== null && imageUploadUrl !== '') {
-        await axios.put(imageUploadUrl, profileImage, {
+        await axiosInstance.put(imageUploadUrl, profileImage, {
           headers: {
             'Content-Type': profileImage.type,
             'Cache-Control': 'no-cache, no-store, must-revalidate',

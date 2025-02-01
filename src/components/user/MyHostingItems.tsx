@@ -1,8 +1,9 @@
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import axiosInstance from '@/axiosInstance';
 
 import LottieLoader from '../common/constants/lottieLoader';
 
@@ -42,9 +43,8 @@ const MyHostingItems = () => {
       }
 
       try {
-        const profileResponse = await axios.get<{ userId: number }>(
+        const profileResponse = await axiosInstance.get<{ userId: number }>(
           '/api/v1/profile',
-          { headers: { Authorization: `Bearer ${token}` } },
         );
         setHostId(profileResponse.data.userId);
       } catch {
@@ -67,11 +67,9 @@ const MyHostingItems = () => {
       }
 
       try {
-        const response = await axios.get<RoomResponse>(
+        const response = await axiosInstance.get<RoomResponse>(
           `/api/v1/rooms/hosting/${hostId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
         );
-
         setRooms(response.data.content);
       } catch (err) {
         console.error('숙소 목록 요청 실패:', err);
@@ -97,9 +95,7 @@ const MyHostingItems = () => {
     }
 
     try {
-      await axios.delete(`/api/v1/rooms/${deleteRoomId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      await axiosInstance.delete(`/api/v1/rooms/${deleteRoomId}`);
 
       setRooms((prev) => prev.filter((room) => room.roomId !== deleteRoomId));
       setIsDeleteModalOpen(false);

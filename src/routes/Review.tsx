@@ -1,7 +1,7 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
+import axiosInstance from '@/axiosInstance';
 import LottieLoader from '@/components/common/constants/lottieLoader';
 import Footer from '@/components/home/Footer';
 import Header from '@/components/home/Topbar/Header';
@@ -43,13 +43,8 @@ const Review = () => {
       }
 
       try {
-        const response = await axios.get<ReservationDetail>(
+        const response = await axiosInstance.get<ReservationDetail>(
           `/api/v1/reservations/${reservationId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         setReservation(response.data);
       } catch (err) {
