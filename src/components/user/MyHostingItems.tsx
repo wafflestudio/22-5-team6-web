@@ -115,8 +115,58 @@ const MyHostingItems = () => {
           <p className="text-3xl mb-16 text-gray-700">
             아직 등록된 숙소가 없습니다.
           </p>
+          <div className="flex gap-12 mb-12">
+            <div className="flex flex-col items-center w-72 text-center">
+              <div className="w-5 h-5 mb-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 32 32"
+                  aria-hidden="true"
+                  role="presentation"
+                  focusable="false"
+                >
+                  <path d="m17.98 1.9.14.14 13.25 13.25-1.41 1.42-.96-.96v12.58a2 2 0 0 1-1.85 2H5a2 2 0 0 1-2-1.85V15.75l-.96.96-1.41-1.42L13.88 2.04a3 3 0 0 1 4.1-.13zm-2.6 1.47-.09.08L5 13.75 5 28.33h6v-10a2 2 0 0 1 1.85-2H19a2 2 0 0 1 2 1.85v10.15h6V13.75L16.7 3.45a1 1 0 0 0-1.31-.08zM19 18.33h-6v10h6z"></path>
+                </svg>
+              </div>
+              <p>몇 단계만 거치면 숙소를 등록할 수 있어요.</p>
+            </div>
+            <div className="flex flex-col items-center w-72 text-center">
+              <div className="w-5 h-5 mb-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 32 32"
+                  aria-hidden="true"
+                  role="presentation"
+                  focusable="false"
+                >
+                  <path d="M19 1v2h-2v2.04a13 13 0 0 1 12 12.65V18a13 13 0 1 1-26 0 12.96 12.96 0 0 1 4.1-9.48L5.3 6.71l1.4-1.42 1.97 1.97A12.93 12.93 0 0 1 15 5.04V3h-2V1h6zm-3 6a11 11 0 1 0 0 22 11 11 0 0 0 0-22zm-4.3 3.3 6 6-1.4 1.4-6-6 1.4-1.4zM16 9a1 1 0 1 1 0 2 1 1 0 0 1 0-2z"></path>
+                </svg>
+              </div>
+              <p>
+                본인의 페이스에 맞게 진행하고, 필요하면 언제든지 내용을
+                수정하세요.
+              </p>
+            </div>
+            <div className="flex flex-col items-center w-72 text-center">
+              <div className="w-5 h-5 mb-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 32 32"
+                  aria-hidden="true"
+                  role="presentation"
+                  focusable="false"
+                >
+                  <path d="M26 1a5 5 0 0 1 5 4.78v10.9a5 5 0 0 1-4.78 5H26a5 5 0 0 1-4.78 5h-4l-3.72 4.36-3.72-4.36H6a5 5 0 0 1-4.98-4.56L1 21.9 1 21.68V11a5 5 0 0 1 4.78-5H6a5 5 0 0 1 4.78-5H26zm-5 7H6a3 3 0 0 0-3 2.82v10.86a3 3 0 0 0 2.82 3h4.88l2.8 3.28 2.8-3.28H21a3 3 0 0 0 3-2.82V11a3 3 0 0 0-3-3zm-1 10v2H6v-2h14zm6-15H11a3 3 0 0 0-3 2.82V6h13a5 5 0 0 1 5 4.78v8.9a3 3 0 0 0 3-2.82V6a3 3 0 0 0-2.82-3H26zM15 13v2H6v-2h9z"></path>
+                </svg>
+              </div>
+              <p>프로필에서 내 숙소를 확인할 수 있어요.</p>
+            </div>
+          </div>
           <button
-            onClick={() => void navigate('/Hosting')}
+            onClick={(e) => {
+              e.preventDefault();
+              void navigate('/Hosting');
+            }}
             className="w-max mt-6 px-4 py-3 text-white text-md rounded-lg transition-all duration-500 bg-gradient-to-tl from-airbnb-hover from-40% via-[#e8214f] to-airbnb bg-size-200 bg-pos-0 hover:bg-pos-100"
           >
             당신의 공간을 에어비앤비하세요
