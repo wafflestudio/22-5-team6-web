@@ -17,9 +17,18 @@ type ProfileInfo = {
   imageUrl: string;
 };
 
+type Reservation = {
+  reservationId: number;
+  place: string;
+  startDate: string;
+  endDate: string;
+};
+
 const OtherUserProfile = () => {
   const { userId } = useParams();
   const [profile, setProfile] = useState<ProfileInfo | null>(null);
+  const [upcomingReservationsCount, setUpcomingReservationsCount] = useState(0);
+  const [reviewsCount, setReviewsCount] = useState(0);
   const [error, setError] = useState<string>('');
 
   useEffect(() => {
@@ -45,6 +54,28 @@ const OtherUserProfile = () => {
         );
         const profileData = profileResponse.data;
         setProfile(profileData);
+
+        // Fetch reservations
+        const reservationsResponse = await axios.get<{
+          content: Reservation[];
+        }>(`/api/v1/reservations/user/${profileData.userId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const reservations = reservationsResponse.data.content;
+
+        // Filter upcoming reservations
+        const now = new Date();
+        const upcomingReservations = reservations.filter(
+          (reservation) => new Date(reservation.startDate) >= now,
+        );
+        setUpcomingReservationsCount(upcomingReservations.length);
+
+        // Fetch review count
+        const reviewsResponse = await axios.get<{ totalElements: number }>(
+          `/api/v1/reviews/user/${profileData.userId}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+        setReviewsCount(reviewsResponse.data.totalElements);
       } catch (err) {
         console.error('데이터를 가져오는 데 실패했습니다:', err);
         setError('데이터를 가져오는 데 실패했습니다.');
@@ -62,8 +93,8 @@ const OtherUserProfile = () => {
       {/* ProfileHeader */}
       <ProfileHeader
         profile={profile}
-        upcomingReservationsCount={0}
-        reviewsCount={0}
+        upcomingReservationsCount={upcomingReservationsCount}
+        reviewsCount={reviewsCount}
       />
 
       <div className="w-3/5 h-full">
