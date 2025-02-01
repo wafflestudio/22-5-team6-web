@@ -1,8 +1,8 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 
 import visited from '@/assets/icons/visited.svg';
 import LogoIconBlack from '@/assets/Logo/LocoIconBlack';
+import axiosInstance from '@/axiosInstance';
 
 type Reservation = {
   reservationId: number;
@@ -22,16 +22,9 @@ const PastReservations = ({ userId }: PastReservationsProps) => {
 
   useEffect(() => {
     const fetchReservations = async () => {
-      const token = localStorage.getItem('token');
-      if (token === null || (typeof token === 'string' && token === '')) {
-        setError('로그인되지 않았습니다.');
-        return;
-      }
-
       try {
-        const response = await axios.get<{ content: Reservation[] }>(
+        const response = await axiosInstance.get<{ content: Reservation[] }>(
           `/api/v1/reservations/user/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
         );
 
         const now = new Date();
