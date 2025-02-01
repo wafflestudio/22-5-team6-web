@@ -12,9 +12,8 @@ const Listings = () => {
     rooms,
     isLoading: isNormalLoading,
     error,
-    initRooms,
+    searchRooms,
     pageInfo,
-    pageRooms,
   } = useSearch();
 
   const { mode } = useMode();
@@ -30,10 +29,10 @@ const Listings = () => {
 
   useEffect(() => {
     if (isInitialMount.current) {
-      void initRooms();
+      void searchRooms();
       isInitialMount.current = false;
     }
-  }, [initRooms]);
+  }, [searchRooms]);
 
   const handleRoomClick = (id: string) => {
     void navigate(`/${id}`);
@@ -143,12 +142,12 @@ const Listings = () => {
         ))}
       </div>
 
-      {/* 페이지네이션 - 일반 모드일 때만 표시 */}
+      {/* 페이지네이션 */}
       {mode === 'normal' && pageInfo.totalPages > 1 && (
         <div className="mt-8 flex justify-center gap-2">
           <button
             onClick={() => {
-              void pageRooms(pageInfo.pageNumber - 1);
+              void searchRooms({ pageNumber: pageInfo.pageNumber - 1 });
             }}
             disabled={pageInfo.pageNumber === 0}
             className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"
@@ -159,7 +158,7 @@ const Listings = () => {
             <button
               key={i}
               onClick={() => {
-                void pageRooms(i);
+                void searchRooms({ pageNumber: i });
               }}
               className={`rounded-lg px-4 py-2 ${
                 pageInfo.pageNumber === i
@@ -172,7 +171,7 @@ const Listings = () => {
           ))}
           <button
             onClick={() => {
-              void pageRooms(pageInfo.pageNumber + 1);
+              void searchRooms({ pageNumber: pageInfo.pageNumber + 1 });
             }}
             disabled={pageInfo.pageNumber === pageInfo.totalPages - 1}
             className="rounded-lg border px-4 py-2 disabled:cursor-not-allowed disabled:opacity-50"

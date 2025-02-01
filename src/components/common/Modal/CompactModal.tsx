@@ -1,7 +1,7 @@
 import CloseIcon from '@mui/icons-material/Close';
 import React from 'react';
 
-type BaseModalProps = {
+type CompactModalProps = {
   isOpen: boolean;
   onClose: () => void;
   title?: string;
@@ -9,13 +9,13 @@ type BaseModalProps = {
   footer?: React.ReactNode;
 };
 
-const BaseModal = ({
+const CompactModal = ({
   isOpen,
   onClose,
   title,
   children,
   footer,
-}: BaseModalProps) => {
+}: CompactModalProps) => {
   if (!isOpen) return null;
 
   return (
@@ -27,10 +27,9 @@ const BaseModal = ({
       />
 
       {/* Modal */}
-      <div className="fixed inset-x-0 top-8 mx-auto w-full max-w-4xl max-h-[90vh] bg-white rounded-xl z-50 flex flex-col">
+      <div className="fixed inset-x-0 top-8 mx-auto w-full max-w-xl max-h-[90vh] bg-white rounded-xl z-50 flex flex-col">
         {/* Header */}
         <div className="flex items-center justify-center py-4 border-b shrink-0">
-          {/* Close button */}
           <button
             onClick={onClose}
             className="absolute left-4 p-2 rounded-full hover:bg-gray-100"
@@ -38,7 +37,6 @@ const BaseModal = ({
             <CloseIcon sx={{ fontSize: 18 }} />
           </button>
 
-          {/* Title */}
           {title != null && <h2 className="text-lg font-semibold">{title}</h2>}
         </div>
 
@@ -56,4 +54,4 @@ const BaseModal = ({
   );
 };
 
-export default BaseModal;
+export default CompactModal;

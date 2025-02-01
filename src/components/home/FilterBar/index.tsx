@@ -71,7 +71,7 @@ const FilterBar = () => {
           className="px-4 py-2 rounded-xl border border-gray-200 hover:shadow-md transition flex items-center gap-2"
         >
           <ImportExport className="h-4 w-4" />
-          <span className="text-sm">정렬</span>
+          <span className="text-sm hidden lg:inline">정렬</span>
         </button>
         <button
           onClick={() => {
@@ -80,7 +80,7 @@ const FilterBar = () => {
           className="px-4 py-2 rounded-xl border border-gray-200 hover:shadow-md transition flex items-center gap-2"
         >
           <TuneRounded className="h-4 w-4" />
-          <span className="text-sm">필터</span>
+          <span className="text-sm hidden lg:inline">필터</span>
         </button>
       </div>
 
