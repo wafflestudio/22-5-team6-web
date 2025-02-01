@@ -1,5 +1,6 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
+
+import axiosInstance from '@/axiosInstance';
 
 type Reservation = {
   reservationId: number;
@@ -30,9 +31,8 @@ const UpcomingReservations = ({
       }
 
       try {
-        const response = await axios.get<{ content: Reservation[] }>(
+        const response = await axiosInstance.get<{ content: Reservation[] }>(
           `/api/v1/reservations/user/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
         );
 
         const now = new Date();

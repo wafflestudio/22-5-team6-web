@@ -1,9 +1,10 @@
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import OtherHousesOutlinedIcon from '@mui/icons-material/OtherHousesOutlined';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
+import axiosInstance from '@/axiosInstance';
+import LottieLoader from '@/components/common/constants/lottieLoader';
 import Footer from '@/components/home/Footer';
 import Header from '@/components/home/Topbar/Header';
 import CancelModal from '@/components/user/CancelReservationModal';
@@ -48,13 +49,8 @@ const ReservationDetails = () => {
       }
 
       try {
-        const response = await axios.get<ReservationDetail>(
+        const response = await axiosInstance.get<ReservationDetail>(
           `/api/v1/reservations/${reservationId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          },
         );
         setReservation(response.data);
       } catch (err) {
@@ -83,11 +79,7 @@ const ReservationDetails = () => {
     }
 
     try {
-      await axios.delete(`/api/v1/reservations/${reservationId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      await axiosInstance.delete(`/api/v1/reservations/${reservationId}`);
       alert('예약이 성공적으로 취소되었습니다.');
       void navigate('/MyReservations');
     } catch (err) {
@@ -108,7 +100,7 @@ const ReservationDetails = () => {
       <hr className="w-full mb-8 border-t border-gray-300" />
       <div className="flex p-20 justify-center min-h-screen bg-white gap-16">
         {loading ? (
-          <p>로딩 중...</p>
+          <LottieLoader />
         ) : reservation !== null ? (
           <MyReservationDetails reservation={reservation} />
         ) : (

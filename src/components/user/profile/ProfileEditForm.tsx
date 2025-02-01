@@ -5,6 +5,8 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import LottieLoader from '@/components/common/constants/lottieLoader';
+
 type ProfileInfo = {
   userId: number;
   nickname: 'string';
@@ -128,7 +130,7 @@ const ProfileEditForm = () => {
   };
 
   if (profile === null) {
-    return <p>로딩 중...</p>;
+    return <LottieLoader />;
   }
 
   return (

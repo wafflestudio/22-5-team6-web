@@ -1,10 +1,14 @@
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined';
 import WavingHandTwoToneIcon from '@mui/icons-material/WavingHandTwoTone';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import axiosInstance from '@/axiosInstance';
+
+import LottieLoader from '../common/constants/lottieLoader';
+
 type Reservation = {
+  roomId: number;
   reservationId: number;
   place: string;
   startDate: string;
@@ -41,18 +45,13 @@ const MyReservationItems = () => {
       }
 
       try {
-        const profileResponse = await axios.get<ProfileInfo>(
-          '/api/v1/profile',
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+        const profileResponse =
+          await axiosInstance.get<ProfileInfo>('/api/v1/profile');
         const userId = profileResponse.data.userId;
 
         const MyReservationItemsResponse =
-          await axios.get<MyReservationItemsResponse>(
+          await axiosInstance.get<MyReservationItemsResponse>(
             `/api/v1/reservations/user/${userId}`,
-            { headers: { Authorization: `Bearer ${token}` } },
           );
 
         const now = new Date();
@@ -97,7 +96,7 @@ const MyReservationItems = () => {
   }, []);
 
   if (loading) {
-    return <p>로딩 중...</p>;
+    return <LottieLoader />;
   }
 
   if (error !== null) {
@@ -177,9 +176,7 @@ const MyReservationItems = () => {
             {pastMyReservationItems.map((reservation) => (
               <div
                 key={reservation.reservationId}
-                onClick={() =>
-                  void navigate(`/reviews/${reservation.reservationId}`)
-                }
+                onClick={() => void navigate(`/${reservation.roomId}`)}
                 className="flex p-5 bg-white rounded-lg border border-gray-200 cursor-pointer"
               >
                 <img
