@@ -108,7 +108,7 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
   return (
     <div className="p-6">
       <div className="relative flex justify-center items-center mb-8">
-      <button
+        <button
           onClick={goToPrevMonth}
           className="absolute left-0 p-2 hover:bg-gray-100 rounded-full"
         >
@@ -170,7 +170,7 @@ const CalendarModal = ({ onClose }: CalendarModalProps) => {
       </div>
 
       <div className="text-center text-gray-500">
-        {mode === 'hotplace' 
+        {mode === 'hotplace'
           ? '핫플레이스를 검색할 기간을 선택해주세요.'
           : selecting === 'checkIn'
             ? '체크인 날짜를 선택해주세요.'

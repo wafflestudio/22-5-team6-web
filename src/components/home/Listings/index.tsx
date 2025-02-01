@@ -18,7 +18,11 @@ const Listings = () => {
   } = useSearch();
 
   const { mode } = useMode();
-  const { trendingRooms, isLoading: isHotplaceLoading, hasSearched } = useHotPlace();
+  const {
+    trendingRooms,
+    isLoading: isHotplaceLoading,
+    hasSearched,
+  } = useHotPlace();
 
   const isInitialMount = useRef(true);
   const displayRooms = mode === 'normal' ? rooms : trendingRooms;
@@ -47,7 +51,9 @@ const Listings = () => {
     return (
       <div className="flex h-96 items-center justify-center">
         <div className="text-center">
-          <p className="text-lg text-red-500">죄송합니다. 오류가 발생했습니다.</p>
+          <p className="text-lg text-red-500">
+            죄송합니다. 오류가 발생했습니다.
+          </p>
           <p className="mt-2 text-gray-600">{error}</p>
         </div>
       </div>
@@ -73,7 +79,9 @@ const Listings = () => {
     return (
       <div className="flex flex-col items-center justify-center h-96 text-center space-y-4">
         <div className="text-4xl">🔍</div>
-        <h2 className="text-xl font-medium">선택하신 기간에는 아직 핫플레이스가 없어요</h2>
+        <h2 className="text-xl font-medium">
+          선택하신 기간에는 아직 핫플레이스가 없어요
+        </h2>
         <p className="text-gray-600">다른 날짜를 선택해보시는 건 어떨까요?</p>
       </div>
     );
@@ -99,7 +107,12 @@ const Listings = () => {
           <div className="bg-gray-50 rounded-xl py-4">
             <h2 className="text-center">
               <span className="text-lg">
-                ✨ 이 기간 핫플레이스는 <strong className="text-xl">{trendingRooms[0]?.address?.sido} {trendingRooms[0]?.address?.sigungu}</strong> ✨
+                ✨ 이 기간 핫플레이스는{' '}
+                <strong className="text-xl">
+                  {trendingRooms[0]?.address?.sido}{' '}
+                  {trendingRooms[0]?.address?.sigungu}
+                </strong>{' '}
+                ✨
               </span>
             </h2>
             <p className="text-center text-gray-600 text-sm mt-1">
@@ -110,11 +123,13 @@ const Listings = () => {
       )}
 
       {/* 숙소 목록 */}
-      <div className={`grid gap-6 ${
-        mode === 'hotplace' 
-          ? 'grid-cols-1 md:grid-cols-3' 
-          : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
-      }`}>
+      <div
+        className={`grid gap-6 ${
+          mode === 'hotplace'
+            ? 'grid-cols-1 md:grid-cols-3'
+            : 'grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'
+        }`}
+      >
         {displayRooms.map((room) => (
           <div
             key={room.id}

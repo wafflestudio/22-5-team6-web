@@ -24,7 +24,7 @@ const ListingItem = ({ listing, onUpdateListing }: ListingItemProps) => {
     setError(null);
 
     try {
-      if (listing.isLiked) {
+      if (isLiked) {
         await axiosInstance.delete(`/api/v1/rooms/${listing.id}/like`);
       } else {
         await axiosInstance.post(`/api/v1/rooms/${listing.id}/like`);

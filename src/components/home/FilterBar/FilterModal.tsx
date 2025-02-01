@@ -110,7 +110,7 @@ const StarRating = ({ value, onChange, className = '' }: StarRatingProps) => {
 };
 
 export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
-  const { filter, filterRooms } = useSearch();
+  const { filter, searchRooms } = useSearch();
   const [minPrice, setMinPrice] = useState(filter.minPrice ?? initialMinPrice);
   const [maxPrice, setMaxPrice] = useState(filter.maxPrice ?? initialMaxPrice);
   const [facilityCount, setFacilityCount] =
@@ -153,13 +153,15 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
       alert('최소 가격이 최대 가격보다 클 수 없습니다.');
       return;
     }
-    void filterRooms({
-      ...filter,
-      minPrice,
-      maxPrice,
-      ...facilityCount,
-      ...amenities,
-      rating,
+    void searchRooms({
+      newFilter: {
+        ...filter,
+        minPrice,
+        maxPrice,
+        ...facilityCount,
+        ...amenities,
+        rating,
+      },
     });
     onClose();
   };
@@ -169,13 +171,15 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
     setMaxPrice(initialMaxPrice);
     setFacilityCount(initialFacilityCount);
     setAmenities(initialAmenities);
-    void filterRooms({
-      ...filter,
-      minPrice: null,
-      maxPrice: null,
-      roomType: null,
-      ...initialFacilityCount,
-      ...initialAmenities,
+    void searchRooms({
+      newFilter: {
+        ...filter,
+        minPrice: null,
+        maxPrice: null,
+        roomType: null,
+        ...initialFacilityCount,
+        ...initialAmenities,
+      },
     });
     onClose();
   };
