@@ -37,32 +37,60 @@ const Dropdown: React.FC<DropdownProps> = ({
 
   if (!isOpen) return null;
 
-  const handleMyPageClick = () => {
-    void (async () => {
-      await navigate('/profile');
-      onClose();
-    })();
-  };
-
-  const handleRegisterClick = () => {
-    void (async () => {
-      await navigate('/register');
-      onClose();
-    })();
+  const handleNavigation = (path: string): void => {
+    void navigate(path);
+    onClose();
   };
 
   return (
     <div
       ref={dropdownRef}
-      className={`absolute right-0 mt-44 mr-64 py-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}
+      className={`absolute right-0 ${
+        isLoggedIn ? 'mt-[360px]' : 'mt-44'
+      } mr-64 py-2 w-60 bg-white border border-gray-200 rounded-lg shadow-lg z-50`}
     >
       {isLoggedIn ? (
         <>
           <button
-            onClick={handleMyPageClick}
+            onClick={() => {
+              handleNavigation('/profile');
+            }}
             className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
           >
             마이 페이지
+          </button>
+          <button
+            onClick={() => {
+              handleNavigation('/MyReservations');
+            }}
+            className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
+          >
+            내 여행
+          </button>
+          <button
+            onClick={() => {
+              handleNavigation('/MyReviews');
+            }}
+            className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
+          >
+            내 후기
+          </button>
+          <hr className="w-full my-1 border-t border-gray-300" />
+          <button
+            onClick={() => {
+              handleNavigation('/MyWishList');
+            }}
+            className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
+          >
+            위시리스트
+          </button>
+          <button
+            onClick={() => {
+              handleNavigation('/MyHosting');
+            }}
+            className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
+          >
+            숙소 관리
           </button>
           <hr className="w-full my-1 border-t border-gray-300" />
           <button
@@ -81,7 +109,9 @@ const Dropdown: React.FC<DropdownProps> = ({
             로그인
           </button>
           <button
-            onClick={handleRegisterClick}
+            onClick={() => {
+              handleNavigation('/register');
+            }}
             className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
           >
             회원가입

@@ -77,11 +77,11 @@ const Footer = () => {
         <hr className="w-full my-2 border-t border-gray-300" />
         <p className="text-xs text-gray-600">
           웹사이트 제공자: Waffle Studio 22.5 Rookies toy project Team 6,
-          웹사이트, https://d2gjarpl85ijp5.cloudfront.net | 호스팅 서비스
-          제공업체: 아마존 웹서비스 | 에어비앤비는 통신판매 중개자로 에어비앤비
-          플랫폼을 통하여 게스트와 호스트 사이에 이루어지는 통신판매의 당사자가
-          아닙니다. 에어비앤비 플랫폼을 통하여 예약된 숙소, 체험, 호스트
-          서비스에 관한 의무와 책임은 해당 서비스를 제공하는 호스트에게
+          웹사이트: https://d2gjarpl85ijp5.cloudfront.net | 호스팅 서비스
+          제공업체: 아마존 웹서비스 | 와플비앤비는 와플 스튜디오 루키
+          토이프로젝트에서 에어비앤비 플랫폼을 클론한 사이트이며, 실제 서비스를
+          제공하는 사이트가 아닙니다. 와플비앤비를 통하여 예약된 숙소, 체험,
+          호스트 서비스에 관한 의무와 책임은 해당 서비스를 제공하는 호스트에게
           있습니다.
         </p>
       </div>
