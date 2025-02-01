@@ -1,8 +1,9 @@
 import type { ReactNode } from 'react';
-import { useCallback } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { createContext, useContext, useState } from 'react';
 
 import axiosInstance from '@/axiosInstance';
+import type { RoomType } from '@/types/room';
 import type {
   Filter,
   RoomListResponse,
@@ -10,6 +11,8 @@ import type {
   RoomMainResponse,
   RoomSearchParams,
   Sort,
+  SortDirection,
+  SortField,
 } from '@/types/roomSearch';
 
 type ModalType =
@@ -36,6 +39,7 @@ type PageInfo = {
 type SearchOptions = {
   newFilter?: Filter;
   newSort?: Sort;
+  pageNumber?: number;
 };
 
 type SearchContextType = {
@@ -60,15 +64,14 @@ type SearchContextType = {
   // 페이지네이션
   pageInfo: PageInfo;
   handlePageChange: (page: number) => void;
-  pageRooms: (pageNumber: number) => Promise<void>;
 
   // 필터 관련
   filter: Filter;
   setFilter: (filter: Filter) => void;
 
-  // 검색 실행
-  initRooms: () => Promise<void>;
+  // 검색 실행 및 초기화
   searchRooms: (options?: SearchOptions) => Promise<void>;
+  resetSearch: () => void;
 
   // 정렬
   sort: Sort;
@@ -93,15 +96,15 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   // 페이지네이션 상태
   const [pageInfo, setPageInfo] = useState<PageInfo>({
     pageNumber: 0,
-    pageSize: 8,
+    pageSize: 12,
     totalElements: 0,
     totalPages: 0,
   });
 
   // 필터 상태
   const [filter, setFilter] = useState<Filter>({
-    minPrice: null,
-    maxPrice: null,
+    minPrice: '',
+    maxPrice: '',
     roomType: null,
     wifi: false,
     selfCheckin: false,
@@ -127,9 +130,13 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   };
 
   const createSearchParams = useCallback(
-    (currentFilter: Filter, currentSort: Sort): RoomSearchParams => {
+    (
+      currentFilter: Filter,
+      currentSort: Sort,
+      pageNumber?: number,
+    ): RoomSearchParams => {
       return {
-        page: pageInfo.pageNumber,
+        page: pageNumber ?? pageInfo.pageNumber,
         size: pageInfo.pageSize,
         sort: currentSort,
         ...(location.sido !== '' && { sido: location.sido }),
@@ -142,10 +149,10 @@ export function SearchProvider({ children }: { children: ReactNode }) {
           endDate: checkOut.toISOString().split('T')[0],
         }),
         ...(guests > 0 && { maxOccupancy: guests }),
-        ...(currentFilter.minPrice != null && {
+        ...(currentFilter.minPrice !== null && {
           minPrice: currentFilter.minPrice,
         }),
-        ...(currentFilter.maxPrice != null && {
+        ...(currentFilter.maxPrice !== null && {
           maxPrice: currentFilter.maxPrice,
         }),
         ...(currentFilter.roomType != null && {
@@ -199,36 +206,10 @@ export function SearchProvider({ children }: { children: ReactNode }) {
     return urlParams;
   };
 
-  // 초기 숙소 목록을 불러오는 함수
-  const initRooms = useCallback(async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const searchParams = {
-        page: pageInfo.pageNumber,
-        size: pageInfo.pageSize,
-        sort,
-      };
-
-      const urlParams = convertToURLSearchParams(searchParams);
-
-      const response = await axiosInstance.get<RoomListResponse>(
-        `/api/v1/rooms/main?${urlParams.toString()}`,
-      );
-
-      handleResponseData(response.data);
-    } catch (err) {
-      handleError(err);
-    } finally {
-      setIsLoading(false);
-    }
-  }, [pageInfo.pageNumber, pageInfo.pageSize, sort]);
-
-  // 필터바에서 설정한 조건으로 숙소를 필터링하는 함수
+  // 메인 함수
   const searchRooms = useCallback(
     async (options: SearchOptions = {}) => {
-      const { newFilter, newSort } = options;
+      const { newFilter, newSort, pageNumber } = options;
       setIsLoading(true);
       setError(null);
 
@@ -236,59 +217,12 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         const searchParams = createSearchParams(
           newFilter ?? filter,
           newSort ?? sort,
+          pageNumber ?? pageInfo.pageNumber,
         );
 
         const urlParams = convertToURLSearchParams(searchParams);
-        const response = await axiosInstance.get<RoomListResponse>(
-          `/api/v1/rooms/main/search?${urlParams.toString()}`,
-        );
 
-        if (newFilter != null) {
-          setFilter(newFilter);
-        }
-        if (newSort != null) {
-          setSort(newSort);
-        }
-
-        handleResponseData(response.data);
-      } catch (err) {
-        handleError(err);
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [createSearchParams, filter, sort],
-  );
-
-  // 페이지네이션 시 해당 페이지의 숙소 목록을 불러오는 함수
-  const pageRooms = useCallback(
-    async (pageNumber: number) => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        const searchParams: RoomSearchParams = {
-          page: pageNumber,
-          size: pageInfo.pageSize,
-          sort,
-          ...(location.sido !== '' && { sido: location.sido }),
-          ...(location.sigungu != null &&
-            location.sigungu !== '' && { sigungu: location.sigungu }),
-          ...(checkIn != null && {
-            startDate: checkIn.toISOString().split('T')[0],
-          }),
-          ...(checkOut != null && {
-            endDate: checkOut.toISOString().split('T')[0],
-          }),
-          ...(guests > 0 && { maxOccupancy: guests }),
-          ...(filter.minPrice != null && { minPrice: filter.minPrice }),
-          ...(filter.maxPrice != null && { maxPrice: filter.maxPrice }),
-          ...(filter.roomType != null && { roomType: filter.roomType }),
-        };
-
-        const urlParams = convertToURLSearchParams(searchParams);
-
-        const hasSearchParams = Object.keys(searchParams).length > 3;
+        const hasSearchParams = Object.keys(searchParams).length > 6;
         const endpoint = hasSearchParams
           ? '/api/v1/rooms/main/search'
           : '/api/v1/rooms/main';
@@ -297,7 +231,22 @@ export function SearchProvider({ children }: { children: ReactNode }) {
           `${endpoint}?${urlParams.toString()}`,
         );
 
-        setPageInfo((prev) => ({ ...prev, pageNumber }));
+        window.history.replaceState(
+          null,
+          '',
+          `${window.location.pathname}?${urlParams.toString()}`,
+        );
+
+        if (newFilter != null) {
+          setFilter(newFilter);
+        }
+        if (newSort != null) {
+          setSort(newSort);
+        }
+        if (pageNumber != null) {
+          setPageInfo((prev) => ({ ...prev, pageNumber }));
+        }
+
         handleResponseData(response.data);
       } catch (err) {
         handleError(err);
@@ -305,8 +254,33 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         setIsLoading(false);
       }
     },
-    [pageInfo.pageSize, location, checkIn, checkOut, guests, filter, sort],
+    [createSearchParams, filter, sort, pageInfo.pageNumber],
   );
+
+  const resetSearch = useCallback(() => {
+    setLocation({ sido: '' });
+    setCheckIn(null);
+    setCheckOut(null);
+    setGuests(0);
+    setFilter({
+      minPrice: '',
+      maxPrice: '',
+      roomType: null,
+      wifi: false,
+      selfCheckin: false,
+      luggage: false,
+      TV: false,
+      bedroom: '',
+      bathroom: '',
+      bed: '',
+      rating: null,
+    });
+    setSort({
+      field: 'createdAt',
+      direction: 'desc',
+    });
+    void searchRooms();
+  }, [searchRooms]);
 
   // 공통 응답 처리 함수
   const handleResponseData = (data: RoomListResponse) => {
@@ -345,11 +319,90 @@ export function SearchProvider({ children }: { children: ReactNode }) {
   const handlePageChange = useCallback(
     (page: number) => {
       if (pageInfo.pageNumber !== page) {
-        void pageRooms(page);
+        void searchRooms({ pageNumber: page });
       }
     },
-    [pageInfo.pageNumber, pageRooms],
+    [pageInfo.pageNumber, searchRooms],
   );
+
+  const isInitialMount = useRef(true);
+
+  useEffect(() => {
+    if (!isInitialMount.current) return;
+    isInitialMount.current = false;
+    // URL에서 검색 조건을 읽어옴
+    const searchParams = new URLSearchParams(window.location.search);
+    const urlSido = searchParams.get('sido');
+    const urlSigungu = searchParams.get('sigungu');
+    const urlStartDate = searchParams.get('startDate');
+    const urlEndDate = searchParams.get('endDate');
+    const urlGuests = searchParams.get('guests');
+    const urlRoomType = searchParams.get('roomType');
+    const urlMinPrice = searchParams.get('minPrice');
+    const urlMaxPrice = searchParams.get('maxPrice');
+    const urlWifi = searchParams.get('wifi');
+    const urlSelfCheckin = searchParams.get('selfCheckin');
+    const urlLuggage = searchParams.get('luggage');
+    const urlTV = searchParams.get('TV');
+    const urlBedroom = searchParams.get('bedroom');
+    const urlBathroom = searchParams.get('bathroom');
+    const urlBed = searchParams.get('bed');
+    const urlRating = searchParams.get('rating');
+    const urlSort = searchParams.get('sort')?.split(',');
+
+    // URL에 검색 조건이 있으면 상태 업데이트
+    if (urlSido !== null) {
+      setLocation({
+        sido: urlSido,
+        sigungu: urlSigungu ?? '',
+      });
+    }
+    if (urlStartDate != null) {
+      setCheckIn(new Date(urlStartDate));
+    }
+    if (urlEndDate != null) {
+      setCheckOut(new Date(urlEndDate));
+    }
+    if (urlGuests != null) {
+      setGuests(Number(urlGuests));
+    }
+    if (urlRoomType != null) {
+      setFilter((prev) => ({ ...prev, roomType: urlRoomType as RoomType }));
+    }
+    // Update filter state
+    const newFilter: Filter = {
+      minPrice: urlMinPrice !== null ? urlMinPrice : '',
+      maxPrice: urlMaxPrice !== null ? urlMaxPrice : '',
+      roomType: urlRoomType as RoomType | null,
+      wifi: urlWifi === 'true',
+      selfCheckin: urlSelfCheckin === 'true',
+      luggage: urlLuggage === 'true',
+      TV: urlTV === 'true',
+      bedroom: urlBedroom ?? '',
+      bathroom: urlBathroom ?? '',
+      bed: urlBed ?? '',
+      rating: urlRating != null ? Number(urlRating) : null,
+    };
+
+    setFilter(newFilter);
+
+    if (urlSort != null) {
+      setSort({
+        field: urlSort[0] as SortField,
+        direction: urlSort[1] as SortDirection,
+      });
+    }
+    void searchRooms({
+      newFilter,
+      newSort:
+        urlSort != null
+          ? {
+              field: urlSort[0] as SortField,
+              direction: urlSort[1] as SortDirection,
+            }
+          : undefined,
+    });
+  }, [searchRooms]);
 
   return (
     <SearchContext.Provider
@@ -371,9 +424,8 @@ export function SearchProvider({ children }: { children: ReactNode }) {
         pageInfo,
         filter,
         setFilter,
-        initRooms,
         searchRooms,
-        pageRooms,
+        resetSearch,
         handlePageChange,
         sort,
         setSort,

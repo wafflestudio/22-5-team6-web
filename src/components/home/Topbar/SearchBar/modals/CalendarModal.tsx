@@ -11,7 +11,9 @@ type CalendarModalProps = {
 const CalendarModal = ({ onClose }: CalendarModalProps) => {
   const { checkIn, checkOut, setCheckIn, setCheckOut } = useSearch();
   const [currentMonth, setCurrentMonth] = useState(dayjs());
-  const [selecting, setSelecting] = useState<'checkIn' | 'checkOut'>('checkIn');
+  const [selecting, setSelecting] = useState<'checkIn' | 'checkOut'>(
+    checkIn != null ? 'checkOut' : 'checkIn',
+  );
   const { mode } = useMode();
 
   const goToNextMonth = () => {

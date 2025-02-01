@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import axiosInstance from '@/axiosInstance';
 import { LogoIcon, LogoText } from '@/components/common/constants/Logo';
 import { useMode } from '@/components/home/context/ModeContext';
+import { useSearch } from '@/components/home/context/SearchContext';
 
 import Dropdown from './Menu/DropDown';
 import LoginModal from './Menu/LoginModal';
@@ -58,6 +59,7 @@ const Header = () => {
   const isHostingPage = location.pathname === '/hosting';
 
   const { mode, setMode } = useMode();
+  const { resetSearch } = useSearch();
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [profileImage, setProfileImage] = useState<string | undefined>(
@@ -68,6 +70,12 @@ const Header = () => {
 
   useEffect(() => {
     const fetchProfile = async () => {
+      const token = localStorage.getItem('token');
+      if (token == null) {
+        setIsLoggedIn(false);
+        return;
+      }
+
       try {
         const { data } =
           await axiosInstance.get<CurrentUserProfile>('/api/v1/profile');
@@ -82,10 +90,6 @@ const Header = () => {
 
     void fetchProfile();
   }, []);
-
-  const handleLogoClick = () => {
-    void navigate(`/`);
-  };
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
@@ -124,6 +128,11 @@ const Header = () => {
     }
   };
 
+  const handleLogoClick = () => {
+    resetSearch();
+    handleModeChange('normal');
+  };
+
   return (
     <div className="flex flex-col w-full">
       <div className="h-20 px-10">
@@ -141,7 +150,7 @@ const Header = () => {
           </div>
 
           {/* 모드 전환 탭 */}
-          <nav className="flex gap-2">
+          <nav className="flex gap-2 hidden sm:block">
             <TabButton
               active={mode === 'normal'}
               isMainPage={isMainPage}

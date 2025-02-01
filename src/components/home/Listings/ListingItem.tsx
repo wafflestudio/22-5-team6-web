@@ -1,8 +1,10 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import HeartIcon from '@/assets/icons/Heart';
 import axiosInstance from '@/axiosInstance';
 import { WifiIcon } from '@/components/common/constants/icons';
+import LoginModal from '@/components/home/Topbar/Menu/LoginModal';
 import type { RoomMain } from '@/types/roomSearch';
 
 type ListingItemProps = {
@@ -11,12 +13,20 @@ type ListingItemProps = {
 };
 
 const ListingItem = ({ listing, onUpdateListing }: ListingItemProps) => {
+  const navigate = useNavigate();
   const [isLiked, setIsLiked] = useState<boolean>(listing.isLiked);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoginModalOpen, setLoginModalOpen] = useState<boolean>(false);
 
   const handleWishList = async (e: React.MouseEvent) => {
     e.stopPropagation();
+
+    const token = localStorage.getItem('token');
+    if (token == null) {
+      handleLoginModalOpen();
+      return;
+    }
 
     if (isLoading) return;
 
@@ -39,6 +49,14 @@ const ListingItem = ({ listing, onUpdateListing }: ListingItemProps) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleLoginModalOpen = () => {
+    setLoginModalOpen(true);
+  };
+
+  const handleLoginModalClose = () => {
+    setLoginModalOpen(false);
   };
 
   return (
@@ -100,6 +118,17 @@ const ListingItem = ({ listing, onUpdateListing }: ListingItemProps) => {
           <span className="text-gray-500">/박</span>
         </p>
       </div>
+
+      {isLoginModalOpen && (
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={handleLoginModalClose}
+          navigateToSignup={() => {
+            handleLoginModalClose();
+            void navigate('/register');
+          }}
+        />
+      )}
     </div>
   );
 };
