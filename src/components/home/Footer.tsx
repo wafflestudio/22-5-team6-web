@@ -2,7 +2,7 @@ import LanguageIcon from '@mui/icons-material/Language';
 
 const Footer = () => {
   return (
-    <footer className="w-screen h-full flex flex-col items-center bg-gray-100 border-t border-gray-300">
+    <footer className="w-full h-full flex flex-col items-center bg-gray-100 border-t border-gray-300">
       <div className="w-2/3 flex flex-col justify-center items-center py-7">
         <div className="flex w-full justify-between">
           <p>© 2025 Wafflebnb.</p>

@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import LottieLoader from '../common/constants/lottieLoader';
 
 type Reservation = {
+  roomId: number;
   reservationId: number;
   place: string;
   startDate: string;
@@ -179,9 +180,7 @@ const MyReservationItems = () => {
             {pastMyReservationItems.map((reservation) => (
               <div
                 key={reservation.reservationId}
-                onClick={() =>
-                  void navigate(`/reviews/${reservation.reservationId}`)
-                }
+                onClick={() => void navigate(`/${reservation.roomId}`)}
                 className="flex p-5 bg-white rounded-lg border border-gray-200 cursor-pointer"
               >
                 <img

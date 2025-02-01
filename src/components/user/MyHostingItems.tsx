@@ -90,7 +90,7 @@ const MyHostingItems = () => {
 
       try {
         const response = await axios.get<RoomResponse>(
-          `/api/v1/rooms/${hostId}`,
+          `/api/v1/rooms/hosting/${hostId}`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
