@@ -4,15 +4,16 @@ import { useParams } from 'react-router-dom';
 
 import PastReservations from './PastReservations';
 import ProfileHeader from './ProfileHeader';
+import UserReviews from './UserReviews';
 
 type ProfileInfo = {
   userId: number;
   nickname: string;
   bio: string;
-  isSuperHost: false;
-  showMyReviews: false;
-  showMyReservations: false;
-  showMyWishlist: false;
+  isSuperHost: boolean;
+  showMyReviews: boolean;
+  showMyReservations: boolean;
+  showMyWishlist: boolean;
   imageUrl: string;
 };
 
@@ -57,7 +58,7 @@ const OtherUserProfile = () => {
   if (profile === null) return <p>로딩 중...</p>;
 
   return (
-    <div className="flex justify-self-center mb-4 px-10 py-12 min-w-[950px] w-2/3 gap-x-20">
+    <div className="flex justify-self-center mb-4 px-10 py-12 min-w-[950px] w-2/3 min-h-screen gap-x-20">
       {/* ProfileHeader */}
       <ProfileHeader
         profile={profile}
@@ -65,20 +66,30 @@ const OtherUserProfile = () => {
         reviewsCount={0}
       />
 
-      {/* 닉네임, 바이오 */}
       <div className="w-3/5 h-full">
+        {/* 닉네임, 바이오 */}
         <p className="font-semibold text-3xl">{`${profile.nickname} 님 소개`}</p>
         <p className="text-s mt-6 mb-8">{profile.bio}</p>
         <hr className="w-full mt-10 mb-8 border-t border-gray-300" />
-      </div>
 
-      {/* 방문한 여행지 */}
-      <div>
-        <p className="text-xl mb-8">
-          {profile.nickname} 님이 지금까지 가 본 여행지
-        </p>
-        <PastReservations userId={profile.userId} />
-        <hr className="w-full my-8 border-t border-gray-300" />
+        {/* 지난 여행지 */}
+        {profile.showMyReservations && (
+          <>
+            <p className="text-xl mb-8">
+              {profile.nickname} 님이 지금까지 가 본 여행지
+            </p>
+            <PastReservations userId={profile.userId} />
+            <hr className="w-full my-8 border-t border-gray-300" />
+          </>
+        )}
+
+        {/* 리뷰 */}
+        {profile.showMyReviews && (
+          <>
+            <p className="text-xl mb-8">{profile.nickname} 님이 작성한 후기</p>
+            <UserReviews userId={profile.userId} />
+          </>
+        )}
       </div>
     </div>
   );

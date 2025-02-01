@@ -11,10 +11,10 @@ type ProfileInfo = {
   userId: number;
   nickname: string;
   bio: string;
-  isSuperHost: false;
-  showMyReviews: false;
-  showMyReservations: false;
-  showMyWishlist: false;
+  isSuperHost: boolean;
+  showMyReviews: boolean;
+  showMyReservations: boolean;
+  showMyWishlist: boolean;
   imageUrl: string;
 };
 
@@ -127,7 +127,7 @@ const UserProfile = () => {
         <hr className="w-full my-8 border-t border-gray-300" />
 
         {/* 리뷰 */}
-        <p className="text-xl mb-8">내가 작성한 후기</p>
+        <p className="text-xl mb-8">{profile.nickname} 님이 작성한 후기</p>
         <UserReviews userId={profile.userId} />
       </div>
     </div>

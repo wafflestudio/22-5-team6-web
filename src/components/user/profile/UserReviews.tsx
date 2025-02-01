@@ -19,6 +19,7 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
   const navigate = useNavigate();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [error, setError] = useState<string>('');
+  const [isCurrentUser, setIsCurrentUser] = useState(false);
 
   useEffect(() => {
     const fetchReviews = async () => {
@@ -29,6 +30,13 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
       }
 
       try {
+        const profileResponse = await axios.get<{ userId: number }>(
+          '/api/v1/profile',
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
+
+        setIsCurrentUser(profileResponse.data.userId === userId);
+
         const response = await axios.get<{ content: Review[] }>(
           `/api/v1/reviews/user/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -47,12 +55,14 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
     return (
       <div>
         <p className="text-gray-500 ml-2">아직 작성한 후기가 없습니다.</p>
-        <button
-          onClick={() => void navigate('/MyReviews')}
-          className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
-        >
-          후기 작성하기
-        </button>
+        {isCurrentUser && (
+          <button
+            onClick={() => void navigate('/MyReviews')}
+            className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
+          >
+            후기 작성하기
+          </button>
+        )}
       </div>
     );
 
@@ -81,12 +91,14 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
           </div>
         ))}
       </div>
-      <button
-        onClick={() => void navigate('/MyReviews')}
-        className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
-      >
-        후기 모두 보기
-      </button>
+      {isCurrentUser && (
+        <button
+          onClick={() => void navigate('/MyReviews')}
+          className="mt-6 p-[10px] text-md underline rounded-lg bg-white hover:bg-gray-100"
+        >
+          후기 모두 보기
+        </button>
+      )}
     </div>
   );
 };

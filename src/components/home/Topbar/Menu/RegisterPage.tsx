@@ -19,6 +19,9 @@ const RegisterPage: React.FC = () => {
     password: '',
     nickname: '',
     bio: '',
+    showMyReviews: true,
+    showMyReservations: true,
+    showMyWishlist: true,
   });
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -126,6 +129,9 @@ const RegisterPage: React.FC = () => {
           password: formData.password,
           nickname: formData.nickname,
           bio: formData.bio,
+          showMyReviews: formData.showMyReviews,
+          showMyReservations: formData.showMyReservations,
+          showMyWishlist: formData.showMyWishlist,
         },
       );
 
