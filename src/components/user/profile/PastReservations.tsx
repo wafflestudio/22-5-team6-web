@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import visited from '@/assets/icons/visited.svg';
-import LogoIconBlack from '@/assets/Logo/LocoIconBlack';
+import LogoIcon from '@/assets/Logo/LogoIcon';
 import axiosInstance from '@/axiosInstance';
 
 type Reservation = {
@@ -71,7 +71,7 @@ const PastReservations = ({ userId }: PastReservationsProps) => {
                 className="w-16 h-16 fill-rose-400"
               />
               <div className="w-6 h-6 fill-rose-400">
-                <LogoIconBlack />
+                <LogoIcon />
               </div>
             </div>
           </div>

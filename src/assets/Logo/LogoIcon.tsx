@@ -3,7 +3,6 @@ const LogoIcon = () => {
     <svg
       viewBox="0 0 32 32"
       xmlns="http://www.w3.org/2000/svg"
-      className="h-8 fill-airbnb"
       aria-label="에어비앤비 로고 아이콘"
       style={{ display: 'block' }}
     >
