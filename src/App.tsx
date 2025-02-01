@@ -21,6 +21,7 @@ import ProfilePage from './routes/ProfilePage';
 import ReservationDetails from './routes/ReservationDetails';
 import Review from './routes/Review';
 import { Roomdetail } from './routes/roomDetail';
+import EditHosting from './routes/UpdateHosting';
 
 export const App = () => {
   return (
@@ -49,6 +50,7 @@ export const App = () => {
                 <Route path="/MyReservations" element={<MyReservations />} />
                 <Route path="/MyReviews" element={<MyReviews />} />
                 <Route path="/MyHosting" element={<MyHosting />} />
+                <Route path="/EditHosting/:roomId" element={<EditHosting />} />
                 <Route path="/reviews/:reservationId" element={<Review />} />
                 <Route
                   path="/reservations/:reservationId"
