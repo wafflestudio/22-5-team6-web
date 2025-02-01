@@ -48,7 +48,7 @@ const SearchBar = () => {
                   <span className="text-base font-medium">
                     {hasDateSelected
                       ? `${checkIn.toLocaleDateString()} - ${checkOut.toLocaleDateString()}`
-                      : '어느 기간의 핫플레이스가 궁금하세요?👀'}
+                      : '여행 기간을 선택하고 인기 핫플을 찾아보세요! 👀🔥'}
                   </span>
                 </div>
                 <button

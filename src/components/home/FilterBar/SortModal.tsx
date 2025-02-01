@@ -1,4 +1,3 @@
-// components/home/FilterBar/SortDropdown.tsx
 import {
   KeyboardArrowDown,
   KeyboardArrowUp,
@@ -18,6 +17,14 @@ type SortDropdownProps = {
 };
 
 const sortOptions = [
+  {
+    label: '최신 등록 순',
+    sort: {
+      field: 'createdAt' as const,
+      direction: 'desc' as const,
+    },
+    icon: <Schedule className="h-5 w-5" />,
+  },
   {
     label: '가격 낮은 순',
     sort: {
@@ -43,14 +50,6 @@ const sortOptions = [
     icon: <SortByAlpha className="h-5 w-5" />,
   },
   {
-    label: '최신 등록 순',
-    sort: {
-      field: 'createdAt' as const,
-      direction: 'desc' as const,
-    },
-    icon: <Schedule className="h-5 w-5" />,
-  },
-  {
     label: '평점 높은 순',
     sort: {
       field: 'ratingStatistics.averageRating' as const,
@@ -62,7 +61,7 @@ const sortOptions = [
 
 export default function SortDropdown({ isOpen, onClose }: SortDropdownProps) {
   const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const { filter, filterRooms, sort, setSort } = useSearch();
+  const { searchRooms, filter, sort } = useSearch();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -82,10 +81,11 @@ export default function SortDropdown({ isOpen, onClose }: SortDropdownProps) {
 
   if (!isOpen) return null;
 
+  // SortDropdown.tsx
   const handleSortClick = (newSort: Sort) => {
-    setSort(newSort);
-    void filterRooms({
-      ...filter,
+    void searchRooms({
+      newFilter: filter,
+      newSort: newSort, // setState 전에 새로운 값을 직접 전달
     });
     onClose();
   };

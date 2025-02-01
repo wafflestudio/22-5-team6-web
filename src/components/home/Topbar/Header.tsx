@@ -3,7 +3,7 @@ import MenuIcon from '@mui/icons-material/Menu';
 import PersonIcon from '@mui/icons-material/Person';
 import { Avatar, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import axiosInstance from '@/axiosInstance';
 import { LogoIcon, LogoText } from '@/components/common/constants/Logo';
@@ -27,14 +27,22 @@ type TabButtonProps = {
   active: boolean;
   children: React.ReactNode;
   onClick: () => void;
+  isMainPage: boolean;
 };
 
-const TabButton = ({ active, children, onClick }: TabButtonProps) => (
+const TabButton = ({
+  active,
+  children,
+  onClick,
+  isMainPage,
+}: TabButtonProps) => (
   <button
     onClick={onClick}
     className={`py-2 px-4 transition-all ${
-      active
-        ? 'border-gray-900 text-gray-900'
+      isMainPage
+        ? active
+          ? 'border-gray-900 text-gray-900'
+          : 'text-gray-500 hover:text-gray-700'
         : 'text-gray-500 hover:text-gray-700'
     }`}
   >
@@ -44,7 +52,10 @@ const TabButton = ({ active, children, onClick }: TabButtonProps) => (
 
 const Header = () => {
   const navigate = useNavigate();
-  const isWideScreen = useMediaQuery('(min-width: 960px)');
+  const location = useLocation();
+  const isWideScreen = useMediaQuery('(min-width: 1080px)');
+  const isMainPage = location.pathname === '/';
+  const isHostingPage = location.pathname === '/hosting';
 
   const { mode, setMode } = useMode();
 
@@ -98,10 +109,19 @@ const Header = () => {
   };
 
   const renderHostingButton = () => {
+    if (isHostingPage) return null;
+
     if (isWideScreen) {
       return '당신의 공간을 에어비앤비하세요';
     }
     return <AddHomeWorkOutlinedIcon sx={{ fontSize: 24 }} />;
+  };
+
+  const handleModeChange = (newMode: 'normal' | 'hotplace') => {
+    setMode(newMode);
+    if (!isMainPage) {
+      void navigate('/');
+    }
   };
 
   return (
@@ -124,16 +144,18 @@ const Header = () => {
           <nav className="flex gap-2">
             <TabButton
               active={mode === 'normal'}
+              isMainPage={isMainPage}
               onClick={() => {
-                setMode('normal');
+                handleModeChange('normal');
               }}
             >
               숙소
             </TabButton>
             <TabButton
               active={mode === 'hotplace'}
+              isMainPage={isMainPage}
               onClick={() => {
-                setMode('hotplace');
+                handleModeChange('hotplace');
               }}
             >
               핫플

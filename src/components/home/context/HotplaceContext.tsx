@@ -12,6 +12,7 @@ type HotPlaceContextType = {
   trendingRooms: RoomMain[];
   isLoading: boolean;
   error: string | null;
+  hasSearched: boolean;
   fetchTrendingRooms: (startDate: Date, endDate: Date) => Promise<void>;
 };
 
@@ -21,6 +22,7 @@ const HotPlaceContext = createContext<HotPlaceContextType | undefined>(
 
 export function HotPlaceProvider({ children }: { children: ReactNode }) {
   const [trendingRooms, setTrendingRooms] = useState<RoomMain[]>([]);
+  const [hasSearched, setHasSearched] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -65,6 +67,7 @@ export function HotPlaceProvider({ children }: { children: ReactNode }) {
         setError(errorMessage);
       } finally {
         setIsLoading(false);
+        setHasSearched(true);
       }
     },
     [],
@@ -76,6 +79,7 @@ export function HotPlaceProvider({ children }: { children: ReactNode }) {
         trendingRooms,
         isLoading,
         error,
+        hasSearched,
         fetchTrendingRooms,
       }}
     >
