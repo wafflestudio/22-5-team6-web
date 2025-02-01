@@ -1,5 +1,5 @@
 import type { PageResponse } from './pagination';
-import type { RoomType } from './room';
+import type { RoomDetails, RoomType } from './room';
 
 export type SortField =
   | 'id'
@@ -14,18 +14,36 @@ export type Sort = {
   direction: SortDirection;
 };
 
+export type Filter = {
+  minPrice: number | null;
+  maxPrice: number | null;
+  roomType: RoomType | null;
+  rating: number | null;
+} & Partial<RoomDetails>;
+
 export type RoomSearchParams = {
+  // 페이징 Params
   page: number;
   size: number;
   sort: Sort;
+  // 서치바 Params
   sido?: string;
   sigungu?: string;
   startDate?: string;
   endDate?: string;
   maxOccupancy?: number;
+  // 필터바 Params
+  roomType?: RoomType;
   minPrice?: number;
   maxPrice?: number;
-  roomType?: RoomType;
+  wifi?: boolean;
+  selfCheckin?: boolean;
+  luggage?: boolean;
+  TV?: boolean;
+  bedroom?: string;
+  bathroom?: string;
+  bed?: string;
+  rating?: number;
 };
 
 export type RoomMainResponse = {

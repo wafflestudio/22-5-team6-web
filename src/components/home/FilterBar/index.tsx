@@ -1,4 +1,3 @@
-// components/home/FilterBar/index.tsx
 import { ImportExport, TuneRounded } from '@mui/icons-material';
 import { useState } from 'react';
 
@@ -10,14 +9,16 @@ import FilterModal from './FilterModal';
 import SortModal from './SortModal';
 
 const FilterBar = () => {
-  const { filter, filterRooms } = useSearch();
+  const { filter, searchRooms } = useSearch();
   const [isFilterModalOpen, setIsFilterModalOpen] = useState(false);
   const [isSortModalOpen, setIsSortModalOpen] = useState(false);
 
   const handleTypeClick = (type: RoomType) => {
-    void filterRooms({
-      ...filter,
-      roomType: filter.roomType === type ? null : type,
+    void searchRooms({
+      newFilter: {
+        ...filter,
+        roomType: filter.roomType === type ? null : type,
+      },
     });
   };
 
