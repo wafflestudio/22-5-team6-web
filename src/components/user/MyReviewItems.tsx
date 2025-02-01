@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 
 import axiosInstance from '@/axiosInstance';
 
+import LottieLoader from '../common/constants/lottieLoader';
 import DeleteReviewModal from './DeleteReviewModal';
 import EditReviewModal from './EditReviewModal';
 
@@ -129,7 +130,7 @@ const MyReviewItems = () => {
     setIsEditModalOpen(false);
   };
 
-  if (loading) return <p>로딩 중...</p>;
+  if (loading) return <LottieLoader />;
   if (error !== null) return <p className="text-red-500">{error}</p>;
 
   return (

@@ -1,8 +1,9 @@
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+
+import axiosInstance from '@/axiosInstance';
 
 type EditReviewModalProps = {
   reviewId: number;
@@ -51,15 +52,10 @@ const EditReviewModal: React.FC<EditReviewModalProps> = ({
     }
 
     try {
-      await axios.put(
-        `/api/v1/reviews/${reviewId}`,
-        { content, rating },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await axiosInstance.put(`/api/v1/reviews/${reviewId}`, {
+        content,
+        rating,
+      });
 
       alert('리뷰가 성공적으로 수정되었습니다.');
       onUpdateSuccess({ content, rating });

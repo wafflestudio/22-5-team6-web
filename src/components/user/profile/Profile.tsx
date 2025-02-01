@@ -1,6 +1,8 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import axiosInstance from '@/axiosInstance';
+import LottieLoader from '@/components/common/constants/lottieLoader';
 
 import PastReservations from './PastReservations';
 import ProfileHeader from './ProfileHeader';
@@ -34,29 +36,17 @@ const UserProfile = () => {
 
   useEffect(() => {
     const fetchProfileData = async () => {
-      const token = localStorage.getItem('token');
-      if (token === null || (typeof token === 'string' && token === '')) {
-        setError('로그인되지 않았습니다.');
-        return;
-      }
-
       try {
         // Fetch profile data
-        const profileResponse = await axios.get<ProfileInfo>(
-          '/api/v1/profile',
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          },
-        );
+        const profileResponse =
+          await axiosInstance.get<ProfileInfo>('/api/v1/profile');
         const profileData = profileResponse.data;
         setProfile(profileData);
 
         // Fetch reservations
-        const reservationsResponse = await axios.get<{
+        const reservationsResponse = await axiosInstance.get<{
           content: Reservation[];
-        }>(`/api/v1/reservations/user/${profileData.userId}`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        }>(`/api/v1/reservations/user/${profileData.userId}`);
         const reservations = reservationsResponse.data.content;
 
         // Filter upcoming reservations
@@ -67,10 +57,9 @@ const UserProfile = () => {
         setUpcomingReservationsCount(upcomingReservations.length);
 
         // Fetch review count
-        const reviewsResponse = await axios.get<{ totalElements: number }>(
-          `/api/v1/reviews/user/${profileData.userId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
+        const reviewsResponse = await axiosInstance.get<{
+          totalElements: number;
+        }>(`/api/v1/reviews/user/${profileData.userId}`);
         setReviewsCount(reviewsResponse.data.totalElements);
       } catch (err) {
         console.error('데이터를 가져오는 데 실패했습니다:', err);
@@ -82,7 +71,7 @@ const UserProfile = () => {
   }, []);
 
   if (error !== '') return <p className="text-red-500">{error}</p>;
-  if (profile === null) return <p>로딩 중...</p>;
+  if (profile === null) return <LottieLoader />;
 
   return (
     <div className="flex justify-self-center mb-4 px-10 py-12 min-w-[950px] w-2/3 gap-x-20">

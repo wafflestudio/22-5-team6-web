@@ -1,6 +1,7 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+
+import axiosInstance from '@/axiosInstance';
 
 type Review = {
   content: string;
@@ -30,16 +31,14 @@ const UserReviews = ({ userId }: UserReviewsProps) => {
       }
 
       try {
-        const profileResponse = await axios.get<{ userId: number }>(
+        const profileResponse = await axiosInstance.get<{ userId: number }>(
           '/api/v1/profile',
-          { headers: { Authorization: `Bearer ${token}` } },
         );
 
         setIsCurrentUser(profileResponse.data.userId === userId);
 
-        const response = await axios.get<{ content: Review[] }>(
+        const response = await axiosInstance.get<{ content: Review[] }>(
           `/api/v1/reviews/user/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
         );
         setReviews(response.data.content);
       } catch {

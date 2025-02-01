@@ -1,8 +1,9 @@
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import axios from 'axios';
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+
+import axiosInstance from '@/axiosInstance';
 
 const ReviewForm = () => {
   const { reservationId } = useParams<{ reservationId: string }>();
@@ -26,25 +27,11 @@ const ReviewForm = () => {
     }
 
     try {
-      const token = localStorage.getItem('token');
-      if (token === null || (typeof token === 'string' && token === '')) {
-        setError('로그인되지 않았습니다.');
-        return;
-      }
-
-      await axios.post(
-        '/api/v1/reviews',
-        {
-          reservationId: Number(reservationId),
-          content,
-          rating,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await axiosInstance.post('/api/v1/reviews', {
+        reservationId: Number(reservationId),
+        content,
+        rating,
+      });
 
       alert('리뷰가 성공적으로 등록되었습니다.');
       void navigate('/profile');

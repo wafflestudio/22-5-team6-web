@@ -9,7 +9,7 @@ import airBalloon from '@/assets/icons/airballoon.svg';
 import googleIcon from '@/assets/icons/socialLogin/googleIcon.svg';
 import kakaoIcon from '@/assets/icons/socialLogin/kakaoIcon.svg';
 import naverIcon from '@/assets/icons/socialLogin/naverIcon.svg';
-import LogoIconBlack from '@/assets/Logo/LocoIconBlack';
+import LogoIcon from '@/assets/Logo/LogoIcon';
 
 const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
@@ -218,196 +218,198 @@ const RegisterPage: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col items-center min-h-screen bg-white">
+    <div className="flex flex-col items-center content-between h-screen bg-white">
       {/* Header */}
-      <div className="w-screen mb-32 pt-8 px-12 top-0 bg-white">
+      <div className="fixed top-0 left-0 w-full bg-white py-12 px-12 z-10">
         <div
           onClick={() => void navigate('/')}
-          className="w-12 h-12 cursor-pointer"
+          className="w-12 h-12 cursor-pointer fill-black"
         >
-          <LogoIconBlack />
+          <LogoIcon />
         </div>
       </div>
 
-      <div className="bg-white w-max min-w-[500px] h-full p-8">
-        <h2 className="text-lg mb-4">회원가입</h2>
+      <div className="flex-1 mt-8 mb-28 flex justify-center items-center overflow-auto">
+        <div className="bg-white w-max min-w-[500px] p-8">
+          <h2 className="text-lg mb-4">회원가입</h2>
 
-        {/* 단계별 화면 */}
-        {step === 1 && (
-          <div>
-            <h2 className="text-4xl mb-16">
-              아이디와 비밀번호를 입력해주세요.
-            </h2>
-            <div className="flex flex-col items-center w-full">
-              <div className="relative w-3/4 mb-4">
-                <input
-                  id="username"
-                  type="text"
-                  name="username"
-                  placeholder="아이디"
-                  value={formData.username}
-                  onChange={handleInputChange}
-                  className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
-                />
-                <label
-                  htmlFor="username"
-                  className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
-                    formData.username.trim() !== ''
-                      ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
-                      : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
-                  }`}
-                >
-                  아이디
-                </label>
-              </div>
-
-              <div className="relative w-3/4 mb-4">
-                <input
-                  id="password"
-                  type={showPassword ? 'text' : 'password'}
-                  name="password"
-                  placeholder="비밀번호"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
-                />
-                <label
-                  htmlFor="password"
-                  className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
-                    formData.password.trim() !== ''
-                      ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
-                      : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
-                  }`}
-                >
-                  비밀번호
-                </label>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setShowPassword((prev) => !prev);
-                  }}
-                  className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
-                >
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </button>
-              </div>
-              <p className="mt-4 text-gray-400">또는 SNS 간편 가입</p>
-              <div className="flex gap-8 mt-4">
-                <img
-                  src={naverIcon}
-                  onClick={handleNaverLogin}
-                  className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
-                />
-                <img
-                  src={kakaoIcon}
-                  onClick={handleKakaoLogin}
-                  className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
-                />
-                <img
-                  src={googleIcon}
-                  onClick={handleGoogleLogin}
-                  className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
-                />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {step === 2 && (
-          <div>
-            <h2 className="text-4xl mb-12">프로필 사진을 선택해주세요.</h2>
-            <div className="flex flex-col items-center">
-              <div className="relative group w-56 h-56">
-                {previewImage !== null ? (
-                  <img
-                    src={previewImage}
-                    alt="프로필 미리보기"
-                    className="w-full h-full rounded-full object-cover"
+          {/* 단계별 화면 */}
+          {step === 1 && (
+            <div>
+              <h2 className="text-4xl mb-16">
+                아이디와 비밀번호를 입력해주세요.
+              </h2>
+              <div className="flex flex-col items-center w-full">
+                <div className="relative w-3/4 mb-4">
+                  <input
+                    id="username"
+                    type="text"
+                    name="username"
+                    placeholder="아이디"
+                    value={formData.username}
+                    onChange={handleInputChange}
+                    className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
                   />
-                ) : (
-                  <div className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center transition duration-300 group-hover:bg-gray-300">
-                    <CameraAltOutlinedIcon className="text-gray-500 text-5xl group-hover:text-gray-700 transition duration-300" />
-                  </div>
-                )}
+                  <label
+                    htmlFor="username"
+                    className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
+                      formData.username.trim() !== ''
+                        ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
+                        : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
+                    }`}
+                  >
+                    아이디
+                  </label>
+                </div>
 
-                {previewImage !== null && (
-                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 bg-opacity-50 opacity-0 group-hover:opacity-100 transition duration-300">
-                    <CameraAltOutlinedIcon className="text-white text-5xl" />
-                  </div>
-                )}
+                <div className="relative w-3/4 mb-4">
+                  <input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    name="password"
+                    placeholder="비밀번호"
+                    value={formData.password}
+                    onChange={handleInputChange}
+                    className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
+                  />
+                  <label
+                    htmlFor="password"
+                    className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
+                      formData.password.trim() !== ''
+                        ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
+                        : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
+                    }`}
+                  >
+                    비밀번호
+                  </label>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setShowPassword((prev) => !prev);
+                    }}
+                    className="absolute top-1/2 right-3 transform -translate-y-1/2 text-gray-500 hover:text-gray-700"
+                  >
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </button>
+                </div>
+                <p className="mt-4 text-gray-400">또는 SNS 간편 가입</p>
+                <div className="flex gap-8 mt-4">
+                  <img
+                    src={naverIcon}
+                    onClick={handleNaverLogin}
+                    className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
+                  />
+                  <img
+                    src={kakaoIcon}
+                    onClick={handleKakaoLogin}
+                    className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
+                  />
+                  <img
+                    src={googleIcon}
+                    onClick={handleGoogleLogin}
+                    className="w-10 h-10 p-2 rounded-full border border-gray-300 cursor-pointer"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
 
+          {step === 2 && (
+            <div>
+              <h2 className="text-4xl mb-12">프로필 사진을 선택해주세요.</h2>
+              <div className="flex flex-col items-center">
+                <div className="relative group w-56 h-56">
+                  {previewImage !== null ? (
+                    <img
+                      src={previewImage}
+                      alt="프로필 미리보기"
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-gray-200 rounded-full flex items-center justify-center transition duration-300 group-hover:bg-gray-300">
+                      <CameraAltOutlinedIcon className="text-gray-500 text-5xl group-hover:text-gray-700 transition duration-300" />
+                    </div>
+                  )}
+
+                  {previewImage !== null && (
+                    <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/50 bg-opacity-50 opacity-0 group-hover:opacity-100 transition duration-300">
+                      <CameraAltOutlinedIcon className="text-white text-5xl" />
+                    </div>
+                  )}
+
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="absolute inset-0 opacity-0 cursor-pointer"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div>
+              <h2 className="text-4xl mb-12">별명을 입력해주세요.</h2>
+              <div className="relative w-[500px] mb-4">
                 <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="absolute inset-0 opacity-0 cursor-pointer"
+                  id="nickname"
+                  type="text"
+                  name="nickname"
+                  placeholder="별명"
+                  value={formData.nickname}
+                  onChange={handleInputChange}
+                  className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
                 />
+                <label
+                  htmlFor="nickname"
+                  className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
+                    formData.nickname.trim() !== ''
+                      ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
+                      : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
+                  }`}
+                >
+                  별명
+                </label>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {step === 3 && (
-          <div>
-            <h2 className="text-4xl mb-12">별명을 입력해주세요.</h2>
-            <div className="relative w-[500px] mb-4">
-              <input
-                id="nickname"
-                type="text"
-                name="nickname"
-                placeholder="별명"
-                value={formData.nickname}
-                onChange={handleInputChange}
-                className="peer w-full h-14 bg-transparent placeholder-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-1 pt-4 pb-2 transition duration-300 ease focus:outline focus:border-slate-600 shadow-sm focus:shadow"
-              />
-              <label
-                htmlFor="nickname"
-                className={`absolute cursor-text bg-transparent px-1 left-1.5 text-slate-600 text-sm transition-all transform origin-left ${
-                  formData.nickname.trim() !== ''
-                    ? 'top-1 left-1.5 text-xs scale-90 text-slate-600'
-                    : 'top-4 text-base text-slate-600 peer-placeholder-shown:top-4 peer-placeholder-shown:text-base peer-placeholder-shown:text-slate-600 peer-focus:top-1 peer-focus:left-1.5 peer-focus:text-xs peer-focus:scale-90 peer-focus:text-slate-600'
-                }`}
-              >
-                별명
-              </label>
-            </div>
-          </div>
-        )}
-
-        {step === 4 && (
-          <div>
-            <h2 className="text-4xl mb-12">
-              {formData.nickname} 님을 소개해주세요.
-            </h2>
-            <div className="relative w-[500px]">
-              <textarea
-                id="bio"
-                name="bio"
-                placeholder="자기소개"
-                value={formData.bio}
-                onChange={(e) => {
-                  setFormData({ ...formData, bio: e.target.value });
-                }}
-                maxLength={100}
-                className="w-full h-32 bg-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-2 transition duration-300 ease focus:outline-none focus:ring-2 focus:ring-slate-600 shadow-sm resize-none"
-              ></textarea>
-              <div className="text-right text-xs text-gray-500 mt-1">
-                {formData.bio.length}/100
+          {step === 4 && (
+            <div>
+              <h2 className="text-4xl mb-12">
+                {formData.nickname} 님을 소개해주세요.
+              </h2>
+              <div className="relative w-[500px]">
+                <textarea
+                  id="bio"
+                  name="bio"
+                  placeholder="자기소개"
+                  value={formData.bio}
+                  onChange={(e) => {
+                    setFormData({ ...formData, bio: e.target.value });
+                  }}
+                  maxLength={100}
+                  className="w-full h-32 bg-transparent text-slate-800 text-sm border border-slate-600 rounded-lg px-3 py-2 transition duration-300 ease focus:outline-none focus:ring-2 focus:ring-slate-600 shadow-sm resize-none"
+                ></textarea>
+                <div className="text-right text-xs text-gray-500 mt-1">
+                  {formData.bio.length}/100
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {/* 오류 메시지 */}
-        {errorMessage !== '' && (
-          <p className="text-red-500 text-sm mt-2 mb-4">{errorMessage}</p>
-        )}
+          {/* 오류 메시지 */}
+          {errorMessage !== '' && (
+            <p className="text-red-500 text-sm mt-2 mb-4">{errorMessage}</p>
+          )}
+        </div>
       </div>
 
       {/* Footer */}
-      <div className="w-screen fixed bottom-0">
+      <div className="fixed bottom-0 left-0 w-full bg-white shadow-md py-2 z-10">
         {/* Progress Bar */}
-        <div className="h-2 bg-gray-200 rounded-md overflow-hidden mb-8">
+        <div className="h-2 bg-gray-200 overflow-hidden mb-8">
           <div
             className="h-full bg-airbnb transition-all duration-500"
             style={{
@@ -424,8 +426,8 @@ const RegisterPage: React.FC = () => {
             onClick={prevStep}
             className={`py-3 px-8 rounded-lg ${
               step === 1
-                ? 'bg-gray-100 underline cursor-not-allowed'
-                : 'bg-gray-100 underline text-black hover:bg-gray-200'
+                ? 'bg-gray-100 cursor-not-allowed'
+                : 'bg-gray-100 text-black hover:bg-gray-200'
             }`}
           >
             뒤로

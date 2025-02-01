@@ -1,9 +1,9 @@
 import ClearOutlinedIcon from '@mui/icons-material/ClearOutlined';
-import axios from 'axios';
 import dayjs from 'dayjs';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import axiosInstance from '@/axiosInstance';
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
 
@@ -46,7 +46,7 @@ const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
 
     const fetchMaxOccupancy = async () => {
       try {
-        const response = await axios.get<{ maxOccupancy: number }>(
+        const response = await axiosInstance.get<{ maxOccupancy: number }>(
           `/api/v1/rooms/main/${roomId}`,
         );
         setMaxOccupancy(response.data.maxOccupancy);
@@ -83,29 +83,18 @@ const ReservationUpdateModal: React.FC<ReservationUpdateModalProps> = ({
     }
 
     try {
-      await axios.put(
-        `/api/v1/reservations/${reservationId}`,
-        {
-          startDate: dayjs(checkIn).format('YYYY-MM-DD'),
-          endDate: dayjs(checkOut).format('YYYY-MM-DD'),
-          numberOfGuests: guests,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      await axiosInstance.put(`/api/v1/reservations/${reservationId}`, {
+        startDate: dayjs(checkIn).format('YYYY-MM-DD'),
+        endDate: dayjs(checkOut).format('YYYY-MM-DD'),
+        numberOfGuests: guests,
+      });
+
       alert('예약이 성공적으로 변경되었습니다.');
       onClose();
       void navigate('/MyReservations');
     } catch (err) {
-      if (axios.isAxiosError(err) && err.response?.status === 409) {
-        setError('해당 날짜는 예약할 수 없습니다. 다른 날짜를 선택해주세요.');
-      } else {
-        console.error(err);
-        setError('예약 수정 중 문제가 발생했습니다. 다시 시도해주세요.');
-      }
+      setError('예약 수정 중 문제가 발생했습니다. 다시 시도해주세요.');
+      console.error(err);
     }
   };
 

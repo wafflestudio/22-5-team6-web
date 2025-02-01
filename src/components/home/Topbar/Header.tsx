@@ -5,8 +5,9 @@ import { Avatar, useMediaQuery } from '@mui/material';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import LogoIcon from '@/assets/Logo/LogoIcon';
 import axiosInstance from '@/axiosInstance';
-import { LogoIcon, LogoText } from '@/components/common/constants/Logo';
+import { LogoText } from '@/components/common/constants/Logo';
 import { useMode } from '@/components/home/context/ModeContext';
 
 import Dropdown from './Menu/DropDown';
@@ -133,7 +134,10 @@ const Header = () => {
               className="flex items-center gap-1"
               onClick={handleLogoClick}
             >
-              <LogoIcon />
+              <div className="w-8 h-8 fill-airbnb">
+                <LogoIcon />
+              </div>
+
               <div className="hidden md:block">
                 <LogoText />
               </div>
