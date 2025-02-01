@@ -6,12 +6,12 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 type ProfileInfo = {
-  userId: 0;
+  userId: number;
   nickname: 'string';
   bio: 'string';
-  isSuperHost: true;
-  showMyReviews: true;
-  showMyReservations: true;
+  isSuperHost: boolean;
+  showMyReviews: boolean;
+  showMyReservations: boolean;
   imageUrl: 'string';
 };
 
@@ -21,10 +21,10 @@ const ProfileEditForm = () => {
   const [nickname, setNickname] = useState('');
   const [bio, setBio] = useState('');
   const [showMyReviews, setShowMyReviews] = useState(
-    profile?.showMyReviews ?? false,
+    profile?.showMyReviews ?? true,
   );
   const [showMyReservations, setShowMyReservations] = useState(
-    profile?.showMyReviews ?? false,
+    profile?.showMyReviews ?? true,
   );
   const [image, setImage] = useState<File | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);

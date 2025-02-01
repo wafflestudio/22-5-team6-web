@@ -38,7 +38,15 @@ const PastReservations = ({ userId }: PastReservationsProps) => {
         const past = response.data.content.filter(
           (reservation) => new Date(reservation.endDate) < now,
         );
-        setReservations(past);
+
+        const uniquePlaces = new Set<string>();
+        const uniqueReservations = past.filter((reservation) => {
+          if (uniquePlaces.has(reservation.place)) return false; // 이미 포함된 경우 제거
+          uniquePlaces.add(reservation.place);
+          return true;
+        });
+
+        setReservations(uniqueReservations);
       } catch {
         setError('지난 예약 데이터를 가져오지 못했습니다.');
       }
