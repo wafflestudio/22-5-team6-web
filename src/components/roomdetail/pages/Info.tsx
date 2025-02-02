@@ -1,6 +1,7 @@
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import StarIcon from '@mui/icons-material/Star';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import crownleft from '@/assets/icons/roomdetail/crownleft.svg';
 import crownright from '@/assets/icons/roomdetail/crownright.svg';
@@ -20,6 +21,7 @@ interface InfoProps {
 }
 
 const Info = ({ data }: InfoProps) => {
+  const navigate = useNavigate();
   const matchingItem = ACCOMMODATION_TYPES.find(
     (item) => item.type === data.roomType,
   );
@@ -120,7 +122,12 @@ const Info = ({ data }: InfoProps) => {
           </div>
         </div>
       </div>
-      <div className="flex items-center justify-start w-full h-fit py-4 px-8 border-b border-b-gray-300">
+      <div
+        className="flex items-center justify-start w-fit h-fit py-4 px-8 cursor-pointer"
+        onClick={() => {
+          void navigate(`/profile/${data.hostId}`);
+        }}
+      >
         <div className="mr-5 bg-gray-300 p-4 rounded-full">
           <PhotoSizeSelectActualIcon className="text-white" />
         </div>
@@ -131,7 +138,9 @@ const Info = ({ data }: InfoProps) => {
           </div>
         </div>
       </div>
-      <div className="w-full h-fit text-wrap px-4 py-8">{data.description}</div>
+      <div className="w-full h-fit border-t border-t-gray-300 text-wrap px-4 py-8">
+        {data.description}
+      </div>
       {isReviewOpen && (
         <ReviewModal
           data={data}
