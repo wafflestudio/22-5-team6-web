@@ -15,8 +15,8 @@ export type Sort = {
 };
 
 export type Filter = {
-  minPrice: number | null;
-  maxPrice: number | null;
+  minPrice: string | null;
+  maxPrice: string | null;
   roomType: RoomType | null;
   rating: number | null;
 } & Partial<RoomDetails>;
@@ -34,8 +34,8 @@ export type RoomSearchParams = {
   maxOccupancy?: number;
   // 필터바 Params
   roomType?: RoomType;
-  minPrice?: number;
-  maxPrice?: number;
+  minPrice?: string;
+  maxPrice?: string;
   wifi?: boolean;
   selfCheckin?: boolean;
   luggage?: boolean;

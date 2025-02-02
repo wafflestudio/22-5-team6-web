@@ -3,13 +3,13 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import StarHalfIcon from '@mui/icons-material/StarHalf';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 import {
   ROOM_AMENITIES,
   ROOM_FACILITIES,
 } from '@/components/common/constants/roomOption';
-import BaseModal from '@/components/common/Modal/BaseModal';
+import CompactModal from '@/components/common/Modal/CompactModal';
 import { useSearch } from '@/components/home/context/SearchContext';
 import type { RoomDetails } from '@/types/room';
 
@@ -17,9 +17,6 @@ type FilterModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
-
-const initialMinPrice = 1;
-const initialMaxPrice = 1000000;
 
 type FacilityCountType = Pick<RoomDetails, 'bedroom' | 'bathroom' | 'bed'>;
 type AmenityType = Pick<RoomDetails, 'wifi' | 'selfCheckin' | 'luggage' | 'TV'>;
@@ -111,8 +108,8 @@ const StarRating = ({ value, onChange, className = '' }: StarRatingProps) => {
 
 export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
   const { filter, searchRooms } = useSearch();
-  const [minPrice, setMinPrice] = useState(filter.minPrice ?? initialMinPrice);
-  const [maxPrice, setMaxPrice] = useState(filter.maxPrice ?? initialMaxPrice);
+  const [minPrice, setMinPrice] = useState(filter.minPrice);
+  const [maxPrice, setMaxPrice] = useState(filter.maxPrice);
   const [facilityCount, setFacilityCount] =
     useState<FacilityCountType>(initialFacilityCount);
   const [amenities, setAmenities] = useState<AmenityType>(initialAmenities);
@@ -131,7 +128,6 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
         : parseInt(prev[type]);
       const newValue = increment ? currentValue + 1 : currentValue - 1;
 
-      // 최소값과 최대값 범위 내에서만 변경
       if (newValue < facility.min || newValue > facility.max) return prev;
 
       return {
@@ -149,7 +145,11 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
   };
 
   const handleApply = () => {
-    if (minPrice > maxPrice) {
+    if (
+      minPrice === '' ||
+      maxPrice === '' ||
+      Number(minPrice) > Number(maxPrice)
+    ) {
       alert('최소 가격이 최대 가격보다 클 수 없습니다.');
       return;
     }
@@ -167,22 +167,50 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
   };
 
   const handleReset = () => {
-    setMinPrice(initialMinPrice);
-    setMaxPrice(initialMaxPrice);
+    const resetFilter = {
+      ...filter,
+      minPrice: '',
+      maxPrice: '',
+      roomType: null,
+      bedroom: '0',
+      bathroom: '0',
+      bed: '0',
+      wifi: false,
+      selfCheckin: false,
+      luggage: false,
+      TV: false,
+      rating: null,
+    };
+
+    // 로컬 상태도 초기화
+    setMinPrice('');
+    setMaxPrice('');
     setFacilityCount(initialFacilityCount);
     setAmenities(initialAmenities);
-    void searchRooms({
-      newFilter: {
-        ...filter,
-        minPrice: null,
-        maxPrice: null,
-        roomType: null,
-        ...initialFacilityCount,
-        ...initialAmenities,
-      },
-    });
+    setRating(null);
+
+    void searchRooms({ newFilter: resetFilter });
     onClose();
   };
+
+  useEffect(() => {
+    if (isOpen) {
+      setMinPrice(filter.minPrice);
+      setMaxPrice(filter.maxPrice);
+      setFacilityCount({
+        bedroom: filter.bedroom ?? '0',
+        bathroom: filter.bathroom ?? '0',
+        bed: filter.bed ?? '0',
+      });
+      setAmenities({
+        wifi: filter.wifi ?? false,
+        selfCheckin: filter.selfCheckin ?? false,
+        luggage: filter.luggage ?? false,
+        TV: filter.TV ?? false,
+      });
+      setRating(filter.rating);
+    }
+  }, [isOpen, filter]);
 
   const modalFooter = (
     <div className="flex justify-between items-center">
@@ -202,12 +230,11 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
   );
 
   return (
-    <BaseModal
+    <CompactModal
       isOpen={isOpen}
       onClose={onClose}
       title="필터"
       footer={modalFooter}
-      width="max-w-2xl"
     >
       <div className="space-y-8">
         {/* 가격 범위 섹션 */}
@@ -223,9 +250,9 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
                 </span>
                 <input
                   type="number"
-                  value={minPrice}
+                  value={Number(minPrice)}
                   onChange={(e) => {
-                    setMinPrice(Number(e.target.value));
+                    setMinPrice(e.target.value);
                   }}
                   min={0}
                   placeholder="최저 요금"
@@ -241,9 +268,9 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
                 </span>
                 <input
                   type="number"
-                  value={maxPrice}
+                  value={Number(maxPrice)}
                   onChange={(e) => {
-                    setMaxPrice(Number(e.target.value));
+                    setMaxPrice(e.target.value);
                   }}
                   min={0}
                   placeholder="최고 요금"
@@ -330,6 +357,6 @@ export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
           )}
         </div>
       </div>
-    </BaseModal>
+    </CompactModal>
   );
 }

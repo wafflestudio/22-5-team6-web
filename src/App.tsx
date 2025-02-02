@@ -11,10 +11,11 @@ import Redirect from '@/routes/Redirect';
 
 import CompleteProfilePage from './components/home/Topbar/Menu/CompleteProfilePage';
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
-import { ReviewProvider } from './components/roomdetail/ReviewContext';
+import { ReviewProvider } from './components/roomdetail/contexts/ReviewContext';
 import MyHosting from './routes/MyHosting';
 import MyReservations from './routes/MyReservations';
 import MyReviews from './routes/MyReviews';
+import { MyWishlist } from './routes/MyWishlist';
 import OtherUserProfilePage from './routes/OtherUserProfilePage';
 import ProfileEdit from './routes/ProfileEdit';
 import ProfilePage from './routes/ProfilePage';
@@ -49,6 +50,7 @@ export const App = () => {
                 <Route path="/register" element={<RegisterPage />} />
                 <Route path="/MyReservations" element={<MyReservations />} />
                 <Route path="/MyReviews" element={<MyReviews />} />
+                <Route path="/MyWishlist" element={<MyWishlist />} />
                 <Route path="/MyHosting" element={<MyHosting />} />
                 <Route path="/EditHosting/:roomId" element={<EditHosting />} />
                 <Route path="/reviews/:reservationId" element={<Review />} />

@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { useSearch } from '@/components/home/context/SearchContext';
 
 const GuestsModal = () => {
-  const { setGuests } = useSearch();
-  const [guestCount, setGuestCount] = useState(0);
+  const { guests, setGuests } = useSearch();
+  const [guestCount, setGuestCount] = useState(guests);
 
   const handleIncrement = () => {
     setGuestCount((prev) => prev + 1);
