@@ -179,7 +179,6 @@
 
 ![image](https://github.com/user-attachments/assets/cb991880-581b-4152-86a4-e91136285cd0)
 
-
 #### 예약 가능 여부 확인
 
 - **API**
@@ -253,7 +252,6 @@
 #### 위시리스트 목록
 
 <img width="944" alt="image" src="https://github.com/user-attachments/assets/53786b7b-fa7a-4898-b3e6-bd83f0734e22" />
-
 
 ---
 
