@@ -3,13 +3,15 @@ import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual
 import { useEffect } from 'react';
 
 import { Shareheart } from '@/components/roomdetail/Shareheart';
+import type { roomType } from '@/types/roomType';
 
 type Props = {
   onClose: () => void;
   UrlList: string[];
+  data: roomType;
 };
 
-const PhotoModal = ({ onClose, UrlList }: Props) => {
+const PhotoModal = ({ onClose, UrlList, data }: Props) => {
   useEffect(() => {
     document.body.style.overflow = 'hidden'; // 배경 스크롤 비활성화
     return () => {
@@ -36,7 +38,7 @@ const PhotoModal = ({ onClose, UrlList }: Props) => {
             사진 투어
           </h2>
           <div className="flex-1 flex justify-end">
-            <Shareheart />
+            <Shareheart data={data} />
           </div>
         </div>
 

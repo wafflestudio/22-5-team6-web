@@ -48,7 +48,7 @@ export const Roomdetail = () => {
       <div className="flex flex-col w-full px-[55px]">
         <div className="flex w-full items-end justify-between py-4">
           <div className="text-2xl font-normal">{roomData.roomName}</div>
-          <Shareheart />
+          <Shareheart data={roomData} />
         </div>
         <div className="grid grid-cols-4 grid-rows-2 gap-2 w-full h-[330px]">
           {roomData.imageUrlList.length > 0 ? (
@@ -175,6 +175,7 @@ export const Roomdetail = () => {
       {error !== null && <p>에러: {error}</p>}
       {isPhotoOpen && (
         <PhotoModal
+          data={roomData}
           onClose={() => {
             setIsPhotoOpen(false);
           }}

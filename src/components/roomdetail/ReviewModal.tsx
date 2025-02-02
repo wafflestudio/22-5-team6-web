@@ -2,6 +2,7 @@ import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import accuracy from '@/assets/icons/reviews/accuracy.svg';
 import clean from '@/assets/icons/reviews/clean.svg';
@@ -16,6 +17,7 @@ interface ReviewProps {
 }
 
 const ReviewModal = ({ onClose, data }: ReviewProps) => {
+  const navigate = useNavigate();
   const [selectedOption, setSelectedOption] = useState('최신순');
   const [page, setPage] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -157,12 +159,21 @@ const ReviewModal = ({ onClose, data }: ReviewProps) => {
                     key={index}
                     className="rounded-md mx-2 p-5 cursor-pointer hover:bg-gray-100"
                   >
-                    <div className="flex items-center">
-                      <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
-                        {review.profileImage !== ''
-                          ? review.nickname
-                          : review.nickname.charAt(0)}
-                      </div>
+                    <div
+                      className="flex items-center"
+                      onClick={() => void navigate(`/profile/${review.userId}`)}
+                    >
+                      {review.profileImage !== '' ? (
+                        <img
+                          src={review.profileImage}
+                          className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm"
+                        />
+                      ) : (
+                        <div className="w-8 h-8 rounded-full bg-gray-300 text-center leading-8 text-sm">
+                          {review.nickname.charAt(0)}
+                        </div>
+                      )}
+
                       <div className="ml-3">
                         <h5 className="font-medium">
                           {review.nickname}&nbsp;&middot;&nbsp;{review.rating}

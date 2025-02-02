@@ -126,7 +126,7 @@ const Info = ({ data }: InfoProps) => {
           <PhotoSizeSelectActualIcon className="text-white" />
         </div>
         <div>
-          <div>호스트: {data.hostId}&nbsp;님</div>
+          <div>호스트: {data.hostName}&nbsp;님</div>
           <div className="text-sm text-gray-600">
             {issuperhost ? '슈퍼호스트' : '훌륭한 호스트'}
           </div>

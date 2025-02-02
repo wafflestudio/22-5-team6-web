@@ -9,7 +9,7 @@ import ProfileHeader from './ProfileHeader';
 import UpcomingReservations from './UpcomingReservations';
 import UserReviews from './UserReviews';
 
-type ProfileInfo = {
+export type ProfileInfo = {
   userId: number;
   nickname: string;
   bio: string;

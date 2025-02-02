@@ -25,6 +25,7 @@ type Price = {
 export type roomType = {
   roomId: number;
   hostId: number;
+  hostName: string;
   roomName: string;
   description: string;
   roomType: string; // 예시로 더 많은 타입을 추가할 수 있습니다.
@@ -32,6 +33,7 @@ export type roomType = {
   roomDetails: RoomDetails;
   price: Price;
   maxOccupancy: number;
+  isLiked: boolean;
   averageRating: number;
   reviewCount: number;
   isSuperhost: boolean;
