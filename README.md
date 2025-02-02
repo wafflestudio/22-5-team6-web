@@ -177,7 +177,7 @@
   - `GET /api/v1/reviews/room/{roomId}` : 특정 방에 대한 리뷰 조회 (페이지네이션 적용, 최신 순/별점 순 정렬 가능)
 - **참고**: 평균 별점 정보 반영 (별점 개수는 시간적 요인으로 하드 코딩)
 
-![readme16](https://github.com/user-attachments/assets/c1d20ad2-f2e5-4006-8ac3-bacb1314e1fb)
+<img width="944" alt="image" src="https://github.com/user-attachments/assets/eaee88e3-1a02-49cb-8e22-ab7abd70aeaf" />
 
 #### 예약 가능 여부 확인
 
@@ -273,6 +273,7 @@
 ### 🫧 인소윤
 
 - 템플릿 사용 레포 초기 설정 (절대 경로, tailwind css)
+- 위시리스트 목록 페이지 구현
 - 상세화면 페이지/GET 구현
   - 위시리스트 모달/POST/DELETE 구현
   - 공유하기 모달 /링크복사 구현
