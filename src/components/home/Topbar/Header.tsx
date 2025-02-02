@@ -154,25 +154,27 @@ const Header = () => {
           </div>
 
           {/* 모드 전환 탭 */}
-          <nav className="flex gap-2 hidden sm:block">
-            <TabButton
-              active={mode === 'normal'}
-              isMainPage={isMainPage}
-              onClick={() => {
-                handleModeChange('normal');
-              }}
-            >
-              숙소
-            </TabButton>
-            <TabButton
-              active={mode === 'hotplace'}
-              isMainPage={isMainPage}
-              onClick={() => {
-                handleModeChange('hotplace');
-              }}
-            >
-              핫플
-            </TabButton>
+          <nav className="flex gap-2">
+            <div className="hidden sm:block">
+              <TabButton
+                active={mode === 'normal'}
+                isMainPage={isMainPage}
+                onClick={() => {
+                  handleModeChange('normal');
+                }}
+              >
+                숙소
+              </TabButton>
+              <TabButton
+                active={mode === 'hotplace'}
+                isMainPage={isMainPage}
+                onClick={() => {
+                  handleModeChange('hotplace');
+                }}
+              >
+                핫플
+              </TabButton>
+            </div>
           </nav>
 
           <div className="flex-1 flex items-center justify-end gap-4">

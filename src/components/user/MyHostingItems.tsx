@@ -202,7 +202,7 @@ const MyHostingItems = () => {
               ₩ {room.price.toLocaleString()} / 박
             </p>
 
-            {/* Hover 시 수정 & 삭제 아이콘 */}
+            {/* Hover시 수정 & 삭제 아이콘 */}
             <div className="absolute inset-0 bg-black bg-opacity-30 rounded-lg flex items-center justify-center gap-5 opacity-0 group-hover:opacity-100 transition-opacity">
               <EditOutlinedIcon
                 className="w-10 h-10 text-white hover:text-black cursor-pointer"
