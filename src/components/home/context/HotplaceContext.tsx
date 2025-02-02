@@ -1,7 +1,7 @@
-import axios from 'axios';
 import type { ReactNode } from 'react';
 import { createContext, useCallback, useContext, useState } from 'react';
 
+import axiosInstance from '@/axiosInstance';
 import type {
   RoomListResponse,
   RoomMain,
@@ -37,7 +37,7 @@ export function HotPlaceProvider({ children }: { children: ReactNode }) {
           endDate: endDate.toISOString().split('T')[0],
         };
 
-        const response = await axios.get<RoomListResponse>(
+        const response = await axiosInstance.get<RoomListResponse>(
           '/api/v1/rooms/main/hotPlaces',
           { params },
         );
