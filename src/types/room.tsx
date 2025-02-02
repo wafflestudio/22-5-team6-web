@@ -41,3 +41,44 @@ export type RoomApiResponse = {
   roomId: number;
   imageUploadUrlList: string[];
 };
+
+interface Room {
+  roomId: number;
+  roomName: string;
+  roomType: string; // 예시로 다른 타입 추가 가능
+  sido: string;
+  sigungu: string;
+  price: number;
+  averageRating: number;
+  isLiked: boolean;
+  imageUrl: string;
+}
+
+interface Sort {
+  empty: boolean;
+  unsorted: boolean;
+  sorted: boolean;
+}
+
+interface Pageable {
+  offset: number;
+  sort: Sort;
+  unpaged: boolean;
+  paged: boolean;
+  pageNumber: number;
+  pageSize: number;
+}
+
+export interface WishlistResponse {
+  totalElements: number;
+  totalPages: number;
+  size: number;
+  content: Room[];
+  number: number;
+  sort: Sort;
+  numberOfElements: number;
+  pageable: Pageable;
+  first: boolean;
+  last: boolean;
+  empty: boolean;
+}

@@ -7,7 +7,7 @@ import axiosInstance from '@/axiosInstance';
 import BaseModal from '@/components/common/Modal/BaseModal';
 import { useSearch } from '@/components/home/context/SearchContext';
 
-import RoomCalendarModal from '../roomdetail/roomCalendarModal';
+import RoomCalendarModal from '../roomdetail/modals/roomCalendarModal';
 
 type ReservationUpdateModalProps = {
   roomId: number;

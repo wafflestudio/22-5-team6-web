@@ -6,15 +6,14 @@ import crownleft from '@/assets/icons/roomdetail/crownleft.svg';
 import crownright from '@/assets/icons/roomdetail/crownright.svg';
 import superhost from '@/assets/icons/superhost.svg';
 import { ACCOMMODATION_TYPES } from '@/components/common/constants/accommodationTypes';
-import ReviewModal from '@/components/roomdetail/ReviewModal';
-import type { roomType } from '@/types/roomType';
-
 import {
   CheckinIcon,
   LuggageIcon,
   TvIcon,
   WifiIcon,
-} from '../common/constants/icons';
+} from '@/components/common/constants/icons';
+import ReviewModal from '@/components/roomdetail/modals/ReviewModal';
+import type { roomType } from '@/types/roomType';
 
 interface InfoProps {
   data: roomType;
@@ -126,7 +125,7 @@ const Info = ({ data }: InfoProps) => {
           <PhotoSizeSelectActualIcon className="text-white" />
         </div>
         <div>
-          <div>호스트: {data.hostId}&nbsp;님</div>
+          <div>호스트: {data.hostName}&nbsp;님</div>
           <div className="text-sm text-gray-600">
             {issuperhost ? '슈퍼호스트' : '훌륭한 호스트'}
           </div>
