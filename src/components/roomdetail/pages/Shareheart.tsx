@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import HeartIcon from '@/assets/icons/Heart';
 import axiosInstance from '@/axiosInstance';
-import ShareModal from '@/components/roomdetail/ShareModal';
+import ShareModal from '@/components/roomdetail/modals/ShareModal';
 import type { roomType } from '@/types/roomType';
 
 export const Shareheart = ({ data }: { data: roomType }) => {

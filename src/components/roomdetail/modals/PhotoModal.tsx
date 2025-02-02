@@ -2,7 +2,7 @@ import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import PhotoSizeSelectActualIcon from '@mui/icons-material/PhotoSizeSelectActual';
 import { useEffect } from 'react';
 
-import { Shareheart } from '@/components/roomdetail/Shareheart';
+import { Shareheart } from '@/components/roomdetail/pages/Shareheart';
 import type { roomType } from '@/types/roomType';
 
 type Props = {

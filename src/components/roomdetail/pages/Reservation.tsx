@@ -6,10 +6,10 @@ import axiosInstance from '@/axiosInstance';
 import BaseModal from '@/components/common/Modal/BaseModal';
 import CompactModal from '@/components/common/Modal/CompactModal';
 import { useSearch } from '@/components/home/context/SearchContext';
-import RoomGuestsModal from '@/components/roomdetail/RoomGuestsModal';
+import RoomGuestsModal from '@/components/roomdetail/modals/RoomGuestsModal';
 import type { roomType } from '@/types/roomType';
 
-import RoomCalendarModal from './roomCalendarModal';
+import RoomCalendarModal from '../modals/roomCalendarModal';
 
 interface InfoProps {
   data: roomType;

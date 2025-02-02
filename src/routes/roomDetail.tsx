@@ -5,10 +5,10 @@ import { useParams } from 'react-router-dom';
 
 import gallery from '@/assets/icons/roomdetail/gallery.svg';
 import Topbar from '@/components/home/Topbar';
-import Info from '@/components/roomdetail/Info';
-import PhotoModal from '@/components/roomdetail/PhotoModal';
-import Reservation from '@/components/roomdetail/Reservation';
-import { Shareheart } from '@/components/roomdetail/Shareheart';
+import PhotoModal from '@/components/roomdetail/modals/PhotoModal';
+import Info from '@/components/roomdetail/pages/Info';
+import Reservation from '@/components/roomdetail/pages/Reservation';
+import { Shareheart } from '@/components/roomdetail/pages/Shareheart';
 import type { roomType } from '@/types/roomType';
 
 export const Roomdetail = () => {

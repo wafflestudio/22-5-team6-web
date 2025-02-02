@@ -11,7 +11,7 @@ import Redirect from '@/routes/Redirect';
 
 import CompleteProfilePage from './components/home/Topbar/Menu/CompleteProfilePage';
 import RegisterPage from './components/home/Topbar/Menu/RegisterPage';
-import { ReviewProvider } from './components/roomdetail/ReviewContext';
+import { ReviewProvider } from './components/roomdetail/contexts/ReviewContext';
 import MyHosting from './routes/MyHosting';
 import MyReservations from './routes/MyReservations';
 import MyReviews from './routes/MyReviews';

@@ -9,7 +9,7 @@ import clean from '@/assets/icons/reviews/clean.svg';
 import { CheckinIcon } from '@/components/common/constants/icons';
 import type { roomType } from '@/types/roomType';
 
-import { useReview } from './ReviewContext';
+import { useReview } from '../contexts/ReviewContext';
 
 interface ReviewProps {
   data: roomType;
