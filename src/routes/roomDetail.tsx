@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 import gallery from '@/assets/icons/roomdetail/gallery.svg';
+import Footer from '@/components/home/Footer';
 import Topbar from '@/components/home/Topbar';
 import PhotoModal from '@/components/roomdetail/modals/PhotoModal';
 import Info from '@/components/roomdetail/pages/Info';
@@ -45,7 +46,7 @@ export const Roomdetail = () => {
   return roomData !== null ? (
     <div className="flex flex-col justify-start items-center w-full">
       <Topbar />
-      <div className="flex flex-col w-full px-[55px]">
+      <div className="flex flex-col w-full px-[55px] mb-8">
         <div className="flex w-full items-end justify-between py-4">
           <div className="text-2xl font-normal">{roomData.roomName}</div>
           <Shareheart data={roomData} />
@@ -182,6 +183,7 @@ export const Roomdetail = () => {
           UrlList={roomData.imageUrlList}
         />
       )}
+      <Footer />
     </div>
   ) : (
     <div>데이터 없음</div>
