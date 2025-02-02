@@ -2,9 +2,10 @@ import { useEffect, useState } from 'react';
 import { useCallback } from 'react';
 
 import axiosInstance from '@/axiosInstance';
-import Topbar from '@/components/home/Topbar';
+import Header from '@/components/home/Topbar/Header';
 import type { ProfileInfo } from '@/components/user/profile/Profile';
 import type { WishlistResponse } from '@/types/room';
+
 export const MyWishlist = () => {
   const [userId, setUserId] = useState<number | null>(null);
   const [wishlist, setWishlist] = useState<WishlistResponse | null>(null);
@@ -83,12 +84,19 @@ export const MyWishlist = () => {
 
   return (
     <div className="flex flex-col justify-start items-center w-full">
-      <Topbar />
-      {isLoading && <div className="text-lg text-gray-700 mt-8">로딩중...</div>}
+      <Header />
+      <hr className="w-full mb-8 border-t border-gray-300" />
+      <div className="w-3/4 mb-8">
+        <h1 className="text-3xl font-bold my-4">위시리스트</h1>
+      </div>
+
       {error !== null && error.trim() !== '' && (
         <div className="text-lg text-red-600 mt-8">{error}</div>
       )}
-      {wishlist !== null ? (
+
+      {isLoading ? (
+        <div className="text-lg text-gray-700 mt-8">로딩중...</div>
+      ) : wishlist !== null ? (
         <div className="grid grid-cols-4 gap-4 mt-8 px-4 w-full">
           {wishlist.content.map((item) => (
             <div
