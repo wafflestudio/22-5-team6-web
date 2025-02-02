@@ -183,7 +183,7 @@ const MyHostingItems = () => {
           <div
             key={room.roomId}
             className="relative group p-5 bg-white rounded-lg shadow-md cursor-pointer"
-            onClick={() => void navigate(`/rooms/${room.roomId}`)}
+            onClick={() => void navigate(`/${room.roomId}`)}
           >
             {/* 숙소 이미지 */}
             <img

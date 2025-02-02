@@ -78,7 +78,7 @@ const Dropdown: React.FC<DropdownProps> = ({
           <hr className="w-full my-1 border-t border-gray-300" />
           <button
             onClick={() => {
-              handleNavigation('/MyWishList');
+              handleNavigation('/MyWishlist');
             }}
             className="block w-full px-4 py-3 text-left text-sm text-black hover:bg-gray-100"
           >

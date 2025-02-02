@@ -137,7 +137,7 @@ const CompleteProfilePage: React.FC = () => {
   return (
     <div className="flex flex-col items-center content-between h-screen bg-white">
       {/* Header */}
-      <div className="fixed top-0 left-0 w-full bg-white py-12 px-12 z-10">
+      <div className="fixed top-0 left-0 w-full py-12 px-12 z-10">
         <div
           onClick={() => void navigate('/')}
           className="w-12 h-12 cursor-pointer fill-black"
